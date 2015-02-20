@@ -1,0 +1,19 @@
+{
+    "name": "dime/frontend",
+    "description": "",
+    "authors": [
+        {
+            "name": "Thomas Birke",
+            "email": "tbirke@netextreme.de"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Dime\\Frontend\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
