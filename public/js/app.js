@@ -81,8 +81,18 @@
       ])
     },
     activityView: function (currentActivity) {
-      return m("div", [
-        m("p", currentActivity.description),
+      var customer = currentActivity.customer;
+      var project  = currentActivity.project;
+      var service  = currentActivity.service;
+      var tags     = currentActivity.tags ? currentActivity.tags : [];
+      return m("div.activity", [
+        m("p", [
+          m("div.description", currentActivity.description),
+          m("div.customer", customer ? "@" + customer.alias : ""),
+          m("div.project", project ? "/" + project.alias : ""),
+          m("div.service", service ? "/" + service.alias : ""),
+          m("div.tags", tags.map(function (tag) { return m("span.tag", "#" + tag) }))
+        ]),
         activity.activityStartStopButton(currentActivity),
         m("table", currentActivity.timeslices.map(timeslice.view))
       ])
