@@ -29,8 +29,8 @@
     },
     view: function (item) {
       return m("tr", [
-        m("td", item.startedAt),
-        m("td", item.stoppedAt)
+        m("td.start", item.startedAt),
+        m("td.stop", item.stoppedAt)
       ])      
     }
   }
@@ -51,19 +51,39 @@
         m.redraw()
       })
     },
-    startTimeslice: function (activity) {
+    startTimeslice: function (currentActivity) {
       var timeslice = {
-        activity: activity.id,
+        activity: currentActivity.id,
         startedAt: moment().format('YYYY-MM-DD HH:mm:ss')
       };
-      activity.timeslices.push(timeslice);
+      currentActivity.timeslices.push(timeslice);
       store.add('timeslices', timeslice);
+    },
+    stopTimeslice: function (currentActivity) {
+      currentActivity.timeslices.forEach(function (timeslice) {
+        if (null == timeslice.stoppedAt) {
+          timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss')
+        }
+      })
+    },
+    isRunning: function (currentActivity) {
+      return currentActivity.timeslices.some(function (currentTimeslice) {
+        return null == currentTimeslice.stoppedAt
+      })
+    },
+    activityStartStopButton: function (currentActivity) {
+      var running = activity.isRunning(currentActivity)
+      return m("div", [
+        m("input[type=button].start" + (running ? ".hidden" : ""), {
+          onclick: function() {activity.startTimeslice(currentActivity)}, value: "run"}),
+        m("input[type=button].stop" + (running ? "" : ".hidden"), {
+          onclick: function() {activity.stopTimeslice(currentActivity)}, value: "stop"})
+      ])
     },
     activityView: function (currentActivity) {
       return m("div", [
         m("p", currentActivity.description),
-        m("input[type=button].start", {
-          onclick: function() {activity.startTimeslice(currentActivity)}, value: "add"}),
+        activity.activityStartStopButton(currentActivity),
         m("table", currentActivity.timeslices.map(timeslice.view))
       ])
     },
