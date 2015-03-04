@@ -67,7 +67,19 @@
     }
   }
 
+  // register module
   dime.modules.activity = activity;
+
+  // register route
   dime.routes['/'] = activity;
-  dime.schema.activities = {url: 'activity'};
+
+  // register schema
+  dime.schema.activities = {url: "activity"};
+
+  // add menu item
+  dime.menu.unshift({
+    id: "activities",
+    name: "Activities",
+    route: "/"
+  });
 })(dime, moment, m)
