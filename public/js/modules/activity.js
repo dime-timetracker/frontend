@@ -86,6 +86,7 @@
   dime.menu.unshift({
     id: "activities",
     name: "Activities",
-    route: "/"
+    route: "/",
+    weight: -10
   });
 })(dime, moment, m)

@@ -51,7 +51,7 @@
       return 0;
     },
     view: function (items) {
-      return dime.menu.map(this.viewItem);
+      return dime.menu.sort(menu.sort).map(this.viewItem);
     }
   }
 
