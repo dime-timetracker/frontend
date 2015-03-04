@@ -3,6 +3,7 @@
 /**
  * Menu items consist of an id and a name.
  * Additionally, they may have an array of children.
+ * Specifying a route turns the item into a link.
  * To manipulate sorting of children, items may specify a weight,
  * otherwise, they'll be sorted alphabetically by name.
  *
@@ -11,6 +12,7 @@
  * {
  *   id: example,
  *   name: "This is an example item",
+ *   route: "/example",
  *   children: [
  *     {id: foo, name: foo},
  *     {id: bar, name: bar},
