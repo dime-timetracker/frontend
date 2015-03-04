@@ -25,7 +25,7 @@
       currentActivity.timeslices.forEach(function (currentTimeslice) {
         if (null == currentTimeslice.stoppedAt) {
           currentTimeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss')
-          currentTimeslice.url = dime.apiUrl + schema.timeslices.url + '/' + currentTimeslice.id
+          currentTimeslice.url = dime.apiUrl + dime.schema.timeslices.url + '/' + currentTimeslice.id
           dime.store.update('timeslices', currentTimeslice)
         }
       })
@@ -52,9 +52,15 @@
       return m("div.activity", [
         m("p", [
           m("div.description", currentActivity.description),
-          m("div.customer", customer ? "@" + customer.alias : ""),
-          m("div.project", project ? "/" + project.alias : ""),
-          m("div.service", service ? "/" + service.alias : ""),
+          customer
+            ? m("div.customer", {title: customer.name}, "@" + customer.alias)
+            : m("div.customer.empty"),
+          project
+            ? m("div.project", {title: project.name}, "/" + project.alias)
+            : m("div.project.empty"),
+          service
+            ? m("div.service", {title: service.name}, ":" + service.alias)
+            : m("div.service.empty"),
           m("div.tags", tags.map(function (tag) { return m("span.tag", "#" + tag) }))
         ]),
         activity.activityStartStopButton(currentActivity),
