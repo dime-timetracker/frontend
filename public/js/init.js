@@ -1,7 +1,7 @@
 'use strict';
 
 var dime = {
-  apiUrl: 'http://dime-laravel-4.dev/api/',
+  apiUrl: 'api/',
   modules: {},
   routes: {},
   schema: {}
