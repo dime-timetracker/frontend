@@ -1,5 +1,7 @@
 'use strict';
 
+var dime = {};
+
 var test = require('tape').test;
 var moment = require('../moment.js');
 var parser = require('./parser.js');

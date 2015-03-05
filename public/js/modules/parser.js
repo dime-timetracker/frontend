@@ -1,10 +1,13 @@
 'use strict';
 
+if ("undefined" == typeof(dime)) {
+  var dime = {};
+}
 if ("undefined" == typeof(moment)) {
   var moment = require('../moment.js');
 }
 
-(function (moment) {
+(function (dime, moment) {
   var parser = {
     result: {},
     parse: function(string) {
@@ -132,6 +135,7 @@ if ("undefined" == typeof(moment)) {
       parser.result.string = null;
     }
   }
-  module && (module.exports = parser);
+  "undefined" != typeof(module) && (module.exports = parser);
+  dime.parser = parser;
   return parser;
-})(moment)
+})(dime, moment)
