@@ -30,6 +30,27 @@
         }
       })
     },
+    getLatestUpdate: function (activity) {
+      var latestUpdate = 0;
+      if (false == _.isEmpty(activity.timeslices)) {
+        return activity.timeslices.reduce(function (prevMax, item) {
+          return prevMax < item.updatedAt ? item.updatedAt : prevMax;
+        }, activity.updatedAt);
+      }
+      return activity.updatedAt;
+    },
+    compare: function (activityA, activityB) {
+      var a = activity.getLatestUpdate(activityA);
+      var b = activity.getLatestUpdate(activityB);
+
+      if (a > b) {
+        return -1;
+      }
+      if (a < b) {
+        return 1;
+      }
+      return 0;
+    },
     isRunning: function (currentActivity) {
       return currentActivity.timeslices.some(function (currentTimeslice) {
         return null == currentTimeslice.stoppedAt
@@ -69,6 +90,7 @@
     },
     view: function (ctrl) {
       var activities = dime.store.findAll('activities') || []
+      activities.sort(activity.compare);
       return m("div", activities.map(activity.activityView))
     }
   }
