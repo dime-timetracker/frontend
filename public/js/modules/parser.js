@@ -16,6 +16,7 @@ if ("undefined" == typeof(moment)) {
         parser.parseCustomer,
         parser.parseProject,
         parser.parseService,
+        parser.parseTags,
         parser.parseTimes,
         parser.parseDescription
       ].forEach(function(parser) {
@@ -52,6 +53,21 @@ if ("undefined" == typeof(moment)) {
       }
       parser.result.string = string.replace(':' + service[1], '', 'g');
       parser.result.service.alias = service[1];
+    },
+    parseTags: function() {
+      var string = parser.result.string;
+      parser.result.tags = [];
+      var tags = string.match(/#([a-z0-9\-\/\_]+)/g);
+      if (null == tags) {
+        return;
+      }
+      var tagNames = [];
+      tags.forEach(function (tag) {
+        tagNames.push(tag.substr(1));
+        string = string.replace(tag, '', 'g');
+      });
+      parser.result.string = string;
+      parser.result.tags = tagNames;
     },
     parseTimes: function() {
       var string = parser.result.string;

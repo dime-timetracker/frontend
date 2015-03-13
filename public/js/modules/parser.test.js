@@ -8,11 +8,12 @@ var parser = require('./parser.js');
 
 test('Parse string', function(t) {
   test('Parse relations', function(t) {
-    var input = 'some @foo /bar :baz description';
+    var input = 'some @foo /bar :baz description #tag-1 #just_another-tag';
     var result = parser.parse(input);
     t.equal(result.customer.alias, 'foo', 'Found customer "foo"');
     t.equal(result.project.alias, 'bar', 'Found project "bar"');
     t.equal(result.service.alias, 'baz', 'Found service "baz"');
+    t.equal(result.tags.toString(), ['tag-1', 'just_another-tag'].toString(), 'Found tags');
     t.equal(result.description, 'some description', 'Resulting description');
     t.end();
   });
