@@ -40,7 +40,8 @@
       }
     },
     viewOne: function (item) {
-      return m("dl#customer-" + item.id, [
+      var disabled = (false == item.enabled);
+      return m("dl#customer-" + item.id + disabled, [
         m("dt.name", "Name"),
         m("dd.name#name-" + item.id, {
           contenteditable: true,
@@ -52,6 +53,13 @@
           contenteditable: true,
           oninput: function() { customer.update(item.id) }
         }, item.alias),
+        m("dt.enabled", "enabled"),
+        m("dd.enabled", [
+          m("input[type=checkbox]#enabled-" + item.id, {
+            checked: item.enabled,
+            onchange: function() { customer.update(item.id) }
+          })
+        ]),
         m("input[type=submit].delete", {
           onclick: function() { customer.remove(item) },
           value: 'Delete'

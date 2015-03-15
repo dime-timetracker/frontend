@@ -42,7 +42,8 @@
       }
     },
     viewOne: function (item) {
-      return m("dl#project-" + item.id, [
+      var disabled = item.enabled ? '' : '.disabled';
+      return m("dl#project-" + item.id + disabled, [
         m("dt.name", "Name"),
         m("dd.name#name-" + item.id, {
           contenteditable: true,
@@ -59,6 +60,13 @@
           contenteditable: true,
           oninput: function() { project.update(item.id) }
         }, item.rate),
+        m("dt.enabled", "enabled"),
+        m("dd.enabled", [
+          m("input[type=checkbox]#enabled-" + item.id, {
+            checked: item.enabled,
+            onchange: function() { customer.update(item.id) }
+          })
+        ]),
         m("input[type=submit].delete", {
           onclick: function() { project.remove(item) },
           value: 'Delete'
