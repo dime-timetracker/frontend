@@ -39,7 +39,7 @@
       }
       return activity.updatedAt;
     },
-    compare: function (activityA, activityB) {
+    compareByTime: function (activityA, activityB) {
       var a = activity.getLatestUpdate(activityA);
       var b = activity.getLatestUpdate(activityB);
 
@@ -90,7 +90,7 @@
     },
     view: function (ctrl) {
       var activities = dime.store.findAll('activities') || []
-      activities.sort(activity.compare);
+      activities.sort(activity.compareByTime);
       return m("div", activities.map(activity.activityView))
     }
   }
