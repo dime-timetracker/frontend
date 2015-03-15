@@ -82,7 +82,10 @@
           service
             ? m("div.service", {title: service.name}, ":" + service.alias)
             : m("div.service.empty"),
-          m("div.tags", tags.map(function (tag) { return m("span.tag", "#" + tag) }))
+          m("div.tags", tags.map(function (tag) {
+            var tagname = _.isString(tag) ? tag : tag.name;
+            return m("span.tag", "#" + tagname);
+          }))
         ]),
         activity.activityStartStopButton(currentActivity),
         m("table", currentActivity.timeslices.map(dime.modules.timeslice.view))

@@ -6,6 +6,7 @@
       dime.store.get('customers');
       dime.store.get('projects');
       dime.store.get('services');
+      dime.store.get('tags');
     },
     submit: function (e) {
       var newActivity = dime.parser.parse(e.target.value);
@@ -38,11 +39,14 @@
       if (false === _.isUndefined(service)) {
         newActivity.service = service.id;
       }
+      if (_.isArray(newActivity.tags)) {
+        newActivity.tags = newActivity.tags.map(function (tag) {
+          return {'name': tag};
+        })
+      }
 
       dime.store.add('activities', newActivity).done(function (newActivity) {
-        console.log(newActivity);
         timeslice.activity = newActivity.id;
-        console.log(timeslice);
         newActivity.timeslices.push(timeslice);
         dime.store.add('timeslices', timeslice);
         dime.store.get('activities').done(function(activities) {
