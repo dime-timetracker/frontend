@@ -40,7 +40,7 @@
       }
     },
     viewOne: function (item) {
-      var disabled = (false == item.enabled);
+      var disabled = item.enabled ? '' : '.disabled';
       return m("dl#customer-" + item.id + disabled, [
         m("dt.name", "Name"),
         m("dd.name#name-" + item.id, {
