@@ -80,8 +80,10 @@
     },
     view: function() {
       var customers = dime.store.findAll('customers') || []
-      var list = customers.map(customer.viewOne);
-      list.push(customer.viewAddForm());
+      var list = [m("h2", "Activities")].concat(
+        customers.map(customer.viewOne),
+        customer.viewAddForm()
+      );
       return m("div", list);
     }
   }
