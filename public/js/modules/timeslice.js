@@ -9,9 +9,10 @@
       }
     },
     view: function (item) {
-      return m("tr", [
-        m("td.start", item.startedAt),
-        m("td.stop", item.stoppedAt)
+      return m("tr#timeslice-" + item.id, [
+        m("td.start", moment(item.startedAt).format("DD.MM.YYYY HH:mm:ss")),
+        m("td.stop", item.stoppedAt ? moment(item.stoppedAt).format("DD.MM.YYYY HH:mm:ss") : ""),
+        m("td.duration#timeslice-duration-" + item.id, dime.helper.duration.format(item.duration, "seconds"))
       ])      
     }
   }
