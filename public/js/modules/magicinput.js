@@ -56,10 +56,25 @@
       });
     },
     view: function (items) {
-      return m("input#magic", {
-        placeholder: "Add an activity",
-        onchange: magicInput.submit
-      });
+      return [
+        m("input", {
+          placeholder: "Add an activity",
+          onchange: magicInput.submit
+        }),
+        m("div.help", [
+          m("div.basics", 'Enter a description to start an activity.'),
+          m("ul", [
+            m("li.dates.duration", 'You may specify a duration by entering something like 1h 10m or 1:10.'),
+            m("li.dates.start", 'You may specify a start by entering something like 13:50-'),
+            m("li.dates.end", 'You may specify an end by entering something like -15:10'),
+            m("li.dates.start-and-end", 'You may specify start and end by entering something like 13:50-15:10'),
+            m("li.customer", 'Use "@" to specify a customer.'),
+            m("li.project", 'Use "/" to specify a project.'),
+            m("li.service", 'Use ":" to specify a service.'),
+            m("li.tags", 'Use "#" to add tags.'),
+          ])
+        ])
+      ];
     }
   }
 
