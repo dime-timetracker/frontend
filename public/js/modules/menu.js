@@ -26,14 +26,15 @@
 (function (dime, m) {
   var menu = {
     viewItem: function (item) {
-      return m("ul", [
+      var children = (item.children || []).sort(menu.sort);
+      return [
         m("li#" + item.id + (m.route() == item.route ? ".active" : ""),
           item.route
             ? m("a[href='" + item.route + "']", {config: m.route}, item.name)
-            : item.name
-        ),
-        (item.children || []).sort(menu.sort).map(menu.viewItem),
-      ]);
+            : item.name,
+          children.length ? m("ul", children.map(menu.viewItem)) : null
+        )
+      ];
     },
     sort: function (a, b) {
       var weightA = _.isNumber(a.weight) ? a.weight : 0;
@@ -51,7 +52,7 @@
       return 0;
     },
     view: function (items) {
-      return dime.menu.sort(menu.sort).map(this.viewItem);
+      return m("ul", dime.menu.sort(menu.sort).map(this.viewItem));
     }
   }
 
