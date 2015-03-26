@@ -5,5 +5,6 @@ var dime = {
   helper: {},
   modules: {},
   routes: {},
-  schema: {}
-}
+  
+  resources: {}
+};

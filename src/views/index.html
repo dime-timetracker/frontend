@@ -15,28 +15,34 @@
   <div id="magicInput"></div>
   <div id="main"></div>
   <!-- vendors -->
-  <script src="packages/dime/frontend/js/moment.js"></script>
-  <script src="packages/dime/frontend/js/node_modules/amygdala/node_modules/underscore/underscore-min.js"></script>
-  <script src="packages/dime/frontend/js/node_modules/amygdala/node_modules/q/q.js"></script>
-  <script src="packages/dime/frontend/js/node_modules/amygdala/node_modules/wolfy87-eventemitter/EventEmitter.min.js"></script>
-  <script src="packages/dime/frontend/js/node_modules/amygdala/amygdala.js"></script>
-  <script src="packages/dime/frontend/js/mithril.js"></script>
+  <script src="packages/dime/frontend/js/vendor/mithril.js"></script>
+  <script src="packages/dime/frontend/js/vendor/lodash.min.js"></script>
+  <script src="packages/dime/frontend/js/vendor/moment.js"></script>
+  <script src="packages/dime/frontend/js/vendor/resource.js"></script>
 
   <!-- init app -->
   <script src="packages/dime/frontend/js/init.js"></script>
+  
+  <!-- helper -->
+  <script src="packages/dime/frontend/js/helper/duration.js"></script>
+  <script src="packages/dime/frontend/js/helper/parser.js"></script>
 
+  <!-- views -->
+  <script src="packages/dime/frontend/js/modules/views/menu.js"></script>
+  
   <!-- modules -->
-  <script src="packages/dime/frontend/js/modules/helper/duration.js"></script>
-  <script src="packages/dime/frontend/js/modules/menu.js"></script>
-  <script src="packages/dime/frontend/js/modules/timeslice.js"></script>
-  <script src="packages/dime/frontend/js/modules/activity.js"></script>
-  <script src="packages/dime/frontend/js/modules/customer.js"></script>
+  <script src="packages/dime/frontend/js/modules/activity/activity.js"></script>
+  <script src="packages/dime/frontend/js/modules/activity/views/item.js"></script>
+  
+  <script src="packages/dime/frontend/js/modules/timeslice/timeslice.js"></script>
+  <script src="packages/dime/frontend/js/modules/tag/tag.js"></script>
+  
+  
+<!--  <script src="packages/dime/frontend/js/modules/customer.js"></script>
   <script src="packages/dime/frontend/js/modules/project.js"></script>
   <script src="packages/dime/frontend/js/modules/service.js"></script>
-  <script src="packages/dime/frontend/js/modules/setting.js"></script>
-  <script src="packages/dime/frontend/js/modules/tag.js"></script>
-  <script src="packages/dime/frontend/js/modules/parser.js"></script>
-  <script src="packages/dime/frontend/js/modules/magicinput.js"></script>
+  <script src="packages/dime/frontend/js/modules/setting.js"></script>-->
+  <!--<script src="packages/dime/frontend/js/modules/magicinput.js"></script>-->
 
   <!-- launch app -->
   <script src="packages/dime/frontend/js/app.js"></script>
