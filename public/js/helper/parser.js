@@ -27,7 +27,7 @@ if ("undefined" == typeof(moment)) {
     parseCustomer: function() {
       var string = parser.result.string;
       parser.result.customer = {};
-      var customer = string.match(/@([a-z]+)/);
+      var customer = string.match(/@([a-z0-9]+)/);
       if (null == customer) {
         return;
       }
@@ -37,7 +37,7 @@ if ("undefined" == typeof(moment)) {
     parseProject: function() {
       var string = parser.result.string;
       parser.result.project = {};
-      var project = string.match(/\/([a-z]+)/);
+      var project = string.match(/\/([a-z0-9]+)/);
       if (null == project) {
         return;
       }
