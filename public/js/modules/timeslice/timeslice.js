@@ -28,4 +28,9 @@
     }
   };
 
+  // register resource
+  dime.resources.timeslice = new Resource({
+    url: dime.apiUrl + "timeslice"
+  });
+
 })(dime, m, moment)

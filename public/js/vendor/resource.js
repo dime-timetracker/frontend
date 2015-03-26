@@ -18,24 +18,17 @@ var Resource = function (options) {
         empty: {}
     }, options);
     this.collection = [];
-    this.map = {};
 
     m.request({ method: 'GET', url: this.config.url })
     .then(function (list) {
         that.collection = _.isFunction(that.config.sort) ? list.sort(that.config.sort) : list;
-        that.map = that.buildIdxMap(that.collection, that.config.idAttribute);
+        if (_.isFunction(that.config.model)) {
+          that.collection.forEach(function(item, idx, collection) {
+            collection[idx] = new that.config.model(item);
+          });
+        }
         return that.collection;
     });
-};
-
-Resource.prototype.buildIdxMap = function (collection, attr) {
-    collection = collection || [];
-    attr = attr || 'id';
-    var map = {};
-    for (var i = 0; i < collection.length; i++) {
-        map[collection[i][attr]] = i;
-    }
-    return map;
 };
 
 Resource.prototype.empty = function (data) {
@@ -52,12 +45,13 @@ Resource.prototype.last = function () {
 };
 
 Resource.prototype.find = function (id) {
-    var cached = this.collection[this.map[id]];
-
-    if (!cached) {
-        cached = this.empty();
+    var result = this.collection.find(function(item) {
+        return item.id === id;
+    });
+    if (!result) {
+        result = this.empty();
     }
-    return cached;
+    return result;
 };
 
 Resource.prototype.findAll = function () {
@@ -102,11 +96,10 @@ Resource.prototype.remove = function (data) {
 
         m.request({ method: method, url: url })
         .then(function(response) {
-            var idx = that.map[id],
+            var idx = that.indexOf(data),
                 item = data;
-            if (idx !== undefined) {
+            if (-1 < idx) {
                 item = that.collection.splice(idx, 1);
-                that.map = that.buildIdxMap(that.collection, that.config.idAttribute);
             }
             deferred.resolve(item);
             return item;
