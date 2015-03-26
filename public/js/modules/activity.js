@@ -37,10 +37,7 @@
       return m("button.toggle-timeslices", {
         href: "#",
         onclick: function() {
-          dime.helper.utils.toggleClassName(
-            doc.getElementById("activity-" + currentActivity.id),
-            "show-timeslices"
-          );
+          doc.getElementById("activity-" + currentActivity.id).classList.toggle("show-timeslices")
           return false;
         }
       }, "…")
