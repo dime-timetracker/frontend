@@ -1,51 +1,48 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dime Timetracker</title>
-    
-  <link rel="stylesheet" href="packages/dime/frontend/css/bootstrap.min.css">
-  <link rel="stylesheet" href="packages/dime/frontend/css/main.css">
-</head>
-<body>
-  <h1>Dime</h1>
-  <nav id="menu"></nav>
-  <div id="magicInput"></div>
-  <div id="main"></div>
-  <!-- vendors -->
-  <script src="packages/dime/frontend/js/vendor/mithril.js"></script>
-  <script src="packages/dime/frontend/js/vendor/lodash.min.js"></script>
-  <script src="packages/dime/frontend/js/vendor/moment.js"></script>
-  <script src="packages/dime/frontend/js/vendor/resource.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Dime Timetracker</title>
 
-  <!-- init app -->
-  <script src="packages/dime/frontend/js/init.js"></script>
-  
-  <!-- helper -->
-  <script src="packages/dime/frontend/js/helper/duration.js"></script>
-  <script src="packages/dime/frontend/js/helper/parser.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="packages/dime/frontend/css/materialize.min.css">
+    <link rel="stylesheet" href="packages/dime/frontend/css/app.css">
+  </head>
+  <body>
+    <nav id="menu" class="green">
+      <div class="nav-wrapper">
+        <a href="#/" class="brand-logo"><i class="mdi-action-schedule"></i> Dime Timetracker</a>
+      </div>
+    </nav>
+    <section id="app" class="container"></section>
 
-  <!-- views -->
-  <script src="packages/dime/frontend/js/modules/views/menu.js"></script>
-  
-  <!-- modules -->
-  <script src="packages/dime/frontend/js/modules/activity/activity.js"></script>
-  <script src="packages/dime/frontend/js/modules/activity/model.js"></script>
-  <script src="packages/dime/frontend/js/modules/activity/views/item.js"></script>
-  
-  <script src="packages/dime/frontend/js/modules/timeslice/timeslice.js"></script>
-  <script src="packages/dime/frontend/js/modules/tag/tag.js"></script>
-  
-  
-<!--  <script src="packages/dime/frontend/js/modules/customer.js"></script>
-  <script src="packages/dime/frontend/js/modules/project.js"></script>
-  <script src="packages/dime/frontend/js/modules/service.js"></script>
-  <script src="packages/dime/frontend/js/modules/setting.js"></script>-->
-  <!--<script src="packages/dime/frontend/js/modules/magicinput.js"></script>-->
+    <!-- vendors -->
+    <script src="packages/dime/frontend/js/vendor/mithril.js"></script>
+    <script src="packages/dime/frontend/js/vendor/lodash.min.js"></script>
+    <script src="packages/dime/frontend/js/vendor/moment.js"></script>
+    <script src="packages/dime/frontend/js/vendor/resource.js"></script>
 
-  <!-- launch app -->
-  <script src="packages/dime/frontend/js/app.js"></script>
-</body>
+    <!-- init app -->
+    <script src="packages/dime/frontend/js/init.js"></script>
+
+    <!-- helper -->
+    <script src="packages/dime/frontend/js/helper/duration.js"></script>
+    <script src="packages/dime/frontend/js/helper/parser.js"></script>
+
+    <!-- views -->
+    <script src="packages/dime/frontend/js/modules/views/menu.js"></script>
+
+    <!-- modules -->
+    <script src="packages/dime/frontend/js/modules/activity/activity.js"></script>
+    <script src="packages/dime/frontend/js/modules/activity/model.js"></script>
+    <script src="packages/dime/frontend/js/modules/activity/views/item.js"></script>
+
+    <script src="packages/dime/frontend/js/modules/timeslice/timeslice.js"></script>
+    <script src="packages/dime/frontend/js/modules/tag/tag.js"></script>
+
+    <!-- launch app -->
+    <script src="packages/dime/frontend/js/app.js"></script>
+  </body>
 </html>

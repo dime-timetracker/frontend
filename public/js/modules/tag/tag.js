@@ -9,7 +9,7 @@
   dime.modules.tag.views = {
     item: function (tag) {
       var tagname = _.isString(tag) ? tag : tag.name;
-      return m("span.tag", "#" + tagname);
+      return m("span.badge.tag", "#" + tagname);
     }
   };
 

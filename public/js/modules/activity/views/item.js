@@ -1,65 +1,57 @@
 'use strict';
-(function (dime, m, moment, _, doc) {
-  
-  var startStopButton = function(current) {
-    return m("div", [
-      m("input[type=button]." + (current.running() ? "stop" : "start"), {
-        onclick: function() {current.startStopTimeslice()},
-        value: dime.helper.duration.format(current.totalDuration(), 'seconds')
-      })
-    ]);
-  }
+(function (dime, m, moment, _) {
 
   dime.timer = setInterval(m.redraw, 1000);
-  
+
   dime.modules.activity.views.item = function (current) {
     var customer = current.customer;
-    var project  = current.project;
-    var service  = current.service;
-    var tags     = current.tags ? current.tags : [];
-    
-    var content = [];
-    
-    // Start-Stop-Button
-    content.push(startStopButton(current));
-    content.push(m("button.toggle-timeslices", {
-      href: "#",
-      onclick: function() {
-        current.toggleTimeslices();
-        return false;
-      }
-    }, "…"));
-    
-    var p = [];
-    
-    p.push(m("div.description", current.description));
-    
-    if (customer) {
-      p.push(m("div.customer", {title: customer.name}, "@" + customer.alias));
-    } else {
-      p.push(m("div.customer.empty"));
-    }
-    
-    if (project) {
-      p.push(m("div.project", {title: project.name}, "/" + project.alias));
-    } else {
-      p.push(m("div.project.empty"));
-    }
-    
-    if (service) {
-      p.push(m("div.service", {title: service.name}, ":" + service.alias));
-    } else {
-      p.push(m("div.service.empty"));
-    }
-    
-    p.push(m("div.tags", tags.map(dime.modules.tag.views.item)));
-    
-    content.push(m("p", p));
-    content.push(dime.modules.timeslice.views.table(current.timeslices));
+    var project = current.project;
+    var service = current.service;
+    var tags = current.tags ? current.tags : [];
 
-    var className = current.showTimeslices ? 'show-timeslices' : 'hide-timeslices';
-    
-    return m("div.list-item.activity#activity-" + current.id + '.' + className, content);
+    var className = current.showTimeslices ? '' : '.hide';
+
+    var p = [];
+    if (customer) {
+      p.push(m("span.bagde.customer", {title: customer.name}, "@" + customer.alias));
+    } else {
+      p.push(m("span.bagde.customer.empty", "@"));
+    }
+
+    if (project) {
+      p.push(m("span.bagde.project", {title: project.name}, "/" + project.alias));
+    } else {
+      p.push(m("span.bagde.project.empty", "/"));
+    }
+
+    if (service) {
+      p.push(m("span.bagde.service", {title: service.name}, ":" + service.alias));
+    } else {
+      p.push(m("span.badge.service.empty", ":"));
+    }
+    p.concat(tags.map(dime.modules.tag.views.item));
+
+    var content = [
+      m(".secondary-content", [
+        m("a.btn.green", {href: "#",
+          onclick: function () {
+            current.toggleTimeslices();
+            return false;
+          }
+        }, m("i.mdi-action-schedule")),
+        " ",
+        m("a.btn.grey.lighten-1", {href: '#', onclick: function() { current.startStopTimeslice() }}, [
+          m("i.mdi-av-play-arrow"),
+          " ",
+          dime.helper.duration.format(current.totalDuration(), 'seconds')
+        ])
+      ]),
+      m("span.title", current.description),
+      m("p", p),
+      m("div.card-panel" + className, dime.modules.timeslice.views.table(current.timeslices))
+    ];
+   
+    return m("div.collection-item.list-item.activity#activity-" + current.id, content);
   };
-  
-})(dime, m, moment, _, document);
+
+})(dime, m, moment, _);

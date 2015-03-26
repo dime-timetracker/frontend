@@ -1,0 +1,46 @@
+.collection .list-item {
+  position: relative;
+}
+
+.collection .list-item .title {
+  font-size: 1rem;
+}
+
+.collection .list-item .description {
+  color: #9E9E9E;
+  font-size: .8rem;
+}
+
+.collection .list-item .description:before {
+  content: '-';
+  padding: 0 .8em;
+}
+
+.collection .list-item p {
+  margin: 0px;
+}
+
+.collection .list-item .secondary-content {
+  position: absolute;
+  right: 16px;
+}
+
+.bagde {
+  background-color: #26A69A;
+  background-clip: padding-box;
+  border-radius: 2px;
+  box-sizing: border-box;
+
+  font-size: 1rem;
+  color: #FFF;
+
+  min-width: 3rem;
+  margin-right: 6px;
+  padding: 0px 6px;
+  text-align: center;
+  line-height: inherit;
+}
+
+.hide {
+  display: none;
+}
