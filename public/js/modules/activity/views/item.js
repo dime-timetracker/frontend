@@ -2,17 +2,9 @@
 (function (dime, m, moment, _, doc) {
   
   var startStopButton = function(current) {
-    var isRunning = current.running();
-    if (isRunning) {
-      //runTimer(current);
-    }
     return m("div", [
-      m("input[type=button].start" + (isRunning ? ".hidden" : "") + "#start-" + current.id, {
-        onclick: function() {current.startTimeslice()},
-        value: dime.helper.duration.format(current.totalDuration(), 'seconds')
-      }),
-      m("input[type=button].stop" + (isRunning ? "" : ".hidden") + "#stop-" + current.id, {
-        onclick: function() {current.stopTimeslice()},
+      m("input[type=button]." + (current.running() ? "stop" : "start"), {
+        onclick: function() {current.startStopTimeslice()},
         value: dime.helper.duration.format(current.totalDuration(), 'seconds')
       })
     ]);

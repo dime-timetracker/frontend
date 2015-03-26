@@ -22,24 +22,23 @@
     }, 0);
   };
 
-  dime.modules.activity.model.prototype.startTimeslice = function () {
-    var timeslice = {
-      activity: this.id,
-      startedAt: moment().format('YYYY-MM-DD HH:mm:ss')
-    };
-    dime.store.add('timeslices', timeslice).done(function(newTimeslice) {
-      this.timeslices.push(newTimeslice);
-      m.redraw();
-    });
-  };
-
-  dime.modules.activity.model.prototype.stopTimeslice = function () {
-    this.timeslices.forEach(function (currentTimeslice) {
-      if (_.isNull(currentTimeslice.stoppedAt) || _.isUndefined(currentTimeslice.stoppedAt)) {
-        currentTimeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
-        dime.resources.timeslice.persist(currentTimeslice);
-      }
-    });
+  dime.modules.activity.model.prototype.startStopTimeslice = function () {
+    if (this.running()) {
+      this.timeslices.forEach(function (currentTimeslice) {
+        if (_.isNull(currentTimeslice.stoppedAt) || _.isUndefined(currentTimeslice.stoppedAt)) {
+          currentTimeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
+          dime.resources.timeslice.persist(currentTimeslice);
+        }
+      });
+    } else {
+      var timeslice = {
+        activity: this.id,
+        startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+        stoppedAt: null
+      };
+      this.timeslices.push(timeslice);
+      dime.resources.timeslice.persist(timeslice);
+    }
   };
 
   dime.modules.activity.model.prototype.toggleTimeslices = function () {
