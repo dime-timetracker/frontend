@@ -62,7 +62,7 @@
       }
 
       if (children.length) {
-        menuItem.push(m("ul", children.map(dime.views.menu.item)));
+        menuItem.push(m("ul.hide", children.map(dime.modules.menu.views.item)));
       }
 
       return m("li", menuItem);
