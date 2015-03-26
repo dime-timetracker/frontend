@@ -41,8 +41,15 @@
     return 0;
   };
 
-  dime.modules.menu = {}
-
+  dime.modules.menu = {
+    controller: function () {
+      
+    },
+    view: function () {
+      return dime.modules.menu.views.list(dime.menu.sort(sort));
+    }
+  };
+  
   dime.modules.menu.views = {
     item: function (item) {
       var children = (item.children || []).sort(sort);
@@ -51,22 +58,17 @@
       if (item.route) {
         menuItem.push(m("a[href='" + item.route + "']", {config: m.route}, item.name));
       } else {
-        menuItem.push(item.name);
+        menuItem.push(m("a[href='#']", item.name));
       }
 
       if (children.length) {
         menuItem.push(m("ul", children.map(dime.views.menu.item)));
       }
 
-      return [
-        m(
-          "li#" + item.id + (m.route() === item.route ? ".active" : ""),
-          menuItem
-        )
-      ];
+      return m("li", menuItem);
     },
     list: function (items) {
-      return m("ul", dime.menu.sort(sort).map(this.item));
+      return m("ul.nav.nav-list", items.map(this.item));
     }
   };
 
