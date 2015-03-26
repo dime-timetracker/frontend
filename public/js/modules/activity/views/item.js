@@ -3,16 +3,15 @@
 
   dime.timer = setInterval(m.redraw, 1000);
   
-  var startStopButton = function(current, color, icon) {
-    color = ".grey.lighten-1";
-    icon = ".mdi-av-play-arrow";
+  var startStopButton = function(current) {
+    var icon = ".icon.icon-play-arrow", color = "";
     if (current.running()) {
-      color = ".orange";
-      icon = ".mdi-av-stop"
+      icon = ".icon.icon-stop";
+      color = ".orange-text";
     }
     
-    return  m("a.btn" + color, {href: '#', onclick: function() { current.startStopTimeslice() }}, [
-      m("i" + icon),
+    return  m("a" + color, {href: '#', onclick: function() { current.startStopTimeslice() }}, [
+      m("span" + icon),
       " ",
       dime.helper.duration.format(current.totalDuration(), 'seconds')
     ]);
@@ -26,43 +25,41 @@
 
     var className = current.showTimeslices ? '' : '.hide';
 
-    var p = [];
+    var badges = [];
     if (customer) {
-      p.push(m("span.bagde.customer", {title: customer.name}, "@" + customer.alias));
+      badges.push(m("span.bagde.customer", {title: customer.name}, "@" + customer.alias));
     } else {
-      p.push(m("span.bagde.customer.empty", "@"));
+      badges.push(m("span.bagde.customer.empty", "@"));
     }
 
     if (project) {
-      p.push(m("span.bagde.project", {title: project.name}, "/" + project.alias));
+      badges.push(m("span.bagde.project", {title: project.name}, "/" + project.alias));
     } else {
-      p.push(m("span.bagde.project.empty", "/"));
+      badges.push(m("span.bagde.project.empty", "/"));
     }
 
     if (service) {
-      p.push(m("span.bagde.service", {title: service.name}, ":" + service.alias));
+      badges.push(m("span.bagde.service", {title: service.name}, ":" + service.alias));
     } else {
-      p.push(m("span.badge.service.empty", ":"));
+      badges.push(m("span.badge.service.empty", ":"));
     }
-    p.concat(tags.map(dime.modules.tag.views.item));
+    badges.concat(tags.map(dime.modules.tag.views.item));
     
-    var content = [
-      m(".secondary-content", [
-        m("a.btn.grey.lighten-1", {href: "#",
-          onclick: function () {
-            current.toggleTimeslices();
-            return false;
-          }
-        }, m("i.mdi-action-schedule")),
-        " ",
-        startStopButton(current)
+
+    return [
+      m(".tile-action", 
+        m("ul.nav.nav-list.pull-right", [
+          m("li", m("a", { href: "#", onclick: function() { current.toggleTimeslices(); return false; }}, m("span.icon.icon-access-time"))),
+          m("li", startStopButton(current)),
+          m("li", m("a", { href: "#" }, m("span.icon.icon-delete")))
+        ])
+      ),
+      m(".tile-inner", [
+        m("span.text-overflow", current.description),
+        badges,
       ]),
-      m("span.title", current.description),
-      m("p", p),
-      m("div.card-panel" + className, dime.modules.timeslice.views.table(current.timeslices))
+      m(".tile-sub" + className, dime.modules.timeslice.views.table(current.timeslices))
     ];
-   
-    return m("div.collection-item.list-item.activity#activity-" + current.id, content);
   };
 
 })(dime, m, moment, _);

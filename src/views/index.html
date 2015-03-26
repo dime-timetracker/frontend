@@ -2,12 +2,13 @@
 <html lang="de">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="initial-scale=1.0, width=device-width" name="viewport">
     <title>Dime Timetracker</title>
 
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="packages/dime/frontend/css/materialize.min.css">
+    <link rel="stylesheet" href="packages/dime/frontend/css/base.css">
+    <link rel="stylesheet" href="packages/dime/frontend/css/color.css">
     <link rel="stylesheet" href="packages/dime/frontend/css/app.css">
     <link rel="shortcut icon" href="packages/dime/frontend/img/favicon.ico" type="image/x-icon" sizes="16x16 32x32 64x64 128x128 256x256" />
 
@@ -19,12 +20,22 @@
     <meta name="apple-mobile-web-app-title" content="Dime Timetracker">
   </head>
   <body>
-    <nav id="menu" class="green">
-      <div class="nav-wrapper">
-        <a href="#/" class="brand-logo"><i class="mdi-action-schedule"></i> Dime Timetracker</a>
+    <header class="header">
+      <div class="clearfix pull-left">
+        <a class="header-logo" href="#/"><i class="icon icon-access-time"></i> Dime Timetracker</a>
       </div>
-    </nav>
-    <section id="app" class="container"></section>
+    </header>
+    <section  class="content">
+      <div class="content-heading"></div>
+      <div class="content-inner">
+        <div id="app" class="container"></div>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="container">
+        <p>(c) 2015</p>
+      </div>
+    </footer>
 
     <!-- vendors -->
     <script src="packages/dime/frontend/js/vendor/mithril.js"></script>

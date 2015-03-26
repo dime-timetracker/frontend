@@ -13,8 +13,8 @@
         m("td.stop", item.stoppedAt ? moment(item.stoppedAt).format("DD.MM.YYYY HH:mm:ss") : ""),
         m("td.duration#timeslice-duration-" + item.id, dime.helper.duration.format(item.duration, "seconds")),
         m("td.actions.right-align", [
-          m("a.btn.grey.lighten-1", m("i.mdi-content-create")),
-          m("a.btn.red", m("i.mdi-action-highlight-remove"))
+          m("a.btn.btn-flat", { href: "#" }, m("span.icon.icon-create")),
+          m("a.btn.btn-flat", { href: "#" }, m("span.icon.icon-clear"))
         ])
       ]);
     },
@@ -26,7 +26,7 @@
             m("th", "Start"),
             m("th", "End"),
             m("th", "Duration"),
-            m("th.right-align", m("a.btn.grey.lighten-1", m("i.mdi-content-add")))
+            m("th.right-align", m("a.btn.btn-flat", { href: "#" }, m("span.icon.icon-add")))
           ])
         ),
         m("tbody", items.map(dime.modules.timeslice.views.item))
