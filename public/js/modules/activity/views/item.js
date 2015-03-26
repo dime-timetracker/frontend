@@ -2,6 +2,21 @@
 (function (dime, m, moment, _) {
 
   dime.timer = setInterval(m.redraw, 1000);
+  
+  var startStopButton = function(current, color, icon) {
+    color = ".grey.lighten-1";
+    icon = ".mdi-av-play-arrow";
+    if (current.running()) {
+      color = ".orange";
+      icon = ".mdi-av-stop"
+    }
+    
+    return  m("a.btn" + color, {href: '#', onclick: function() { current.startStopTimeslice() }}, [
+      m("i" + icon),
+      " ",
+      dime.helper.duration.format(current.totalDuration(), 'seconds')
+    ]);
+  }
 
   dime.modules.activity.views.item = function (current) {
     var customer = current.customer;
@@ -30,21 +45,17 @@
       p.push(m("span.badge.service.empty", ":"));
     }
     p.concat(tags.map(dime.modules.tag.views.item));
-
+    
     var content = [
       m(".secondary-content", [
-        m("a.btn.green", {href: "#",
+        m("a.btn.grey.lighten-1", {href: "#",
           onclick: function () {
             current.toggleTimeslices();
             return false;
           }
         }, m("i.mdi-action-schedule")),
         " ",
-        m("a.btn.grey.lighten-1", {href: '#', onclick: function() { current.startStopTimeslice() }}, [
-          m("i.mdi-av-play-arrow"),
-          " ",
-          dime.helper.duration.format(current.totalDuration(), 'seconds')
-        ])
+        startStopButton(current)
       ]),
       m("span.title", current.description),
       m("p", p),

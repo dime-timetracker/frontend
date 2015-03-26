@@ -26,7 +26,7 @@
             m("th", "Start"),
             m("th", "End"),
             m("th", "Duration"),
-            m("th.right-align", "Action")
+            m("th.right-align", m("a.btn.grey.lighten-1", m("i.mdi-content-add")))
           ])
         ),
         m("tbody", items.map(dime.modules.timeslice.views.item))
