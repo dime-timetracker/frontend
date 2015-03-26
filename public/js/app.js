@@ -7,6 +7,6 @@
     
   m.route(document.getElementById("app"), "/", dime.routes);
   m.module(document.getElementById("app-menu"), dime.modules.menu);
-//  m.module(document.getElementById("magicInput"), dime.modules.magicInput);
+  m.module(document.getElementById("prompt"), dime.modules.prompt);
 
 })(dime, document, m)

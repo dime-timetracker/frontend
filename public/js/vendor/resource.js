@@ -44,14 +44,12 @@ Resource.prototype.last = function () {
     return (this.collection.length > 0) ? this.collection[this.collection.length - 1] : undefined;
 };
 
-Resource.prototype.find = function (id) {
-    var result = this.collection.find(function(item) {
-        return item.id === id;
-    });
-    if (!result) {
-        result = this.empty();
+Resource.prototype.find = function (filter) {
+    if (_.isNumber(filter)) {
+        filter = {};
+        fiter[this.idAttribute] = filter;
     }
-    return result;
+    return _.findWhere(this.collection, filter);
 };
 
 Resource.prototype.findAll = function () {
@@ -71,7 +69,10 @@ Resource.prototype.persist = function (data) {
 
     m.request({ method: method, url: url, data: data })
     .then(function(response) {
-        if (method === 'POST') {
+        if (method === 'POST') { // create new
+            if (_.isFunction(that.config.model)) {
+                response = new that.config.model(response);
+            }
             that.collection.push(response);
             if (_.isFunction(that.config.sort)) {
                 that.collection = that.collection.sort(that.config.sort);
