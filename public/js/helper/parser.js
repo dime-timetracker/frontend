@@ -27,7 +27,7 @@ if ("undefined" == typeof(moment)) {
     parseCustomer: function() {
       var string = parser.result.string;
       parser.result.customer = {};
-      var customer = string.match(/@([a-z0-9]+)/);
+      var customer = string.match(/[ \^]@([a-z0-9\-\/\_+]+)[ \$]/i);
       if (null == customer) {
         return;
       }
@@ -37,7 +37,7 @@ if ("undefined" == typeof(moment)) {
     parseProject: function() {
       var string = parser.result.string;
       parser.result.project = {};
-      var project = string.match(/\/([a-z0-9]+)/);
+      var project = string.match(/[ \^]\/([a-z0-9\-\/\_+]+)[ \$]/i);
       if (null == project) {
         return;
       }
@@ -47,7 +47,7 @@ if ("undefined" == typeof(moment)) {
     parseService: function() {
       var string = parser.result.string;
       parser.result.service = {};
-      var service = string.match(/:([a-z]+)/);
+      var service = string.match(/[ \^]:([a-z0-9\-\/\_+]+)[ \$]/i);
       if (null == service) {
         return;
       }
@@ -57,7 +57,7 @@ if ("undefined" == typeof(moment)) {
     parseTags: function() {
       var string = parser.result.string;
       parser.result.tags = [];
-      var tags = string.match(/#([a-z0-9\-\/\_]+)/g);
+      var tags = string.match(/#([a-z0-9\-\/\_+]+)/gi);
       if (null == tags) {
         return;
       }
