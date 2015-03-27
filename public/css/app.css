@@ -41,6 +41,10 @@
   line-height: inherit;
 }
 
+.incomplete {
+  background-color: #fbc02d;
+}
+
 .empty {
   background-color: #F44336;
 }

@@ -27,19 +27,28 @@
 
     var badges = [];
     if (customer) {
-      badges.push(m("span.bagde.customer", {title: customer.name}, "@" + customer.alias));
+      var incomplete = customer.name.length ? '' : '.incomplete';
+      badges.push(
+        m("span.bagde.customer" + incomplete, {title: customer.name}, "@" + customer.alias)
+      );
     } else {
       badges.push(m("span.bagde.customer.empty", {title: "No customer selected"}, "@"));
     }
 
     if (project) {
-      badges.push(m("span.bagde.project", {title: project.name}, "/" + project.alias));
+      var incomplete = project.name.length ? '' : '.incomplete';
+      badges.push(
+        m("span.bagde.project" + incomplete, {title: project.name}, "/" + project.alias)
+      );
     } else {
       badges.push(m("span.bagde.project.empty", {title: "No project selected"}, "/"));
     }
 
     if (service) {
-      badges.push(m("span.bagde.service", {title: service.name}, ":" + service.alias));
+      var incomplete = service.name.length ? '' : '.incomplete';
+      badges.push(
+        m("span.bagde.service" + incomplete, {title: service.name}, ":" + service.alias)
+      );
     } else {
       badges.push(m("span.badge.service.empty", {title: "No service selected"}, ":"));
     }
