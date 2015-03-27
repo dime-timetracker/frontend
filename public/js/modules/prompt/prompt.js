@@ -54,38 +54,6 @@
       timeslice.stoppedAt = newActivity.stoppedAt;
     }
 
-    if (newActivity.customer && newActivity.customer.alias) {
-      var customer = dime.resources.customer.find({
-        alias: newActivity.customer.alias
-      });
-      if (false === _.isUndefined(customer)) {
-        newActivity.customer = customer.id;
-      }
-    }
-
-    if (newActivity.project && newActivity.project.alias) {
-      var project = dime.resources.project.find({
-        alias: newActivity.project.alias
-      });
-      if (false === _.isUndefined(project)) {
-        newActivity.project = project.id;
-      }
-    }
-    if (false === _.isNumber(newActivity.customer)
-      && false === _.isUndefined(project)
-    ) {
-      newActivity.customer = project.customer.id;
-    }
-
-    if (newActivity.service && newActivity.service.alias) {
-      var service = dime.resources.service.find({
-        alias: newActivity.service.alias
-      });
-      if (false === _.isUndefined(service)) {
-        newActivity.service = service.id;
-      }
-    }
-
     if (_.isArray(newActivity.tags)) {
       newActivity.tags = newActivity.tags.map(function (tag) {
         return {'name': tag};
