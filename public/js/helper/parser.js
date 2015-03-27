@@ -4,7 +4,7 @@ if ("undefined" == typeof(dime)) {
   var dime = {};
 }
 if ("undefined" == typeof(moment)) {
-  var moment = require('../moment.js');
+  var moment = require('../vendor/moment.js');
 }
 
 (function (dime, moment) {
