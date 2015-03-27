@@ -52,7 +52,6 @@
     } else {
       badges.push(m("span.badge.service.empty", {title: "No service selected"}, ":"));
     }
-    badges.concat(tags.map(dime.modules.tag.views.item));
     
 
     return [
@@ -65,7 +64,7 @@
       ),
       m(".tile-inner", [
         m("span.text-overflow", current.description),
-        badges,
+        badges.concat(tags.map(dime.modules.tag.views.item)),
       ]),
       m(".tile-sub" + className, dime.modules.timeslice.views.table(current.timeslices))
     ];
