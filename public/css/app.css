@@ -25,7 +25,7 @@
   right: 16px;
 }
 
-.bagde {
+.badge {
   background-color: #26A69A;
   background-clip: padding-box;
   border-radius: 2px;
@@ -41,11 +41,11 @@
   line-height: inherit;
 }
 
-.incomplete {
+.badge.incomplete {
   background-color: #fbc02d;
 }
 
-.empty {
+.badge.empty {
   background-color: #F44336;
 }
 
