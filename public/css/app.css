@@ -41,6 +41,10 @@
   line-height: inherit;
 }
 
+.empty {
+  background-color: #F44336;
+}
+
 .hide {
   display: none;
 }
