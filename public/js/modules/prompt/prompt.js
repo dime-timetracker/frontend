@@ -58,11 +58,6 @@
       var customer = dime.resources.customer.find({
         alias: newActivity.customer.alias
       });
-      if (_.isUndefined(customer)
-        && false === _.isUndefined(project)
-      ) {
-        customer = project.customer;
-      }
       if (false === _.isUndefined(customer)) {
         newActivity.customer = customer.id;
       }
@@ -75,6 +70,11 @@
       if (false === _.isUndefined(project)) {
         newActivity.project = project.id;
       }
+    }
+    if (false === _.isNumber(newActivity.customer)
+      && false === _.isUndefined(project)
+    ) {
+      newActivity.customer = project.customer.id;
     }
 
     if (newActivity.service && newActivity.service.alias) {
