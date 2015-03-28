@@ -1,12 +1,41 @@
 'use strict';
 
 (function (dime, document, m) {
-  var customer = {
+
+  dime.modules.customer = {
     controller: function () {
-      dime.store.get('customers').done(function(customers) {
-        m.redraw();
-      })
+      var scope = {};
+
+      return scope;
     },
+    view: function() {
+      var customers = dime.resources.customer.findAll() || [];
+      var list = [m('h2', 'Customers')].concat(
+        m('table.bordered.responsive-table', [
+          m("thead",
+            m("tr", [
+              m("th", "Name"),
+              m("th", "Alias"),
+              m("th.text-center", "Enabled"),
+              m("th.text-right", m(
+                "a.btn.btn-flat", {
+                  href: "#",
+                  onclick: function() {
+                    console.log('not yet implemented');
+                    return false;
+                  }
+                }, m("span.icon.icon-add")
+              ))
+            ])
+          ),
+          customers.map(dime.modules.customer.views.item)
+        ]),
+        dime.modules.customer.view.form
+      );
+      return m("div", list);
+    },
+    views: {}
+    /*
     getUrl: function (id) {
       return dime.apiUrl + dime.schema.customers.url + '/'
         + (_.isObject(id) ? id.id : id);
@@ -39,33 +68,6 @@
           });
       }
     },
-    viewOne: function (item) {
-      var disabled = item.enabled ? '' : '.disabled';
-      return m("dl#customer-" + item.id + disabled, [
-        m("dt.name", "Name"),
-        m("dd.name#name-" + item.id, {
-          contenteditable: true,
-          "data-field": "name",
-          oninput: function() { customer.update(item.id) },
-        }, item.name),
-        m("dt.alias", "Alias"),
-        m("dd.alias#alias-" + item.id, {
-          contenteditable: true,
-          oninput: function() { customer.update(item.id) }
-        }, item.alias),
-        m("dt.enabled", "enabled"),
-        m("dd.enabled", [
-          m("input[type=checkbox]#enabled-" + item.id, {
-            checked: item.enabled,
-            onchange: function() { customer.update(item.id) }
-          })
-        ]),
-        m("input[type=submit].delete", {
-          onclick: function() { customer.remove(item) },
-          value: 'Delete'
-        })
-      ]);
-    },
     viewAddForm: function() {
       return m("div#new-customer", [
         m("label[for=name]", 'Name'),
@@ -78,24 +80,17 @@
         }),
       ])
     },
-    view: function() {
-      var customers = dime.store.findAll('customers') || []
-      var list = [m("h2", "Activities")].concat(
-        customers.map(customer.viewOne),
-        customer.viewAddForm()
-      );
-      return m("div", list);
-    }
+    */
   }
 
-  // register module
-  dime.modules.customer = customer;
-
   // register route
-  dime.routes["/customer"] = customer;
+  dime.routes["/customer"] = dime.modules.customer;
 
   // register schema
-  dime.schema.customers = {url: 'customer'};
+  dime.resources.customer = new Resource({
+    url: dime.apiUrl + "customer",
+    model: dime.modules.customer.model
+  });
 
   // add menu item
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({
