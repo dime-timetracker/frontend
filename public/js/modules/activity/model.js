@@ -24,9 +24,11 @@
 
   dime.modules.activity.model.prototype.startStopTimeslice = function () {
     if (this.running()) {
-      this.timeslices.forEach(function (currentTimeslice) {
+      currentActivity = this;
+      this.timeslices.forEach(function (currentTimeslice, idx) {
         if (_.isNull(currentTimeslice.stoppedAt) || _.isUndefined(currentTimeslice.stoppedAt)) {
           currentTimeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
+          currentActivity.timeslices[idx] = currentTimeslice;
           dime.resources.timeslice.persist(currentTimeslice);
         }
       });
@@ -47,5 +49,10 @@
     }
     this.showTimeslices = !this.showTimeslices;
   };
+
+  dime.modules.activity.model.prototype.updateDescription = function (description) {
+    this.description = description;
+    dime.resources.activity.persist(this);
+  }
 
 })(dime, moment, _);

@@ -63,7 +63,7 @@
         ])
       ),
       m(".tile-inner", [
-        m("span.text-overflow", current.description),
+        m("span.text-overflow", { contenteditable: true, oninput: function(e) { current.updateDescription(e.target.textContent); return false; }}, current.description),
         badges.concat(tags.map(dime.modules.tag.views.item)),
       ]),
       m(".tile-sub" + className, dime.modules.timeslice.views.table(current.timeslices))
