@@ -6,13 +6,13 @@
       return null === timeslice.stoppedAt;
     });
   };
-  
+
   dime.modules.activity.model.prototype.runningTimeslice = function () {
     return this.timeslices.find(function (timeslice) {
       return null === timeslice.stoppedAt;
     });
   };
-  
+
   dime.modules.activity.model.prototype.totalDuration = function () {
     return this.timeslices.reduce(function (prev, timeslice) {
       if (_.isNumber(timeslice.duration)) {
