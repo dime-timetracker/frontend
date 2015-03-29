@@ -9,7 +9,8 @@
       return scope;
     },
     view: function (scope) {
-    }
+    },
+    views: {}
   }
   /*
   var project = {

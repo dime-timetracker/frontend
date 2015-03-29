@@ -43,7 +43,12 @@
     if (project) {
       var incomplete = project.name.length ? '' : '.incomplete';
       badges.push(
-        m("span.badge.project" + incomplete, {title: project.name}, "/" + project.alias)
+        m("span.badge.project" + incomplete, {
+          title: project.name
+        }, [
+          "/" + project.alias,
+          dime.modules.project.views.select(current)
+        ])
       );
     } else {
       badges.push(m("span.badge.project.empty", {title: "No project selected"}, "/"));
@@ -52,7 +57,12 @@
     if (service) {
       var incomplete = service.name.length ? '' : '.incomplete';
       badges.push(
-        m("span.badge.service" + incomplete, {title: service.name}, ":" + service.alias)
+        m("span.badge.service" + incomplete, {
+          title: service.name
+        }, [
+          ":" + service.alias,
+          dime.modules.service.views.select(current)
+        ])
       );
     } else {
       badges.push(m("span.badge.service.empty", {title: "No service selected"}, ":"));

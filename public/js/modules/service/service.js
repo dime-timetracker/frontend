@@ -1,6 +1,18 @@
 'use strict';
 
-(function (dime, document, m) {
+(function (dime, m) {
+
+  dime.modules.service = {
+    controller: function () {
+      var scope = {};
+
+      return scope;
+    },
+    view: function (scope) {
+    },
+    views: {}
+  }
+  /*
   var service = {
     controller: function () {
       dime.store.get('services').done(function(services) {
@@ -89,12 +101,16 @@
 
   // register module
   dime.modules.service = service;
+  */
 
   // register route
-  dime.routes["/service"] = service;
+  dime.routes["/service"] = dime.modules.service;
 
   // register schema
-  dime.schema.services = {url: 'service'};
+  dime.resources.service = new Resource({
+    url: dime.apiUrl + "service",
+    model: dime.modules.service.model
+  });
 
   // add menu item
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({
@@ -102,4 +118,4 @@
     route: "/service",
     name: "Services",
   });
-})(dime, document, m)
+})(dime, m)

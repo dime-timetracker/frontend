@@ -3,27 +3,27 @@
 (function (dime, m, _) {
 
 
-  dime.modules.customer.views.select = function (activity) {
-    var customers = dime.resources.customer.findAll() || [];
+  dime.modules.project.views.select = function (activity) {
+    var projects = dime.resources.project.findAll() || [];
     return m("ul.context-menu.hide", [
       m("li", [
         m("a", {
           href: '#',
           onclick: function() {
-            console.log('Editing customers is not yet implemented');
+            console.log('Editing projects is not yet implemented');
           }
         }, [
           m("span.icon.icon-edit"),
-          activity.customer.name
+          activity.project.name
         ])
       ]),
-      customers.map(function(customer) {
+      projects.map(function(project) {
         return m("li", m("a", {
           href: "#",
           onclick: function() {
-            console.log('Changing customers is not yet implemented');
+            console.log('Changing projects is not yet implemented');
           }
-        }, customer.name))
+        }, project.name))
       })
     ]);
   }

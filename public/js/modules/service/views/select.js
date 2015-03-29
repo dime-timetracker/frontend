@@ -2,28 +2,27 @@
 
 (function (dime, m, _) {
 
-
-  dime.modules.customer.views.select = function (activity) {
-    var customers = dime.resources.customer.findAll() || [];
+  dime.modules.service.views.select = function (activity) {
+    var services = dime.resources.service.findAll() || [];
     return m("ul.context-menu.hide", [
       m("li", [
         m("a", {
           href: '#',
           onclick: function() {
-            console.log('Editing customers is not yet implemented');
+            console.log('Editing services is not yet implemented');
           }
         }, [
           m("span.icon.icon-edit"),
-          activity.customer.name
+          activity.service.name
         ])
       ]),
-      customers.map(function(customer) {
+      services.map(function(service) {
         return m("li", m("a", {
           href: "#",
           onclick: function() {
-            console.log('Changing customers is not yet implemented');
+            console.log('Changing services is not yet implemented');
           }
-        }, customer.name))
+        }, service.name))
       })
     ]);
   }
