@@ -29,7 +29,12 @@
     if (customer) {
       var incomplete = customer.name.length ? '' : '.incomplete';
       badges.push(
-        m("span.badge.customer" + incomplete, {title: customer.name}, "@" + customer.alias)
+        m("span.badge.customer" + incomplete, {
+          title: customer.name
+        }, [
+          "@" + customer.alias,
+          dime.modules.customer.views.select(current)
+        ])
       );
     } else {
       badges.push(m("span.badge.customer.empty", {title: "No customer selected"}, "@"));
@@ -63,7 +68,12 @@
         ])
       ),
       m(".tile-inner", [
-        m("span.text-overflow", { contenteditable: true, oninput: function(e) { current.updateDescription(e.target.textContent); return false; }}, current.description),
+        m("span.text-overflow", {
+          contenteditable: true,
+          oninput: function(e) {
+            current.updateDescription(e.target.textContent); return false;
+          }
+        }, current.description),
         badges.concat(tags.map(dime.modules.tag.views.item)),
       ]),
       m(".tile-sub" + className, dime.modules.timeslice.views.table(current.timeslices))
