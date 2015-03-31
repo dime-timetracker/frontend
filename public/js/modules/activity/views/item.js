@@ -18,28 +18,15 @@
   }
 
   dime.modules.activity.views.item = function (current) {
-    var customer = current.customer;
-    var project = current.project;
-    var service = current.service;
-    var tags = current.tags ? current.tags : [];
-
     var className = current.showTimeslices ? '' : '.hide';
 
     var badges = [
       dime.modules.customer.views.badge(current),
       dime.modules.project.views.badge(current),
       dime.modules.service.views.badge(current),
+      dime.modules.tag.views.input(current),
     ];
 
-
-    var hasTags = 0 < tags.length;
-    var tagClass = hasTags ? "" : ".empty";
-    badges.push(m("span.tag-badges" + tagClass, {
-      title: hasTags ? "Click to edit tags" : "Click to add tags"
-    }, hasTags
-      ? tags.map(dime.modules.tag.views.item)
-      : m("span.badge.tag.incomplete", "#")
-    ));
 
     return [
       m(".tile-action",
