@@ -25,49 +25,21 @@
 
     var className = current.showTimeslices ? '' : '.hide';
 
-    var badges = [];
-    if (customer) {
-      var incomplete = customer.name.length ? '' : '.incomplete';
-      badges.push(
-        m("span.badge.customer" + incomplete, {
-          title: customer.name
-        }, [
-          "@" + customer.alias,
-          dime.modules.customer.views.select(current)
-        ])
-      );
-    } else {
-      badges.push(m("span.badge.customer.empty", {title: "No customer selected"}, "@"));
-    }
+    var badges = [
+      dime.modules.customer.views.badge(current),
+      dime.modules.project.views.badge(current),
+      dime.modules.service.views.badge(current),
+    ];
 
-    if (project) {
-      var incomplete = project.name.length ? '' : '.incomplete';
-      badges.push(
-        m("span.badge.project" + incomplete, {
-          title: project.name
-        }, [
-          "/" + project.alias,
-          dime.modules.project.views.select(current)
-        ])
-      );
-    } else {
-      badges.push(m("span.badge.project.empty", {title: "No project selected"}, "/"));
-    }
 
-    if (service) {
-      var incomplete = service.name.length ? '' : '.incomplete';
-      badges.push(
-        m("span.badge.service" + incomplete, {
-          title: service.name
-        }, [
-          ":" + service.alias,
-          dime.modules.service.views.select(current)
-        ])
-      );
-    } else {
-      badges.push(m("span.badge.service.empty", {title: "No service selected"}, ":"));
-    }
-    
+    var hasTags = 0 < tags.length;
+    var tagClass = hasTags ? "" : ".empty";
+    badges.push(m("span.tag-badges" + tagClass, {
+      title: hasTags ? "Click to edit tags" : "Click to add tags"
+    }, hasTags
+      ? tags.map(dime.modules.tag.views.item)
+      : m("span.badge.tag.incomplete", "#")
+    ));
 
     return [
       m(".tile-action", 
@@ -84,7 +56,7 @@
             current.updateDescription(e.target.textContent); return false;
           }
         }, current.description),
-        badges.concat(tags.map(dime.modules.tag.views.item)),
+        badges
       ]),
       m(".tile-sub" + className, dime.modules.timeslice.views.table(current.timeslices))
     ];
