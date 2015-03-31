@@ -2,14 +2,14 @@
 (function (dime, m, moment, _) {
 
   dime.timer = setInterval(m.redraw, 1000);
-  
+
   var startStopButton = function(current) {
     var icon = ".icon.icon-play-arrow", color = "";
     if (current.running()) {
       icon = ".icon.icon-stop";
       color = ".orange-text";
     }
-    
+
     return  m("a" + color, {href: '#', onclick: function() { current.startStopTimeslice() }}, [
       m("span" + icon),
       " ",
@@ -42,7 +42,7 @@
     ));
 
     return [
-      m(".tile-action", 
+      m(".tile-action",
         m("ul.nav.nav-list.pull-right", [
           m("li", m("a", { href: "#", onclick: function() { current.toggleTimeslices(); return false; }}, m("span.icon.icon-access-time"))),
           m("li", startStopButton(current)),
