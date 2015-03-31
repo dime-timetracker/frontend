@@ -15,16 +15,16 @@
 
   dime.modules.activity.model.prototype.totalDuration = function () {
     return this.timeslices.reduce(function (prev, timeslice) {
-      if (_.isNumber(timeslice.duration)) {
-        return prev + timeslice.duration;
+      if (_.isNaN(timeslice.duration)) {
+        return prev + moment().diff(moment(timeslice.startedAt), "seconds");
       }
-      return prev + moment().diff(moment(timeslice.startedAt), "seconds");
+      return prev + parseInt(timeslice.duration);
     }, 0);
   };
 
   dime.modules.activity.model.prototype.startStopTimeslice = function () {
     if (this.running()) {
-      currentActivity = this;
+      var currentActivity = this;
       this.timeslices.forEach(function (currentTimeslice, idx) {
         if (_.isNull(currentTimeslice.stoppedAt) || _.isUndefined(currentTimeslice.stoppedAt)) {
           currentTimeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
