@@ -49,9 +49,14 @@
   background-color: #F44336;
 }
 
+.badge:hover .context-menu {
+  display: block;
+}
+
 .badge .context-menu {
   border: 1px solid #4CAF50;
   color: #212121;
+  display: none;
   list-style: none;
   margin: -2px 0 0 0;
   position: absolute;
@@ -67,12 +72,21 @@
   padding: 0 15px;
 }
 
+.badge .context-menu li.current {
+  background: #6CCF70;
+}
+
 .badge .context-menu li:hover {
   background-color: #dedede;
 }
 
 .badge .context-menu li .icon {
   margin-right: 5px;
+}
+
+.badge .context-menu li a {
+  color: #212121;
+  text-decoration: none;
 }
 
 .hide {

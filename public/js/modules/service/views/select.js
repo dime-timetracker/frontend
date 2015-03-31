@@ -4,8 +4,8 @@
 
   dime.modules.service.views.select = function (activity) {
     var services = dime.resources.service.findAll() || [];
-    return m("ul.context-menu.hide", [
-      m("li", [
+    return m("ul.context-menu", [
+      m("li.current", [
         m("a", {
           href: '#',
           onclick: function() {
@@ -22,7 +22,7 @@
           onclick: function() {
             console.log('Changing services is not yet implemented');
           }
-        }, service.name))
+        }, service.name ? service.name : "(:" + service.alias + ")"))
       })
     ]);
   }

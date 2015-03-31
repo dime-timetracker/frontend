@@ -5,8 +5,8 @@
 
   dime.modules.customer.views.select = function (activity) {
     var customers = dime.resources.customer.findAll() || [];
-    return m("ul.context-menu.hide", [
-      m("li", [
+    return m("ul.context-menu", [
+      m("li.current", [
         m("a", {
           href: '#',
           onclick: function() {
@@ -23,7 +23,7 @@
           onclick: function() {
             console.log('Changing customers is not yet implemented');
           }
-        }, customer.name))
+        }, customer.name ? customer.name : "(@" + customer.alias + ")"))
       })
     ]);
   }

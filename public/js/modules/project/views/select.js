@@ -2,11 +2,10 @@
 
 (function (dime, m, _) {
 
-
   dime.modules.project.views.select = function (activity) {
     var projects = dime.resources.project.findAll() || [];
-    return m("ul.context-menu.hide", [
-      m("li", [
+    return m("ul.context-menu", [
+      m("li.current", [
         m("a", {
           href: '#',
           onclick: function() {
@@ -23,7 +22,7 @@
           onclick: function() {
             console.log('Changing projects is not yet implemented');
           }
-        }, project.name))
+        }, project.name ? project.name : "(/" + project.alias + ")"))
       })
     ]);
   }
