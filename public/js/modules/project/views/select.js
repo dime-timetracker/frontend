@@ -20,7 +20,8 @@
         return m("li", m("a", {
           href: "#",
           onclick: function() {
-            console.log('Changing projects is not yet implemented');
+            activity.project = project;
+            dime.resources.activity.persist(activity);
           }
         }, project.name ? project.name : "(/" + project.alias + ")"))
       })

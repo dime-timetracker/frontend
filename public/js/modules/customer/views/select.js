@@ -21,7 +21,8 @@
         return m("li", m("a", {
           href: "#",
           onclick: function() {
-            console.log('Changing customers is not yet implemented');
+            activity.customer = customer;
+            dime.resources.activity.persist(activity);
           }
         }, customer.name ? customer.name : "(@" + customer.alias + ")"))
       })

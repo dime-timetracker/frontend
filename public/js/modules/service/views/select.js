@@ -20,7 +20,8 @@
         return m("li", m("a", {
           href: "#",
           onclick: function() {
-            console.log('Changing services is not yet implemented');
+            activity.service = service;
+            dime.resources.activity.persist(activity);
           }
         }, service.name ? service.name : "(:" + service.alias + ")"))
       })
