@@ -29,8 +29,7 @@
             ])
           ),
           customers.map(dime.modules.customer.views.item)
-        ]),
-        dime.modules.customer.view.form
+        ])
       );
       return m("div", list);
     },

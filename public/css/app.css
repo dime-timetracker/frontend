@@ -1,3 +1,18 @@
+.nav li:hover ul.hide {
+  display: inherit;
+}
+
+.nav li ul {
+  background: #4CAF50;
+  position: absolute;
+  width: 100%;
+}
+
+.nav li.active,
+.nav li:hover {
+  background: #3C9F40;
+}
+
 .collection .list-item {
   position: relative;
 }

@@ -55,17 +55,37 @@
       var children = (item.children || []).sort(sort);
       var menuItem = [];
 
+      var visibilitySettingFilter = {
+        namespace: "menu/visibility",
+        name: item.id
+      };
+      var visibilitySetting = dime.resources.setting.find(visibilitySettingFilter);
+
+      if (!visibilitySetting) {
+        visibilitySetting = visibilitySettingFilter;
+      }
+      if (!visibilitySetting.value) {
+        visibilitySetting.value = 0;
+      }
+
       if (item.route) {
         menuItem.push(m("a[href='" + item.route + "']", {config: m.route}, item.name));
       } else {
-        menuItem.push(m("a[href='#']", item.name));
+        menuItem.push(m("a[href='#']", {
+          onclick: function() {
+            visibilitySetting.value = Math.abs(visibilitySetting.value - 1);
+            return false;
+          }
+        }, item.name));
       }
+      var active = (1 == visibilitySetting.value || m.route() == item.route) ? '.active' : '';
 
       if (children.length) {
-        menuItem.push(m("ul.hide", children.map(dime.modules.menu.views.item)));
+        var hide = (visibilitySetting && 1 == visibilitySetting.value) ? '' : '.hide';
+        menuItem.push(m("ul" + hide, children.map(dime.modules.menu.views.item)));
       }
 
-      return m("li", menuItem);
+      return m("li" + active, menuItem);
     },
     list: function (items) {
       return m("ul.nav.nav-list", items.map(this.item));
