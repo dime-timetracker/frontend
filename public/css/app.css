@@ -40,6 +40,16 @@
   right: 16px;
 }
 
+.activity .tag-badges a.tag-edit-button {
+  display: none;
+}
+
+.activity:hover .tag-badges a.tag-edit-button:hover,
+.activity:hover .tag-badges a.tag-edit-button {
+  display: inherit;
+  text-decoration: none;
+}
+
 .badge {
   background-color: #26A69A;
   background-clip: padding-box;

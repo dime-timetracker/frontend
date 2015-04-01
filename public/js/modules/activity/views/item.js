@@ -36,7 +36,7 @@
           m("li", m("a", { href: "#" }, m("span.icon.icon-delete")))
         ])
       ),
-      m(".tile-inner", [
+      m(".activity.tile-inner", [
         m("span.text-overflow", {
           contenteditable: true,
           oninput: function(e) {
