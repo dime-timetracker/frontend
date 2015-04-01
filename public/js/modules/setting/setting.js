@@ -1,6 +1,6 @@
 'use strict';
 
-(function (dime, m) {
+(function (dime, _, m) {
 
   dime.modules.setting = {
     controller: function () {
@@ -10,7 +10,7 @@
     },
     view: function() {
       var settings = dime.resources.setting.findAll() || [];
-      var list = [m('h2', 'settings')].concat(
+      var list = [m('h2', 'Settings')].concat(
         m('table.bordered.responsive-table', [
           m("thead",
             m("tr", [
@@ -25,8 +25,31 @@
       );
       return m("div", list);
     },
-    views: {}
+    views: {},
   }
+
+  var getSetting = function (namespace, name) {
+    var filter = { namespace: namespace, name: name };
+    return dime.resources.setting.find(filter) || filter;
+  }
+
+  dime.modules.setting.get = function (namespace, name, defaultValue) {
+    var setting = getSetting(namespace, name);
+    if (false === _.isUndefined(setting.value)) {
+      return setting.value;
+    }
+    return (_.isUndefined(defaultValue)) ? null : defaultValue;
+  };
+
+  dime.modules.setting.setLocally = function (namespace, name, value) {
+    getSetting(namespace, name).value = value;
+  };
+
+  dime.modules.setting.set = function (namespace, name, value) {
+    var setting = getSetting(namespace, name);
+    setting.value = value;
+    dime.resources.setting.persist(setting);
+  };
 
   // register route
   dime.routes["/setting"] = dime.modules.setting;
@@ -44,4 +67,4 @@
     name: "Settings",
     weight: 100
   });
-})(dime, m)
+})(dime, _, m)

@@ -9,7 +9,7 @@
       m("td.value", {
         contenteditable: true,
         oninput: function(e) {
-          current.value = e.target.value;
+          current.value = e.target.textContent;
           dime.resources.setting.persist(current);
         },
       }, current.value)

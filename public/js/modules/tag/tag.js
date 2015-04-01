@@ -6,11 +6,10 @@
     views: {}
   };
   
-  dime.modules.tag.views = {
-    item: function (tag) {
-      var tagname = _.isString(tag) ? tag : tag.name;
-      return m("span.badge.tag", "#" + tagname);
-    }
-  };
+  // register schema
+  dime.resources.tag = new Resource({
+    url: dime.apiUrl + "tag",
+    model: dime.modules.tag.model
+  });
 
 })(dime, m, _);
