@@ -37,7 +37,8 @@
       var timeslice = {
         activity: this.id,
         startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-        stoppedAt: null
+        stoppedAt: null,
+        duration: null
       };
       this.timeslices.push(timeslice);
       dime.resources.timeslice.persist(timeslice);
