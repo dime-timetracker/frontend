@@ -91,14 +91,9 @@
 
 .badge .context-menu li {
   background-color: #ffffff;
-  height: 20px;
   line-height: 20px;
   margin: 0 0 0 -32px;
   padding: 0 15px;
-}
-
-.badge .context-menu li.current {
-  background: #6CCF70;
 }
 
 .badge .context-menu li:hover {
@@ -109,9 +104,28 @@
   margin-right: 5px;
 }
 
+.badge .context-menu li.current,
+.badge .context-menu li.current:hover {
+  background: #6CCF70;
+}
+
 .badge .context-menu li a {
   color: #212121;
   text-decoration: none;
+}
+
+.badge .context-menu li dl {
+  margin: -20px 0 0 20px;
+}
+
+.badge .context-menu li dl dd {
+  height: 20px;
+}
+
+.badge .context-menu li dl dd[contenteditable] {
+  background: #FCFFFC;
+  font-size: 0.9em;
+  padding: 0 5px;
 }
 
 .tag-badges.editable {

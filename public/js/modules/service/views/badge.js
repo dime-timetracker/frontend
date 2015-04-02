@@ -7,9 +7,15 @@
     var cssClass = '.empty';
     var title = 'No service selected';
 
-    if (service) {
-      cssClass = service.name && service.name.length ? "" : ".incomplete";
-      title = service.name && service.name.length ? service.name : "Please edit service details";
+    if (service && service.alias && service.alias.length) {
+      cssClass = '.incomplete';
+      title = 'Please edit service details';
+
+      if (service && service.name && service.name.length) {
+        cssClass = '';
+        title = service.name;
+      }
+
     }
 
     return m("span.badge.service" + cssClass, {

@@ -7,9 +7,15 @@
     var cssClass = '.empty';
     var title = 'No customer selected';
 
-    if (customer) {
-      cssClass = customer.name && customer.name.length ? "" : ".incomplete";
-      title = customer.name && customer.name.length ? customer.name : "Please edit customer details";
+    if (customer && customer.alias && customer.alias.length) {
+      cssClass = '.incomplete';
+      title = 'Please edit customer details';
+
+      if (customer && customer.name && customer.name.length) {
+        cssClass = '';
+        title = customer.name;
+      }
+
     }
 
     return m("span.badge.customer" + cssClass, {

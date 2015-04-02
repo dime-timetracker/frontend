@@ -2,12 +2,12 @@
 
 (function (dime, m, _) {
 
-  dime.modules.customer.views.form = function (current, allowDelete) {
+  dime.modules.service.views.form = function (current, allowDelete, onSave) {
     allowDelete = _.isUndefined(allowDelete) ? true : allowDelete;
     var disabled = current.enabled ? '' : '.disabled';
 
     var saveForm = function (e) {
-      dime.resources.customer.persist(current);
+      dime.resources.service.persist(current);
       if (_.isFunction(onSave)) {
         onSave(current);
       }
@@ -28,6 +28,13 @@
           current.alias = e.target.textContent;
         },
       }, current.alias),
+      m("dt.rate", "Rate"),
+      m("dd.rate", {
+        contenteditable: true,
+        oninput: function (e) {
+          current.rate = e.target.textContent;
+        },
+      }, current.rate),
       m("dt.enabled", "enabled"),
       m("dd.enabled", [
         m("input[type=checkbox]", {

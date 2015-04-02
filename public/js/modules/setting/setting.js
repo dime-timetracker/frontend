@@ -41,15 +41,14 @@
     return (_.isUndefined(defaultValue)) ? null : defaultValue;
   };
 
-  dime.modules.setting.setLocally = function (namespace, name, value) {
-    getSetting(namespace, name).value = value;
-  };
-
   dime.modules.setting.set = function (namespace, name, value) {
     var setting = getSetting(namespace, name);
     setting.value = value;
     dime.resources.setting.persist(setting);
   };
+
+  // transient store for temporary settings
+  dime.modules.setting.local = {};
 
   // register route
   dime.routes["/setting"] = dime.modules.setting;
