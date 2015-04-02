@@ -7,9 +7,14 @@
     var cssClass = '.empty';
     var title = 'No project selected';
 
-    if (project) {
-      cssClass = project.name && project.name.length ? "" : ".incomplete";
-      title = project.name && project.name.length ? project.name : "Please edit project details";
+    if (project && project.alias && project.alias.length) {
+      cssClass = '.incomplete';
+      title = 'Please edit project details';
+
+      if (project && project.name && project.name.length) {
+        cssClass = '';
+        title = project.name;
+      }
     }
 
     return m("span.badge.project" + cssClass, {

@@ -7,25 +7,41 @@
 
     var customers = dime.resources.customer.findAll() || [];
 
-    var inlineForm = function (customer) {
-      var allowDelete = false;
-      return dime.modules.customer.views.form(customer, allowDelete);
-    }
-
     var options = customers.map(function(customer) {
       return m("li", m("a", {
         href: "#",
         onclick: function() {
           activity.customer = customer;
-          if (activity.project && activity.project.customer.alias !== customer.alias) {
-            activity.project = null;
+          if (activity.project) {
+            // reset project after selecting a different customer
+            if (activity.project.customer
+              && activity.project.customer.alias
+              && activity.project.customer.alias !== customer.alias
+            ) {
+              activity.project = null;
+            }
+            // assign customer to project, if it has none
+            if (activity.customer && "" == activity.project.customer.alias) {
+              activity.project.customer = activity.customer;
+            }
           }
           dime.resources.activity.persist(activity);
         }
       }, customer.name ? customer.name : "(@" + customer.alias + ")"))
     });
 
-    var customer = activity.customer || {};
+    var onSave = function (customer) {
+      setEditable(false);
+      activity.customer = customer;
+      dime.resources.activity.persist(activity);
+    }
+
+    var inlineForm = function (customer) {
+      var allowDelete = false;
+      return dime.modules.customer.views.form(customer, allowDelete, onSave);
+    }
+
+    activity.customer = activity.customer || { name: "", alias: "", enabled: true };
     var alias = 'activity-' + activity.id;
     var isEditable = function () {
       return dime.modules.setting.local['customer/edit-inline/' + alias] || false;
@@ -40,9 +56,9 @@
           onclick: function() { setEditable(!isEditable()); return false; }
         }, [
           m("span.icon.icon-edit"),
-          isEditable() ? '' : customer.name
+          isEditable() ? '' : activity.customer.name
         ]),
-        isEditable() ? inlineForm(customer) : ''
+        isEditable() ? inlineForm(activity.customer) : ''
       ])
     );
 

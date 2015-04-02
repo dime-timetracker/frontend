@@ -2,7 +2,7 @@
 
 (function (dime, m, _) {
 
-  dime.modules.customer.views.form = function (current, allowDelete) {
+  dime.modules.customer.views.form = function (current, allowDelete, onSave) {
     allowDelete = _.isUndefined(allowDelete) ? true : allowDelete;
     var disabled = current.enabled ? '' : '.disabled';
 
