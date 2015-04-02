@@ -15,7 +15,7 @@
 
   dime.modules.activity.model.prototype.totalDuration = function () {
     return this.timeslices.reduce(function (prev, timeslice) {
-      if (_.isNaN(timeslice.duration)) {
+      if (_.isNull(timeslice.duration)) {
         return prev + moment().diff(moment(timeslice.startedAt), "seconds");
       }
       return prev + parseInt(timeslice.duration);
@@ -25,11 +25,12 @@
   dime.modules.activity.model.prototype.startStopTimeslice = function () {
     if (this.running()) {
       var currentActivity = this;
-      this.timeslices.forEach(function (currentTimeslice, idx) {
-        if (_.isNull(currentTimeslice.stoppedAt) || _.isUndefined(currentTimeslice.stoppedAt)) {
-          currentTimeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
-          currentActivity.timeslices[idx] = currentTimeslice;
-          dime.resources.timeslice.persist(currentTimeslice);
+      this.timeslices.forEach(function (timeslice, idx) {
+        if (_.isNull(timeslice.stoppedAt) || _.isUndefined(timeslice.stoppedAt)) {
+          timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
+          timeslice.duration = moment(timeslice.stoppedAt).diff(moment(timeslice.startedAt), "seconds");
+          currentActivity.timeslices[idx] = timeslice;
+          dime.resources.timeslice.persist(timeslice);
         }
       });
     } else {
