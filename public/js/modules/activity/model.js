@@ -3,7 +3,7 @@
 
   dime.modules.activity.model.prototype.running = function () {
     return this.timeslices.some(function (timeslice) {
-      return null === timeslice.stoppedAt;
+      return _.isNull(timeslice.stoppedAt) || _.isUndefined(timeslice.stoppedAt);
     });
   };
 
@@ -23,14 +23,15 @@
   };
 
   dime.modules.activity.model.prototype.startStopTimeslice = function () {
+    var activity = this;
     if (this.running()) {
-      var currentActivity = this;
       this.timeslices.forEach(function (timeslice, idx) {
         if (_.isNull(timeslice.stoppedAt) || _.isUndefined(timeslice.stoppedAt)) {
           timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
           timeslice.duration = moment(timeslice.stoppedAt).diff(moment(timeslice.startedAt), "seconds");
-          currentActivity.timeslices[idx] = timeslice;
-          dime.resources.timeslice.persist(timeslice);
+          dime.resources.timeslice.persist(timeslice).then(function (stoppedTimeslice) {
+            activity.timeslices[idx] = stoppedTimeslice;
+          });
         }
       });
     } else {
@@ -40,8 +41,9 @@
         stoppedAt: null,
         duration: null
       };
-      this.timeslices.push(timeslice);
-      dime.resources.timeslice.persist(timeslice);
+      dime.resources.timeslice.persist(timeslice).then(function (startedTimeslice) {
+        activity.timeslices.push(startedTimeslice);
+      });
     }
   };
 
