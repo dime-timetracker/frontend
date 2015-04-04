@@ -1,3 +1,7 @@
+@import 'material/base.scss';
+@import 'color.scss';
+@import 'tables.scss';
+
 .header .nav li:hover ul.hide {
   display: inherit;
 }
@@ -50,7 +54,43 @@
   text-decoration: none;
 }
 
-.badge {
+.badge-list {
+  margin: 0;
+
+  > li {
+    background-color: #26A69A;
+    background-clip: padding-box;
+    border-radius: 2px;
+    box-sizing: border-box;
+
+    font-size: 1rem;
+    color: #FFF;
+
+    min-width: 3rem;
+    margin-right: 6px;
+    padding: 0px 6px;
+    text-align: center;
+    line-height: inherit;
+
+    &.incomplete {
+      background-color: #FBC02D;
+    }
+    &.empty {
+      background-color: #F44336;
+    }
+
+    > a {
+      color: #FFF;
+      padding: 0;
+    }
+  }
+}
+
+.tile-action-show {
+  z-index: 2;
+}
+
+/*.badge {
   background-color: #26A69A;
   background-clip: padding-box;
   border-radius: 2px;
@@ -66,19 +106,22 @@
   line-height: inherit;
 }
 
+*/
 .badge.incomplete {
-  background-color: #fbc02d;
+  background-color: #FBC02D;
 }
 
 .badge.empty {
   background-color: #F44336;
 }
 
-.badge:hover .context-menu {
+/*
+
+.badge:hover .dropdown-menu {
   display: block;
 }
 
-.badge .context-menu {
+.badge .dropdown-menu {
   border: 1px solid #4CAF50;
   color: #212121;
   display: none;
@@ -89,40 +132,40 @@
   z-index: 2
 }
 
-.badge .context-menu li {
+.badge .dropdown-menu li {
   background-color: #ffffff;
   line-height: 20px;
   margin: 0 0 0 -32px;
   padding: 0 15px;
 }
 
-.badge .context-menu li:hover {
+.badge .dropdown-menu li:hover {
   background-color: #dedede;
 }
 
-.badge .context-menu li .icon {
+.badge .dropdown-menu li .icon {
   margin-right: 5px;
 }
 
-.badge .context-menu li.current,
-.badge .context-menu li.current:hover {
+.badge .dropdown-menu li.current,
+.badge .dropdown-menu li.current:hover {
   background: #6CCF70;
 }
 
-.badge .context-menu li a {
+.badge .dropdown-menu li a {
   color: #212121;
   text-decoration: none;
 }
 
-.badge .context-menu li dl {
+.badge .dropdown-menu li dl {
   margin: -20px 0 0 20px;
 }
 
-.badge .context-menu li dl dd {
+.badge .dropdown-menu li dl dd {
   height: 20px;
 }
 
-.badge .context-menu li dl dd[contenteditable] {
+.badge .dropdown-menu li dl dd[contenteditable] {
   background: #FCFFFC;
   font-size: 0.9em;
   padding: 0 5px;
@@ -151,34 +194,8 @@
 
 .tag-badges input {
   border: none;
-}
+}*/
 
 .hide {
   display: none;
-}
-
-table {
-  width: 100%;
-  max-width: 100%;
-  margin-bottom: 20px;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td,
-table > tfoot > tr > th,
-table > tfoot > tr > td {
-  padding: 10px;
-  line-height: 1.429;
-}
-table > thead > tr > th {
-  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
-  font-weight: 700;
-}
-table > tbody + tbody {
-  border-top: 2px solid rgba(0, 0, 0, 0.12);
-}
-table.bordered > tbody > tr > td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }

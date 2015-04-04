@@ -1,6 +1,6 @@
 'use strict';
 
-/**
+/*
  * Menu items consist of an id and a name.
  * Additionally, they may have an array of children.
  * Specifying a route turns the item into a link.
@@ -43,38 +43,43 @@
 
   dime.modules.menu = {
     controller: function () {
-      
+
     },
     view: function () {
       return dime.modules.menu.views.list(dime.menu.sort(sort));
     }
   };
-  
+
   dime.modules.menu.views = {
     item: function (item) {
-      var children = (item.children || []).sort(sort);
-      var menuItem = [];
-
-      var visibility = dime.modules.setting.get('menu/visibility', item.id, 0);
+      var
+      menuItem = [],
+      children = (item.children || []).sort(sort),
+      visibility = dime.configuration.get({name: item.id, namespace: 'menu/visibility', defaultValue: 0}),
+      active = (1 === visibility || m.route() === item.route) ? '.active' : '',
+      dropdown = '';
 
       if (item.route) {
         menuItem.push(m("a[href='" + item.route + "']", {config: m.route}, item.name));
       } else {
-        menuItem.push(m("a[href='#']", {
+        menuItem.push(m("a[href='#'].dropdown-toggle", {
           onclick: function() {
             visibility = Math.abs(visibility - 1);
+            dime.configuration.set({name: item.id, namespace: 'menu/visibility', value: visibility});
             return false;
           }
         }, item.name));
       }
-      var active = (1 == visibility || m.route() == item.route) ? '.active' : '';
 
-      if (children.length) {
-        var hide = (visibility && 1 == visibility) ? '' : '.hide';
-        menuItem.push(m("ul" + hide, children.map(dime.modules.menu.views.item)));
+      if (children.length > 0) {
+        menuItem.push(m("ul.dropdown-menu.white", children.map(dime.modules.menu.views.item)));
+        dropdown = '.dropdown';
+        if (visibility && 1 === visibility) {
+          dropdown += '.open';
+        }
       }
 
-      return m("li" + active, menuItem);
+      return m("li" + active + dropdown, menuItem);
     },
     list: function (items) {
       return m("ul.nav.nav-list", items.map(this.item));

@@ -13,7 +13,7 @@
     },
     view: function (scope) {
       var activities = dime.resources.activity.findAll() || [];
-      return m(".tile", activities.map(dime.modules.activity.views.item));
+      return m(".tile-wrap", activities.map(dime.modules.activity.views.item));
     },
     views: {}
   };

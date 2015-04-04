@@ -48,7 +48,7 @@
       ])
     );
 
-    return m("ul.context-menu", options);
+    return m("ul.dropdown-menu", options);
   }
 
 })(dime, m, _);

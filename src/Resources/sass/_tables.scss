@@ -1,0 +1,42 @@
+// Source: https://raw.githubusercontent.com/amorey/mui/master/src/sass/mui/_tables.scss
+// Global styles
+th {
+  text-align: left;
+}
+
+// Table style
+table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+
+  // Cells
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+        padding: 10px;
+        line-height: 1.429;
+      }
+    }
+  }
+
+  // Bottom align for column headings
+  > thead > tr > th {
+    border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+    font-weight: 700;
+  }
+
+  // multiple tbody instances
+  > tbody + tbody {
+    border-top: 2px solid rgba(0, 0, 0, 0.12);
+  }
+
+  // Bordered style
+  &.table-bordered > tbody > tr > td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
+

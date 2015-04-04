@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 (function (dime, m, _) {
 
@@ -34,12 +34,12 @@
     }
 
     activity.project = activity.project || { customer: activity.customer, name: "", alias: "", enabled: true };
-    var alias = 'activity-' + activity.id;
+    var alias = "activity-" + activity.id;
     var isEditable = function () {
-      return dime.modules.setting.local['project/edit-inline/' + alias] || false;
+      return dime.modules.setting.local["project/edit-inline/" + alias] || false;
     }
     var setEditable = function (value) {
-      dime.modules.setting.local['project/edit-inline/' + alias] = value;
+      dime.modules.setting.local["project/edit-inline/" + alias] = value;
     }
 
     options.unshift(
@@ -48,13 +48,13 @@
           onclick: function() { setEditable(!isEditable()); return false; }
         }, [
           m("span.icon.icon-edit"),
-          isEditable() ? '' : activity.project.name
+          isEditable() ? "" : activity.project.name
         ]),
-        isEditable() ? inlineForm(activity.project) : ''
+        isEditable() ? inlineForm(activity.project) : ""
       ])
     );
 
-    return m("ul.context-menu", options);
+    return m("ul.dropdown-menu", options);
   }
 
 })(dime, m, _);
