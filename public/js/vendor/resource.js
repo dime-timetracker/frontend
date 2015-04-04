@@ -97,7 +97,7 @@ Resource.prototype.remove = function (data) {
 
         m.request({ method: method, url: url })
         .then(function(response) {
-            var idx = that.indexOf(data),
+            var idx = that.collection.indexOf(data),
                 item = data;
             if (-1 < idx) {
                 item = that.collection.splice(idx, 1);

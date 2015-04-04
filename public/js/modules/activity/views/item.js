@@ -33,7 +33,7 @@
         m("ul.nav.nav-list.pull-right", [
           m("li", m("a", { href: "#", onclick: function() { current.toggleTimeslices(); return false; }}, m("span.icon.icon-access-time"))),
           m("li", startStopButton(current)),
-          m("li", m("a", { href: "#" }, m("span.icon.icon-delete")))
+          m("li", m("a", { href: "#", onclick: function() { dime.resources.activity.remove(current); return false; } }, m("span.icon.icon-delete")))
         ])
       ),
       m(".activity.tile-inner", [
