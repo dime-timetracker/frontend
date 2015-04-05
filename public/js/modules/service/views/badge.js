@@ -18,6 +18,10 @@
       }
     }
 
+    if (visibility && 1 === visibility) {
+      cssClass += '.open';
+    }
+
     return m("li.dropdown" + cssClass, [
       m("a", {title: title, href: "#", onclick: function() {
             visibility = Math.abs(visibility - 1);
