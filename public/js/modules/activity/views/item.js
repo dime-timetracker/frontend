@@ -47,7 +47,7 @@
         }, current.description),
 
       ]),
-      m(".tile-sub" + className, dime.modules.timeslice.views.table(current.timeslices))
+      m(".tile-sub" + className, dime.modules.activity.views.timeslices(current))
     ]);
   };
 
