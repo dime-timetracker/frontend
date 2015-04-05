@@ -23,7 +23,7 @@
     }
 
     return m("li.dropdown" + cssClass, [
-      m("a.dropdown-toggle", {title: title, href: "#", onclick: function() {
+      m("a", {title: title, href: "#", onclick: function() {
             visibility = Math.abs(visibility - 1);
             dime.configuration.set({name: activity.id, namespace: 'activity/customer/visibility', value: visibility});
             return false;

@@ -9915,11 +9915,10 @@ table {
     background-clip: padding-box;
     border-radius: 2px;
     box-sizing: border-box;
-    font-size: 1rem;
     color: #FFF;
+    font-size: 1rem;
     min-width: 3rem;
     margin-right: 6px;
-    padding: 0px 6px;
     text-align: center;
     line-height: inherit; }
     .badge-list > li.incomplete {
@@ -9927,8 +9926,11 @@ table {
     .badge-list > li.empty {
       background-color: #F44336; }
     .badge-list > li > a {
-      color: #FFF;
-      padding: 0; }
+      color: inherit;
+      padding: 0px 3px; }
+  .badge-list.badge-list-small > li {
+    font-size: .7rem;
+    min-width: auto; }
 
 .tile-action-show {
   z-index: 2; }

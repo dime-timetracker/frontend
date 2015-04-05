@@ -63,12 +63,11 @@
     border-radius: 2px;
     box-sizing: border-box;
 
-    font-size: 1rem;
     color: #FFF;
+    font-size: 1rem;
 
     min-width: 3rem;
     margin-right: 6px;
-    padding: 0px 6px;
     text-align: center;
     line-height: inherit;
 
@@ -80,9 +79,15 @@
     }
 
     > a {
-      color: #FFF;
-      padding: 0;
+      color: inherit;
+      padding: 0px 3px;
     }
+  }
+
+  &.badge-list-small > li {
+    font-size: .7rem;
+    min-width: auto;
+
   }
 }
 

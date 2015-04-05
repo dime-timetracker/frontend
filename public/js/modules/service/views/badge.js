@@ -3,9 +3,10 @@
 (function (dime, m) {
 
   dime.modules.service.views.badge = function (activity) {
-    var service = activity.service;
-    var cssClass = ".empty";
-    var title = "No service selected";
+    var service = activity.service,
+        cssClass = ".empty",
+        title = "No service selected",
+        visibility = dime.configuration.get({name: activity.id, namespace: 'activity/service/visibility', defaultValue: 0});
 
     if (service && service.alias && service.alias.length) {
       cssClass = ".incomplete";
@@ -18,7 +19,11 @@
     }
 
     return m("li.dropdown" + cssClass, [
-      m("a.dropdown-toggle", {title: title, href: "#" }, ":" + (service && service.alias ? service.alias : "")),
+      m("a", {title: title, href: "#", onclick: function() {
+            visibility = Math.abs(visibility - 1);
+            dime.configuration.set({name: activity.id, namespace: 'activity/service/visibility', value: visibility});
+            return false;
+          } }, ":" + (service && service.alias ? service.alias : "")),
       dime.modules.service.views.select(activity)
     ]);
   };

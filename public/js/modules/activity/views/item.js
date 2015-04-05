@@ -21,6 +21,7 @@
     var className = current.showTimeslices ? '' : '.hide';
 
     var badges = [
+      m('li', m('a[href=#]', m('span.icon.icon-add'))),
       dime.modules.customer.views.badge(current),
       dime.modules.project.views.badge(current),
       dime.modules.service.views.badge(current),
@@ -28,7 +29,7 @@
     ];
 
     return m('.tile', [
-      m(".pull-left.tile-side",  m('ul.nav.nav-list.badge-list', badges)),
+      m(".pull-left.tile-side", m('ul.nav.nav-list.badge-list.badge-list-small', badges)),
       m(".tile-action.tile-action-show",
         m("ul.nav.nav-list.pull-right", [
           m("li", m("a", { href: "#", onclick: function() { current.toggleTimeslices(); return false; }}, m("span.icon.icon-access-time"))),

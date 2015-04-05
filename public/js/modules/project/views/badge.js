@@ -3,9 +3,10 @@
 (function (dime, m) {
 
   dime.modules.project.views.badge = function (activity) {
-    var project = activity.project;
-    var cssClass = ".empty";
-    var title = "No project selected";
+    var project = activity.project,
+        cssClass = ".empty",
+        title = "No project selected",
+        visibility = dime.configuration.get({name: activity.id, namespace: 'activity/project/visibility', defaultValue: 0});
 
     if (project && project.alias && project.alias.length) {
       cssClass = ".incomplete";
@@ -17,8 +18,16 @@
       }
     }
 
+    if (visibility && 1 === visibility) {
+      cssClass += '.open';
+    }
+
     return m("li.dropdown" + cssClass, [
-      m("a.dropdown-toggle", {title: title, href: "#" }, "/" + (project && project.alias ? project.alias : "")),
+      m("a", {title: title, href: "#", onclick: function() {
+            visibility = Math.abs(visibility - 1);
+            dime.configuration.set({name: activity.id, namespace: 'activity/project/visibility', value: visibility});
+            return false;
+          } }, "/" + (project && project.alias ? project.alias : "")),
       dime.modules.project.views.select(activity)
     ]);
   };
