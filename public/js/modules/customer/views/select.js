@@ -27,25 +27,26 @@
           }
           dime.resources.activity.persist(activity);
         }
-      }, customer.name ? customer.name : "(@" + customer.alias + ")"))
+      }, customer.name ? customer.name : "(@" + customer.alias + ")"));
     });
 
     var onSave = function (customer) {
       setEditable(false);
       activity.customer = customer;
       dime.resources.activity.persist(activity);
-    }
+    };
 
     var inlineForm = function (customer) {
       var allowDelete = false;
       return dime.modules.customer.views.form(customer, allowDelete, onSave);
-    }
+    };
 
-    activity.customer = activity.customer || { name: "", alias: "", enabled: true };
+    activity.customer = activity.customer || dime.resources.customer.empty();
     var alias = 'activity-' + activity.id;
     var isEditable = function () {
       return dime.modules.setting.local['customer/edit-inline/' + alias] || false;
-    }
+    };
+    
     var setEditable = function (value) {
       dime.modules.setting.local['customer/edit-inline/' + alias] = value;
     }

@@ -35,12 +35,10 @@
         }
       });
     } else {
-      var timeslice = {
+      var timeslice = dime.resources.timeslice.empty({
         activity: this.id,
-        startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-        stoppedAt: null,
-        duration: null
-      };
+        startedAt: moment().format('YYYY-MM-DD HH:mm:ss')
+      });
       dime.resources.timeslice.persist(timeslice).then(function (startedTimeslice) {
         activity.timeslices.push(startedTimeslice);
       });
@@ -57,6 +55,15 @@
   dime.modules.activity.model.prototype.updateDescription = function (description) {
     this.description = description;
     dime.resources.activity.persist(this);
+  }
+
+  dime.modules.activity.model.prototype.removeTimeslice = function (timeslice) {
+    var idx = this.timeslices.indexOf(timeslice);
+    if (-1 < idx) {
+      this.timeslices.splice(idx, 1);
+      dime.resources.timeslice.remove(timeslice);
+    }
+    return timeslice;
   }
 
 })(dime, moment, _);

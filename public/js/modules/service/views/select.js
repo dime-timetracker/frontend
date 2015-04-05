@@ -13,10 +13,10 @@
           activity.service = service;
           dime.resources.activity.persist(activity);
         }
-      }, service.name ? service.name : "(:" + service.alias + ")"))
+      }, service.name ? service.name : "(:" + service.alias + ")"));
     });
 
-    activity.service = activity.service || { name: "", alias: "", enabled: true };
+    activity.service = activity.service || dime.resources.service.empty();
     var alias = 'activity-' + activity.id;
     var isEditable = function () {
       return dime.modules.setting.local['service/edit-inline/' + alias] || false;

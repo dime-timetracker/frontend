@@ -33,7 +33,7 @@
       return dime.modules.project.views.form(project, allowDelete, onSave);
     }
 
-    activity.project = activity.project || { customer: activity.customer, name: "", alias: "", enabled: true };
+    activity.project = activity.project || dime.resources.project.empty({ customer: activity.customer });
     var alias = "activity-" + activity.id;
     var isEditable = function () {
       return dime.modules.setting.local["project/edit-inline/" + alias] || false;
