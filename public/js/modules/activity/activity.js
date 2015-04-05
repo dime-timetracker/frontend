@@ -48,6 +48,7 @@
       return 0;
     },
   });
+  dime.resources.activity.fetch();
 
   // add menu item
   dime.menu.unshift({

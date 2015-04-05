@@ -114,8 +114,10 @@
   // register resource
   dime.resources.project = new Resource({
     url: dime.apiUrl + "project",
-    model: dime.modules.project.model
+    model: dime.modules.project.model,
+    empty: { name: "", alias: "", enabled: true }
   });
+  dime.resources.project.fetch();
 
   // add menu item
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({

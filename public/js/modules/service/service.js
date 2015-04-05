@@ -109,8 +109,10 @@
   // register schema
   dime.resources.service = new Resource({
     url: dime.apiUrl + "service",
-    model: dime.modules.service.model
+    model: dime.modules.service.model,
+    empty: { name: "", alias: "", enabled: true }
   });
+  dime.resources.service.fetch();
 
   // add menu item
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({

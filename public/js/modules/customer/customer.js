@@ -88,8 +88,10 @@
   // register schema
   dime.resources.customer = new Resource({
     url: dime.apiUrl + "customer",
-    model: dime.modules.customer.model
+    model: dime.modules.customer.model,
+    empty: { name: "", alias: "", enabled: true }
   });
+  dime.resources.customer.fetch();
 
   // add menu item
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({
