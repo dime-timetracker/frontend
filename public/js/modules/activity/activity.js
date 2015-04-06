@@ -47,6 +47,34 @@
   });
   dime.resources.activity.fetch();
 
+  // add settings section
+  dime.settings.activity = {
+    title: "Activity",
+    description: "Activity settings",
+    children: {
+      display: {
+        title: "Display settings",
+        children: {
+          showRates: {
+            title: "Show rates",
+            default: false,
+          },
+          calculateActivityRateSum: {
+            title: "Show rates",
+            default: true,
+            display: function() {return false;}
+          },
+          activityRateSumPrecision: {
+            title: "Rate sum precision (in minutes)",
+            onRead: function(value) { return value/60 },
+            onWrite: function(value) { return value*60 },
+            default: 15*60
+          }
+        }
+      }
+    }
+  }
+
   // add menu item
   dime.menu.unshift({
     id: "activities",

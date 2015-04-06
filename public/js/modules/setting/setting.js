@@ -9,6 +9,59 @@
       return scope;
     },
     view: function() {
+
+      var list = [m('h2', 'Settings')];
+
+      /**
+       * Configuration object pattern:
+       *
+       * {
+       *   foo: {
+       *     title: "Tab Foo",
+       *     weight: 0
+       *     children: {
+       *       bar: {
+       *         title: "Section Bar",
+       *         weight: 0
+       *         children: {
+       *           baz: {
+       *             title: "Item Baz",
+       *             description: "Foo bar baz",
+       *             onRead: function(value, namespace, name) {},
+       *             onWrite: function(value, oldValue, namespace, name) {},
+       *             default: "Default value",
+       *             display: function(namespace, name) { return true; },
+       *             type: "number"
+       *           }
+       *         }
+       *       }
+       *     }
+       *   },
+       *   boo: {...}
+       * }
+       */
+      Object.keys(dime.settings).map(function (key) {
+        list.push(dime.modules.setting.views.tab(dime.settings[key]));
+      });
+
+      if ('1' == getSetting('config', 'settings/view/all')) {
+        var settings = dime.resources.setting.findAll() || [];
+        list.concat(
+          m('table.bordered.responsive-table', [
+            m("thead",
+              m("tr", [
+                m("th", "Namespace"),
+                m("th", "Name"),
+                m("th", "Value")
+              ])
+            ),
+            settings.map(dime.modules.setting.views.item)
+          ]),
+          dime.modules.setting.view.form
+        );
+      }
+      return m("div", list);
+
       var settings = dime.resources.setting.findAll() || [];
       var list = [m('h2', 'Settings')].concat(
         m('table.bordered.responsive-table', [
@@ -40,6 +93,8 @@
     }
     return (_.isUndefined(defaultValue)) ? null : defaultValue;
   };
+
+  dime.settings = {};
 
   dime.modules.setting.set = function (namespace, name, value) {
     var setting = getSetting(namespace, name);
