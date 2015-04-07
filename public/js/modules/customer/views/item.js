@@ -7,23 +7,22 @@
     return m('tr' + disabled, [
       m("td.name", {
         contenteditable: true,
-        oninput: function() { current.updateName(e.target.value) },
+        oninput: function(e) { current.updateName(e.target.value); }
       }, current.name),
       m("td.alias", {
         contenteditable: true,
-        oninput: function() { current.updateAlias(e.target.value) },
+        oninput: function(e) { current.updateAlias(e.target.value); }
       }, current.alias),
       m("td.enabled.text-center", [
         m("input[type=checkbox]", {
           checked: current.enabled,
-          oninput: function() { current.updateEnabled(e.target.checked) },
+          oninput: function(e) { current.updateEnabled(e.target.checked); }
         })
       ]),
-      m("td.actions.text-right", [
-        m("a.btn.btn-flat", { href: "#" }, m("span.icon.icon-create")),
-        m("a.btn.btn-flat", { href: "#" }, m("span.icon.icon-clear"))
+      m("td.text-right", [
+        m("a.btn.btn-flat[href=#]", { onclick: function(e) { dime.resources.customer.remove(current); return false; } }, m("span.icon.icon-delete"))
       ])
     ]);
-  }
+  };
 
 })(dime, m, _);

@@ -22,7 +22,7 @@
           m("th", "Start"),
           m("th", "End"),
           m("th", "Duration"),
-          m("th.right-align", m("a.btn.btn-flat", { href: "#" }, m("span.icon.icon-add")))
+          m("th.right-align", m("a.btn.btn-flat[href=#]", m("span.icon.icon-add")))
         ])
       ),
       m("tbody", items.map(dime.modules.activity.views.timesliceItem, current))
