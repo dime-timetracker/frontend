@@ -40,9 +40,19 @@
        *   boo: {...}
        * }
        */
-      Object.keys(dime.settings).map(function (key) {
-        list.push(dime.modules.setting.views.tab(dime.settings[key]));
+
+      var tabs = Object.keys(dime.settings);
+
+      var tabList = [];
+      tabs.map(function (key) {
+        tabList.push(dime.modules.setting.views.tab(
+          dime.settings[key],
+          key===tabs[0]
+        ))
       });
+      list.push(m('div.tabs', tabList));
+
+      list.push(dime.modules.setting.views.tabContents(dime.settings[tabs[0]]));
 
       if ('1' == getSetting('config', 'settings/view/all')) {
         var settings = dime.resources.setting.findAll() || [];

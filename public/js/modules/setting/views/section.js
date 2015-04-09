@@ -8,11 +8,16 @@
       items.push(dime.modules.setting.views.config(current.children[key]))
     });
 
-    return m("div#config-section", [
-      m("div.title", current.title),
-      m("div.description", current.description),
-      m("div.items", items)
-    ]);
+    var sectionParts = [];
+    sectionParts.push(m("div.section-title.title", current.title));
+    if (current.description) {
+      sectionParts.push(m("div.description", current.description));
+    }
+    if (items.length) {
+      sectionParts.push(m("div.items", items));
+    }
+
+    return m("div#config-section", sectionParts);
   }
 
 })(dime, m);
