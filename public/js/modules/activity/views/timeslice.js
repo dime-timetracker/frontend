@@ -6,7 +6,7 @@
     return m("tr#timeslice-" + item.id, [
       m("td.start", moment(item.startedAt).format("DD.MM.YYYY HH:mm:ss")),
       m("td.stop", item.stoppedAt ? moment(item.stoppedAt).format("DD.MM.YYYY HH:mm:ss") : ""),
-      m("td.duration#timeslice-duration-" + item.id, dime.helper.duration.format(item.duration, "seconds")),
+      m("td.duration#timeslice-duration-" + item.id, dime.helper.duration.format(item.calcDuration(), "seconds")),
       m("td.actions.right-align", [
         m("a.btn.btn-flat[href=#]", { onclick: function() { activity.removeTimeslice(item); return false; } }, m("span.icon.icon-delete"))
       ])

@@ -3,6 +3,7 @@
 var dime = {
   apiUrl: 'api/',
   helper: {},
+  model: {},
   modules: {},
   routes: {},
   

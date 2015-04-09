@@ -3,9 +3,6 @@
 (function (dime, doc, moment, m) {
 
   dime.modules.activity = {
-    model: function (data) {
-      _.extend(this, data);
-    },
     controller: function () {
       var scope = {};
 
@@ -34,7 +31,7 @@
   // register resource
   dime.resources.activity = new Resource({
     url: dime.apiUrl + "activity",
-    model: dime.modules.activity.model,
+    model: dime.model.Activity,
     sort: function (activityA, activityB) {
       var a = getLatestUpdate(activityA);
       var b = getLatestUpdate(activityB);
@@ -46,7 +43,7 @@
         return 1;
       }
       return 0;
-    },
+    }
   });
   dime.resources.activity.fetch();
 
