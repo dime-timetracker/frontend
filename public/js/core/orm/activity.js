@@ -38,24 +38,23 @@
   };
 
   dime.model.Activity.prototype.startStopTimeslice = function () {
-    var Activity = this;
+    var activity = this;
     if (this.running()) {
       this.timeslices.forEach(function (timeslice, idx) {
         if (_.isNull(timeslice.stoppedAt) || _.isUndefined(timeslice.stoppedAt)) {
           timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
           timeslice.duration = moment(timeslice.stoppedAt).diff(moment(timeslice.startedAt), "seconds");
           dime.resources.timeslice.persist(timeslice).then(function (stoppedTimeslice) {
-            Activity.timeslices[idx] = stoppedTimeslice;
+            activity.timeslices[idx] = new dime.model.Timeslice(stoppedTimeslice);
           });
         }
       });
     } else {
-      var timeslice = dime.resources.timeslice.empty({
-        Activity: this.id,
-        startedAt: moment().format('YYYY-MM-DD HH:mm:ss')
+      var timeslice = new dime.model.Timeslice({
+        activity: activity.id
       });
       dime.resources.timeslice.persist(timeslice).then(function (startedTimeslice) {
-        Activity.timeslices.push(startedTimeslice);
+        activity.timeslices.add(startedTimeslice);
       });
     }
   };
@@ -69,7 +68,7 @@
 
   dime.model.Activity.prototype.updateDescription = function (description) {
     this.description = description;
-    dime.resources.Activity.persist(this);
+    dime.resources.activity.persist(this);
   };
 
   dime.model.Activity.prototype.removeTimeslice = function (timeslice) {

@@ -4,7 +4,10 @@
     if (!(this instanceof dime.model.Timeslice)) {
         return new dime.model.Timeslice(data);
     }
-    _.extend(this, data || {});
+    _.extend(this, {
+      startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+      duration: 0
+    }, data);
   };
 
   dime.model.Timeslice.prototype = new Model();
