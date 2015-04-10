@@ -50,7 +50,7 @@
           key===tabs[0]
         ))
       });
-      list.push(m('div.tabs', tabList));
+      list.push(m('nav.tab-nav', m('ul.nav.nav-justified', tabList)));
 
       list.push(dime.modules.setting.views.tabContents(dime.settings[tabs[0]]));
 
