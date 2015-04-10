@@ -90,7 +90,7 @@
                 dime.settings.activity.children.display.children.showRates,
                 dime.settings.activity.children.display.children.calculateActivityRateSum
               ];
-              _.every(depends, function(depend) {
+              return _.every(depends, function(depend) {
                 return true == dime.modules.setting.get(
                   depend.namespace,
                   depend.name,
