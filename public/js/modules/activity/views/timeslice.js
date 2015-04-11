@@ -2,6 +2,7 @@
 (function (dime, m, moment, _) {
 
   dime.modules.activity.views.timesliceItem = function (item) {
+    item = dime.model.Timeslice(item);
     var activity = this;
     return m("tr#timeslice-" + item.id, [
       m("td.start", moment(item.startedAt).format("DD.MM.YYYY HH:mm:ss")),
