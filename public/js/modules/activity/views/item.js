@@ -28,27 +28,44 @@
 //      dime.modules.tag.views.input(current)
     ];
 
-    return m('.tile', [
-      m(".pull-left.tile-side", m('ul.nav.nav-list.badge-list.badge-list-small', badges)),
-      m(".tile-action.tile-action-show",
-        m("ul.nav.nav-list.pull-right", [
-          m("li", m("a", { href: "#", onclick: function() { current.toggleTimeslices(); return false; }}, m("span.icon.icon-access-time"))),
-          m("li", startStopButton(current)),
-          m("li", m("a", { href: "#", onclick: function() { dime.resources.activity.remove(current); return false; } }, m("span.icon.icon-delete")))
-        ])
-      ),
-      m(".tile-inner", [
-        m("span.text-overflow", {
-          contenteditable: true,
-          oninput: function(e) {
-            current.updateDescription(e.target.textContent);
-            return false;
-          }
-        }, current.description),
+    var badgesView = m('ul.nav.nav-list.badge-list.badge-list-small', badges);
+    dime.events.emit('activity-item-badges-view-after', {view: badgesView, item: current});
 
-      ]),
-      m(".tile-sub" + className, dime.modules.activity.views.timeslices(current))
+    var actionsView = m("ul.nav.nav-list.pull-right", [
+      m("li.toggle-timeslices", m("a", {
+        href: "#",
+        onclick: function() { current.toggleTimeslices(); return false; }
+      }, m("span.icon.icon-access-time"))),
+      m("li.start-stop-button", startStopButton(current)),
+      m("li.remove", m("a", {
+        href: "#",
+        onclick: function() { dime.resources.activity.remove(current); return false; }
+      }, m("span.icon.icon-delete")))
     ]);
+    dime.events.emit('activity-item-actions-view-after', {view: actionsView, item: current});
+
+    var descriptionsView = m("span.text-overflow", {
+      contenteditable: true,
+      oninput: function(e) {
+        current.updateDescription(e.target.textContent);
+        return false;
+      }
+    }, current.description);
+    dime.events.emit('activity-item-actions-view-after', {view: descriptionsView, item: current});
+
+    var timeslicesView = dime.modules.activity.views.timeslices(current);
+    dime.events.emit('activity-item-timeslices-view-after', {view: timeslicesView, item: current});
+
+    var result = m('.tile', [
+      m(".pull-left.tile-side", badgesView),
+      m(".tile-action.tile-action-show", actionsView),
+      m(".tile-inner", descriptionsView),
+      m(".tile-sub" + className, timeslicesView)
+    ]);
+
+    dime.events.emit('activity-item-view-after', {view: result, item: current});
+
+    return result;
   };
 
 })(dime, m, moment, _);

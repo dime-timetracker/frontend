@@ -7,5 +7,6 @@ var dime = {
   modules: {},
   routes: {},
   
+  events: new Evemit(),
   resources: {}
 };
