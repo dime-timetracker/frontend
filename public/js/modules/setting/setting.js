@@ -123,6 +123,7 @@
     url: dime.apiUrl + "setting",
     model: dime.modules.setting.model
   });
+  dime.resources.setting.fetch();
 
   // add menu item
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({
