@@ -80,4 +80,11 @@
     return timeslice;
   };
 
+  dime.model.Activity.prototype.getRateSum = function (precisionSeconds) {
+    var sum = this.rate * this.timeslices.reduce(function (prev, timeslice) {
+      return prev + Math.ceil(timeslice.calcDuration()/precisionSeconds) * precisionSeconds;
+    }, 0) / 60 / 60;
+    return sum;
+  }
+
 })(dime, Model, moment, _);
