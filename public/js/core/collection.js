@@ -18,9 +18,9 @@
  * @param {Array} data
  * @returns {Collection}
  */
-var Collection = function(options, data) {
-  if (!(this instanceof Collection)) {
-      return new Collection(options, data);
+dime.Collection = function(options, data) {
+  if (!(this instanceof dime.Collection)) {
+      return new dime.Collection(options, data);
   }
 
   this.config = _.extend({
@@ -35,10 +35,10 @@ var Collection = function(options, data) {
   }
 };
 
-Collection.prototype = new Array();
-Collection.prototype.constructor = Collection;
+dime.Collection.prototype = new Array();
+dime.Collection.prototype.constructor = dime.Collection;
 
-Collection.prototype.add = function (data, idx) {
+dime.Collection.prototype.add = function (data, idx) {
   if (data !== undefined && _.isObject(data)) {
     var item = data;
     if (this.config.model !== undefined && !(data instanceof this.config.model)) {
@@ -49,7 +49,7 @@ Collection.prototype.add = function (data, idx) {
   return this;
 };
 
-Collection.prototype.create = function (data) {
+dime.Collection.prototype.create = function (data) {
   var model = undefined;
   if (this.config.model !== undefined) {
     model = new this.config.model(data);
@@ -57,7 +57,7 @@ Collection.prototype.create = function (data) {
   return model;
 };
 
-Collection.prototype.find = function (filter) {
+dime.Collection.prototype.find = function (filter) {
   if (_.isNumber(filter)) {
     filter = {};
     filter[this.config.idAttribute] = filter;
@@ -65,20 +65,19 @@ Collection.prototype.find = function (filter) {
   return _.findWhere(this, filter);
 };
 
-Collection.prototype.findAll = function () {
+dime.Collection.prototype.findAll = function () {
   return this.data;
 };
 
-Collection.prototype.first = function () {
+dime.Collection.prototype.first = function () {
   return (this.length > 0) ? this[0] : undefined;
 };
 
-Collection.prototype.last = function () {
+dime.Collection.prototype.last = function () {
   return (this.length > 0) ? this[this.length - 1] : undefined;
 };
 
-
-Collection.prototype.remove = function (filter) {
+dime.Collection.prototype.remove = function (filter) {
   if (_.isNumber(filter)) {
     filter = {};
     filter[this.config.idAttribute] = filter;

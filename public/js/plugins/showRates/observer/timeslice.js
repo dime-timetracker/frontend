@@ -14,7 +14,7 @@
       return;
     }
     var precision = dime.modules.setting.get('activity', 'display/activityRateSumPrecision', 15*60)
-    var income = context.activity.rate * Math.ceil(context.item.calcDuration()/precision) * precision / 60 / 60;
+    var income = context.activity.rate * Math.ceil(context.item.totalDuration(precision)) / 60 / 60;
     context.view.children[4] = context.view.children[3];
     context.view.children[3] = m("td.text-right", dime.helper.number.formatCurrency(income, '{number} €'));
   });

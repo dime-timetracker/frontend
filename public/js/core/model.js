@@ -7,5 +7,12 @@
  * 
  */
 
-var Model = function() {
+dime.Model = function() {
+  if (!(this instanceof dime.Model)) {
+      return new dime.Model();
+  }
 };
+
+
+dime.Model.prototype = new Object();
+dime.Model.prototype.constructor = dime.Model;
