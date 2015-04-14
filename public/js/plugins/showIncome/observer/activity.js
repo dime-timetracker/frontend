@@ -2,7 +2,7 @@
 (function (dime, m, _) {
 
   var calculateTimesliceIncome = function (timeslice, precisionSeconds) {
-    return Math.ceil(timeslice.calcDuration()/precisionSeconds) * precisionSeconds;
+    return Math.ceil(timeslice.totalDuration()/precisionSeconds) * precisionSeconds;
   }
 
   var calculateActivityIncome = function (activity, precisionSeconds) {
