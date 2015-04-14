@@ -6223,9 +6223,6 @@ a.fbtn:focus, a.fbtn:hover {
       color: #2196f3; }
     .card-action .nav > li.open > a, .tile-action .nav > li.open > a {
       color: #212121; }
-    .tile-action .nav > li.rateSum {
-      text-align: right;
-      width: 120px; }
 
 .card-alt {
   -webkit-box-shadow: 0 0 2px #4caf50;

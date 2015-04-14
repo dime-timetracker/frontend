@@ -13,7 +13,7 @@
       }
       dime.modules.setting.set(current.namespace, current.name, value);
     };
-    var value = dime.modules.setting.get(current.namespace, current.name, current.default);
+    var value = dime.modules.setting.get(current.namespace, current.name, current.defaultValue);
     if (_.isFunction(current.onRead)) {
       value = current.onRead(value);
     }

@@ -97,6 +97,11 @@
   }
 
   dime.modules.setting.get = function (namespace, name, defaultValue) {
+    if (_.isObject(namespace)) {
+      defaultValue = namespace.defaultValue;
+      name = namespace.name;
+      var namespace = namespace.namespace;
+    }
     var setting = getSetting(namespace, name);
     if (false === _.isUndefined(setting.value)) {
       return setting.value;
@@ -107,6 +112,11 @@
   dime.settings = {};
 
   dime.modules.setting.set = function (namespace, name, value) {
+    if (_.isObject(namespace)) {
+      value = name;
+      name = namespace.name;
+      var namespace = namespace.namespace;
+    }
     var setting = getSetting(namespace, name);
     setting.value = value;
     dime.resources.setting.persist(setting);

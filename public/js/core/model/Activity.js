@@ -76,10 +76,3 @@ dime.model.Activity.prototype.removeTimeslice = function (timeslice) {
   }
   return timeslice;
 };
-
-dime.model.Activity.prototype.getRateSum = function (precisionSeconds) {
-  var sum = this.rate * this.timeslices.reduce(function (prev, timeslice) {
-    return prev + timeslice.totalDuration(precisionSeconds);
-  }, 0) / 60 / 60;
-  return sum;
-};
