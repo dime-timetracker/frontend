@@ -29,7 +29,7 @@
        *             description: "Foo bar baz",
        *             onRead: function(value, namespace, name) {},
        *             onWrite: function(value, oldValue, namespace, name) {},
-       *             default: "Default value",
+       *             defaultValue: "Default value",
        *             display: function(namespace, name) { return true; },
        *             type: "number"
        *           }

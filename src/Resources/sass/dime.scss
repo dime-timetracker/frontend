@@ -91,6 +91,12 @@
   }
 }
 
+.nav.tag-badges a {
+  display: inline;
+  padding: 2px 4px;
+  position: inherit;
+}
+
 .tile-action-show {
   z-index: 2;
 }

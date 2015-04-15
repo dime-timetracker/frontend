@@ -6,6 +6,7 @@
     var tags = activity.tags || [];
     var hasTags = 0 < tags.length;
     var tagClass = hasTags ? "" : ".empty";
+    var editable = 1===dime.modules.setting.get("activity/tags/editable", activity.id, 0);
 
     var addTag = function (name) {
       var filter = {name: name};
@@ -29,8 +30,9 @@
     var badge = function (tag) {
       return dime.modules.tag.views.item(
         tag,
-        function () { setEditable(1); return false; },
-        removeTag
+        activity,
+        null,
+        editable ? removeTag : null
       );
     }
  
@@ -45,30 +47,22 @@
       }
     });
 
+    var setEditable = function (value) {
+      dime.modules.setting.set("activity/tags/editable", activity.id, value); 
+    }
+
     var ok = m("a[href=#].close", {
       onclick: function () { setEditable(0); return false; },
     }, "~");
 
-    var editTagsButton = m("a[href=#].tag-edit-button", {
-      onclick: function (e) { setEditable(1); }
-    }, '+');
-
-    var setEditable = function (editable) {
-      dime.modules.setting.setLocally(
-        "activity/tags/editable",
-        activity.id,
-        editable
-      );
-    };
-
-    var editable = 1==dime.modules.setting.get("activity/tags/editable", activity.id, 0);
-    tagClass += editable ? '.editable' : '';
-    return m("span.tag-badges" + tagClass, {
+    var editTagsButton = m('li', m("a[href=#].tag-edit-button", {
       title: hasTags ? "Click to edit tags" : "Click to add tags",
-    }, (hasTags
-      ? tags.map(badge)
-      : [m("span.badge.tag.incomplete", "#")]
-      ).concat(editable ? [input, ok] : editTagsButton)
+      onclick: function (e) { setEditable(1); }
+    }, '+'));
+
+    tagClass += editable ? '.editable' : '';
+    return m("ul.nav.nav-list.badge-list.badge-list-small.pull-right.tag-badges" + tagClass,
+      (hasTags ? tags.map(badge) : []).concat(editable ? [input, ok] : editTagsButton)
     );
   }
 

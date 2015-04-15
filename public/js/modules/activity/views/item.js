@@ -25,7 +25,6 @@
       dime.modules.customer.views.badge(current),
       dime.modules.project.views.badge(current),
       dime.modules.service.views.badge(current),
-//      dime.modules.tag.views.input(current)
     ];
 
     var badgesView = m('ul.nav.nav-list.badge-list.badge-list-small', badges);
@@ -44,7 +43,7 @@
     ]);
     dime.events.emit('activity-item-actions-view-after', {view: actionsView, item: current});
 
-    var descriptionsView = m("span.text-overflow", {
+    var descriptionsView = m("span.text-overflow pull-left", {
       contenteditable: true,
       oninput: function(e) {
         current.updateDescription(e.target.textContent);
@@ -53,13 +52,15 @@
     }, current.description);
     dime.events.emit('activity-item-actions-view-after', {view: descriptionsView, item: current});
 
+    var tagBadgesView = dime.modules.tag.views.input(current)
+
     var timeslicesView = dime.modules.activity.views.timeslices(current);
     dime.events.emit('activity-item-timeslices-view-after', {view: timeslicesView, item: current});
 
     var result = m('.tile', [
       m(".pull-left.tile-side", badgesView),
       m(".tile-action.tile-action-show", actionsView),
-      m(".tile-inner", descriptionsView),
+      m(".tile-inner", [descriptionsView, tagBadgesView]),
       m(".tile-sub" + className, timeslicesView)
     ]);
 

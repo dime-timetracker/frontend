@@ -13,41 +13,51 @@
       }
     };
 
-    var rows = [
-      m("dt.name", "Name"),
-      m("dd.name", {
-        contenteditable: true,
-        oninput: function (e) {
-          current.name = e.target.textContent;
-        },
-      }, current.name),
-      m("dt.alias", "Alias"),
-      m("dd.alias", {
-        contenteditable: true,
-        oninput: function (e) {
-          current.alias = e.target.textContent;
-        },
-      }, current.alias),
-      m("dt.rate", "Rate"),
-      m("dd.rate", {
-        contenteditable: true,
-        oninput: function (e) {
-          current.rate = e.target.textContent;
-        },
-      }, current.rate),
-      m("dt.enabled", "enabled"),
-      m("dd.enabled", [
-        m("input[type=checkbox]", {
+    var rows = m(".form-rows", [
+      m(".form-row.name", [
+        m("label", "Name"),
+        m("input", {
+          value: current.name,
+          onchange: function (e) {
+            current.name = e.target.value;
+          }
+        })
+      ]),
+      m(".form-row.alias", [
+        m("label", "Alias"),
+        m("input", {
+          value: current.alias,
+          onchange: function (e) {
+            current.alias = e.target.value;
+          }
+        })
+      ]),
+      m(".form-row.rate", [
+        m("label", "Rate"),
+        m("input", {
+          value: current.rate,
+          type: 'number',
+          onchange: function (e) {
+            current.rate = e.target.value;
+          }
+        })
+      ]),
+      m(".form-row.enabled", [
+        m("label", "enabled"),
+        m("input", {
+          value: true,
           checked: current.enabled,
-          oninput: function (e) {
-            current.enabled = e.target.checked;
-          },
+          type: 'checkbox',
+          onchange: function (e) {
+            current.enabled = e.target.value;
+          }
         })
       ])
-    ];
+    ]);
+    dime.events.emit('project-form-rows-view-after', {view: rows, project: current});
 
     if (allowDelete) {
-      rows.push(
+      rows.children.push(
         m("input[type=submit].delete", {
           onclick: function() { confirm('Really?') && current.delete(current.id) },
           value: 'Delete'
@@ -55,14 +65,14 @@
       );
     }
 
-    rows.push(
+    rows.children.push(
       m("input[type=submit].save", {
         onclick: saveForm,
         value: 'Save'
       })
     );
 
-    return m('dl' + disabled, rows);
+    return m('form' + disabled, rows);
   }
 
 })(dime, m, _);
