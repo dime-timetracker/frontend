@@ -43,18 +43,14 @@
        * }
        */
 
-      var tabs = Object.keys(dime.settings);
-
+      var activeTabIndex = dime.configuration.get({namespace: 'settings', name: 'tab/selected', defaultValue: 'general'});
       var tabList = [];
-      tabs.map(function (key) {
-        tabList.push(dime.modules.setting.views.tab(
-          dime.settings[key],
-          key===tabs[0]
-        ))
+      Object.keys(dime.settings).map(function (key) {
+        tabList.push(dime.modules.setting.views.tab(key, activeTabIndex));
       });
       list.push(m('nav.tab-nav', m('ul.nav.nav-justified', tabList)));
 
-      list.push(dime.modules.setting.views.tabContents(dime.settings[tabs[0]]));
+      list.push(dime.modules.setting.views.tabContents(dime.settings[activeTabIndex]));
 
       if ('1' == getSetting('config', 'settings/view/all')) {
         var settings = dime.resources.setting.findAll() || [];
@@ -75,7 +71,7 @@
       return m("div", list);
 
       var settings = dime.resources.setting.findAll() || [];
-      var list = [m('h2', 'Settings')].concat(
+      var list = [m('h2', t('Settings'))].concat(
         m('table.bordered.responsive-table', [
           m("thead",
             m("tr", [
