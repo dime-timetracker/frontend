@@ -1,11 +1,6 @@
 'use strict';
 (function (dime, m, _) {
 
-  dime.settings.ticketLink = {
-    title: "Ticket Link Settings",
-    children: {}
-  };
-
   dime.events.on('project-form-rows-view-after', function(context) {
     if (false === _.isString(context.project.alias)) {
       return;
