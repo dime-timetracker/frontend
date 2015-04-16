@@ -2,6 +2,8 @@
 
 (function (dime, _, m) {
 
+  var t = dime.translate;
+
   dime.modules.setting = {
     controller: function () {
       var scope = {};
@@ -10,7 +12,7 @@
     },
     view: function() {
 
-      var list = [m('h2', 'Settings')];
+      var list = [m('h2', t('Settings'))];
 
       /**
        * Configuration object pattern:
@@ -109,8 +111,6 @@
     return (_.isUndefined(defaultValue)) ? null : defaultValue;
   };
 
-  dime.settings = {};
-
   dime.modules.setting.set = function (namespace, name, value) {
     if (_.isObject(namespace)) {
       value = name;
@@ -139,7 +139,7 @@
   dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({
     id: "settings",
     route: "/setting",
-    name: "Settings",
+    name: t('Settings'),
     weight: 100
   });
 })(dime, _, m)

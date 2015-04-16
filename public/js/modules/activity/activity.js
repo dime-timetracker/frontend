@@ -2,6 +2,8 @@
 
 (function (dime, _, moment, m) {
 
+  var t = dime.translate;
+
   dime.modules.activity = {
     controller: function () {
       var scope = {};
@@ -49,11 +51,11 @@
 
   // add settings section
   dime.settings.activity = {
-    title: "Activity",
-    description: "Activity settings",
+    title: t('Activity'),
+    description: t('Activity settings'),
     children: {
       display: {
-        title: "Display settings",
+        title: t('Display settings'),
         children: {}
       }
     }
@@ -62,7 +64,7 @@
   // add menu item
   dime.menu.unshift({
     id: "activities",
-    name: "Activities",
+    name: t('Activities'),
     route: "/",
     weight: -10
   });
