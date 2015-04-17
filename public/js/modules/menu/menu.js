@@ -11,8 +11,8 @@
  *
  * {
  *   id: example,
- *   name: "This is an example item",
- *   route: "/example",
+ *   name: 'This is an example item',
+ *   route: '/example',
  *   children: [
  *     {id: foo, name: foo},
  *     {id: bar, name: bar},
@@ -24,6 +24,8 @@
  */
 
 (function (dime, m, _) {
+
+  var t = dime.translate;
 
   var sort = function (a, b) {
     var weightA = _.isNumber(a.weight) ? a.weight : 0;
@@ -53,6 +55,7 @@
   dime.modules.menu.views = {
     item: function (item) {
       var
+      t = dime.translate,
       menuItem = [],
       children = (item.children || []).sort(sort),
       visibility = dime.configuration.get({name: item.id, namespace: 'menu/visibility', defaultValue: 0}),
@@ -60,31 +63,31 @@
       dropdown = '';
 
       if (item.route) {
-        menuItem.push(m("a[href='" + item.route + "']", {config: m.route}, item.name));
+        menuItem.push(m('a[href="' + item.route + '"]', {config: m.route}, t(item.name)));
       } else {
-        menuItem.push(m("a[href='#'].dropdown-toggle", {
+        menuItem.push(m('a[href=#].dropdown-toggle', {
           onclick: function() {
             visibility = Math.abs(visibility - 1);
             dime.configuration.set({name: item.id, namespace: 'menu/visibility', value: visibility});
             return false;
           }
-        }, item.name));
+        }, t(item.name)));
       }
 
       if (children.length > 0) {
-        menuItem.push(m("ul.dropdown-menu.white", children.map(dime.modules.menu.views.item)));
+        menuItem.push(m('ul.dropdown-menu.white', children.map(dime.modules.menu.views.item)));
         dropdown = '.dropdown';
         if (visibility && 1 === visibility) {
           dropdown += '.open';
         }
       }
 
-      return m("li" + active + dropdown, menuItem);
+      return m('li' + active + dropdown, menuItem);
     },
     list: function (items) {
-      return m("ul.nav.nav-list", items.map(this.item));
+      return m('ul.nav.nav-list', items.map(this.item));
     }
   };
 
-  dime.menu = [{id: "administration", name: "Administration", children: []}];
+  dime.menu = [{id: 'administration', name: 'Administration', children: []}];
 })(dime, m, _);

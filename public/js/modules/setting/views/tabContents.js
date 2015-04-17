@@ -2,6 +2,8 @@
 
 (function (dime, m) {
 
+  var t = dime.translate;
+
   dime.modules.setting.views.tabContents = function (current) {
     var sections = [];
     Object.keys(current.children).map(function (key) {
@@ -9,7 +11,7 @@
     });
 
     return m("div#config-tab-content", [
-      m("div.description", current.description),
+      m("div.description", t(current.description)),
       m("div.sections", sections)
     ]);
   }

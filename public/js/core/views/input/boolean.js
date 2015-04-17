@@ -6,15 +6,16 @@
     dime.inputs = {};
   }
   dime.inputs.boolean = function (current, value, onchange) {
+    var t = dime.translate || function (s) { return s; };
     var options = [
       {
         value: 1,
-        label: 'yes',
+        label: t('yes'),
         selected: value==true
       },
       {
         value: 0,
-        label: 'no',
+        label: t('no'),
         selected: value==false
       }
     ];

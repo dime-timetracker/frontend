@@ -2,6 +2,8 @@
 
 (function (dime, m) {
 
+  var t = dime.translate;
+
   dime.modules.setting.views.section = function (current) {
     var items = [];
     Object.keys(current.children).map(function (key) {
@@ -9,15 +11,15 @@
     });
 
     var sectionParts = [];
-    sectionParts.push(m("div.section-title.title", current.title));
+    sectionParts.push(m('div.section-title.title', t(current.title)));
     if (current.description) {
-      sectionParts.push(m("div.description", current.description));
+      sectionParts.push(m('div.description', t(current.description)));
     }
     if (items.length) {
-      sectionParts.push(m("div.items", items));
+      sectionParts.push(m('div.items', items));
     }
 
-    return m("div#config-section", sectionParts);
+    return m('div#config-section', sectionParts);
   }
 
 })(dime, m);

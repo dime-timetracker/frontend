@@ -4,6 +4,7 @@
   dime.translation.add('de_DE', {
     'customer': 'Kunde',
     'customers': 'Kunden',
+    'Customers': 'Kunden',
     'name': 'Name',
     'alias': 'Alias',
     'enabled': 'aktiviert',

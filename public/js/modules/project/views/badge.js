@@ -2,15 +2,17 @@
 
 (function (dime, m) {
 
+  var t = dime.translate;
+
   dime.modules.project.views.badge = function (activity) {
     var project = activity.project,
         cssClass = ".empty",
-        title = "No project selected",
+        title = t('No project selected'),
         visibility = dime.configuration.get({name: activity.id, namespace: 'activity/project/visibility', defaultValue: 0});
 
     if (project && project.alias && project.alias.length) {
       cssClass = ".incomplete";
-      title = "Please edit project details";
+      title = t('Please edit project details');
 
       if (project && project.name && project.name.length) {
         cssClass = "";

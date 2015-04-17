@@ -1,6 +1,8 @@
 'use strict';
 (function (dime, m, _) {
 
+  var t = dime.translate;
+
   dime.events.on('project-form-rows-view-after', function(context) {
     if (false === _.isString(context.project.alias)) {
       return;
@@ -12,12 +14,12 @@
 
     // Add pattern
     context.view.children.push(
-      m(".form-row.ticketlink-pattern", [
-        m("label", "Ticket Tag pattern"),
-        m("input", {
+      m('.form-row.ticketlink-pattern', [
+        m('label', t('Ticket Tag pattern')),
+        m('input', {
           value: dime.modules.setting.get(namespace, namePattern),
           type: 'text',
-          title: "Enter a regular expression to extract ticket numbers out of tags, e.g. '[A-Z]+-[0-9]+' for JIRA tickets",
+          title: t('Enter a regular expression to extract ticket numbers out of tags, e.g. "[A-Z]+-[0-9]+" for JIRA tickets'),
           oninput: function (e) {
             dime.modules.setting.set(namespace, namePattern, e.target.value);
           }
@@ -27,12 +29,12 @@
 
     // Add URL schema
     context.view.children.push(
-      m(".form-row.ticketlink-url", [
-        m("label", "Ticket URL"),
-        m("input", {
+      m('.form-row.ticketlink-url', [
+        m('label', t('Ticket URL')),
+        m('input', {
           value: dime.modules.setting.get(namespace, nameUrlSchema),
           type: 'url',
-          title: "Enter a ticket URL and use [TICKET] to be replaced by the ticket number",
+          title: t('Enter a ticket URL and use [TICKET] to be replaced by the ticket number'),
           oninput: function (e) {
             dime.modules.setting.set(namespace, nameUrlSchema, e.target.value);
           }
@@ -62,7 +64,7 @@
     var ticketNumber = _.last(matches);
     var ticketUrl = urlSchema.replace('[TICKET]', ticketNumber);
 
-    context.view.attrs.title = 'Open Ticket ' + ticketNumber;
+    context.view.attrs.title = t('Open Ticket [TICKET]').replace('[TICKET]', ticketNumber);
     context.view.attrs.href = ticketUrl;
     context.view.attrs.target = '_blank';
   });

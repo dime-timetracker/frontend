@@ -6,7 +6,7 @@
       return;
     }
     context.view.children[0].children[4] = context.view.children[0].children[3];
-    context.view.children[0].children[3] = m("th.text-right", "Income");
+    context.view.children[0].children[3] = m('th.text-right', dime.translate('Income'));
   });
 
   dime.events.on('activity-timeslice-table-row-view-after', function(context) {
@@ -16,7 +16,7 @@
     var precision = dime.modules.setting.get('activity', 'display/incomePrecisionSeconds', 15*60);
     var income = context.activity.rate * Math.ceil(context.item.totalDuration(precision)) / 60 / 60;
     context.view.children[4] = context.view.children[3];
-    context.view.children[3] = m("td.text-right", dime.helper.number.formatCurrency(income, '{number} €'));
+    context.view.children[3] = m('td.text-right', dime.helper.number.formatCurrency(income, '{number} €'));
   });
 
 })(dime, m, _);

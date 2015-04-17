@@ -2,6 +2,8 @@
 
 (function (dime, m) {
 
+  var t = dime.translate;
+
   dime.modules.setting.views.config = function (current) {
     if (_.isFunction(current.onRender) && false === current.onRender()) {
       return null;
@@ -17,7 +19,7 @@
     if (_.isFunction(current.onRead)) {
       value = current.onRead(value);
     }
-    var input = m("input", {
+    var input = m('input', {
       type: type,
       value: value,
       onchange: function (e) { onchange(e.target.value); }
@@ -26,10 +28,10 @@
       input = dime.inputs[type](current, value, onchange);
     }
 
-    return m("div.setting#setting-" + current.namespace + '/' + current.name, [
-      m("div.title", current.title),
-      m("div.value", input),
-      m("div.description", current.description)
+    return m('div.setting#setting-' + current.namespace + '/' + current.name, [
+      m('div.title', t(current.title)),
+      m('div.value', input),
+      m('div.description', t(current.description))
     ]);
   }
 

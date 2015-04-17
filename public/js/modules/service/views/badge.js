@@ -2,15 +2,17 @@
 
 (function (dime, m) {
 
+  var t = dime.translate;
+
   dime.modules.service.views.badge = function (activity) {
     var service = activity.service,
         cssClass = ".empty",
-        title = "No service selected",
+        title = t('No service selected'),
         visibility = dime.configuration.get({name: activity.id, namespace: 'activity/service/visibility', defaultValue: 0});
 
     if (service && service.alias && service.alias.length) {
       cssClass = ".incomplete";
-      title = "Please edit service details";
+      title = t('Please edit service details');
 
       if (service && service.name && service.name.length) {
         cssClass = "";

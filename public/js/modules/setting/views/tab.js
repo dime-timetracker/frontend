@@ -2,6 +2,8 @@
 
 (function (dime, m) {
 
+  var t = dime.translate;
+
   dime.modules.setting.views.tab = function (key, activeKey) {
     var current = dime.settings[key];
     var items = [];
@@ -14,7 +16,7 @@
         dime.configuration.set({namespace: 'settings', name: 'tab/selected', value: key});
         return false;
       }
-    }, current.title));
+    }, t(current.title)));
   }
 
 })(dime, m);
