@@ -38,7 +38,7 @@ dime.model.Activity.prototype.startStopTimeslice = function () {
   var activity = this;
   if (this.running()) {
     this.timeslices.forEach(function (timeslice, idx) {
-      if (timslice.isRunning()) {
+      if (timeslice.isRunning()) {
         timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
         timeslice.duration = moment(timeslice.stoppedAt).diff(moment(timeslice.startedAt), 'seconds');
         dime.resources.timeslice.persist(timeslice).then(function (stoppedTimeslice) {
