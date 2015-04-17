@@ -2,7 +2,6 @@
 
 (function (dime, m, _) {
 
-
   dime.modules.customer.views.select = function (activity) {
 
     var customers = dime.resources.customer.findAll() || [];
