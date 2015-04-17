@@ -1,6 +1,8 @@
 'use strict';
 (function (dime, m, moment, _) {
 
+  var t = dime.translate;
+
   dime.timer = setInterval(m.redraw, 1000);
 
   var startStopButton = function(current) {
@@ -38,7 +40,11 @@
       m("li.start-stop-button", startStopButton(current)),
       m("li.remove", m("a", {
         href: "#",
-        onclick: function() { dime.resources.activity.remove(current); return false; }
+        onclick: function() {
+          var question = t('Do you really want to delete "[activity]"?').replace('[activity]', current.description);
+          if (confirm(question)) dime.resources.activity.remove(current);
+          return false;
+        }
       }, m("span.icon.icon-delete")))
     ]);
     dime.events.emit('activity-item-actions-view-after', {view: actionsView, item: current});
