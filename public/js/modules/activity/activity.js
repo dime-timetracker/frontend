@@ -11,7 +11,23 @@
       return scope;
     },
     view: function (scope) {
-      var activities = dime.resources.activity.findAll() || [];
+
+      // first of all, we accept all of them
+      scope.filters = [
+        function (activity) { return true; }
+      ];
+
+      // TODO: render filter view
+
+      var activities = new dime.Collection({
+        model: dime.model.Activity
+      }, dime.resources.activity.findAll() || []);
+      dime.events.emit('activity-view-collection-load', {
+        collection: activities,
+        scope: scope
+      });
+      activities = activities.findAll();
+
       return m(".tile-wrap", activities.map(dime.modules.activity.views.item));
     },
     views: {}
