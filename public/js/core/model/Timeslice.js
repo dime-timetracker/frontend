@@ -22,8 +22,11 @@ dime.model.Timeslice.prototype.totalDuration = function (precision) {
     result = parseInt(this.duration);
   }
 
-  if (!_.isUndefined(precision) && _.isNumber(precision) &&  precision > 0) {
-    result = Math.ceil(result / precision) * precision;
+  if (!_.isUndefined(precision)) {
+    precision = parseInt(precision);
+    if (_.isNumber(precision) && 0 < precision) {
+      result = Math.ceil(result / precision) * precision;
+    }
   }
 
   return result;
