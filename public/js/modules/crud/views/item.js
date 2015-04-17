@@ -2,6 +2,8 @@
 
 (function (dime, m, _) {
 
+  var t = dime.translate;
+
   dime.modules.crud.views.item = function (item, type, properties) {
 
     var textColumn = function (property) {
@@ -36,7 +38,8 @@
       m("td.text-right", [
         m("a.btn.btn-flat[href=#]", {
           onclick: function(e) {
-            dime.resources[type].remove(item);
+            var question = t('Do you really want to delete "[name]"?').replace('[name]', item.name);
+            if (confirm(question)) dime.resources[type].remove(item);
             return false;
           }
         }, m("span.icon.icon-delete"))
