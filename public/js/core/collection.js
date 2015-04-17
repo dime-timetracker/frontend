@@ -57,6 +57,14 @@ dime.Collection.prototype.create = function (data) {
   return model;
 };
 
+dime.Collection.prototype.filter = function (filter) {
+  if (_.isUndefined(this.data)) {
+    this.data = this;
+  }
+  this.data = _.filter(this.data, filter);
+  return this;
+};
+
 dime.Collection.prototype.find = function (filter) {
   if (_.isNumber(filter)) {
     filter = {};
