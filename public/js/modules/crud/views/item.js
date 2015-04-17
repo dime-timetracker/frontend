@@ -19,10 +19,12 @@
     var columns = properties.map(function(property) {
       if (false === _.isUndefined(property.type)) {
         if ('boolean' === property.type) {
-          return dime.inputs.boolean(item, property.key, function(value) {
-            item[property.key] = value;
-            dime.resources[type].persist(item);
-          });
+          return m('td.' + property.key,
+            dime.inputs.boolean(item, property.key, function(value) {
+              item[property.key] = value;
+              dime.resources[type].persist(item);
+            })
+          );
         }
       }
       return textColumn(property);
