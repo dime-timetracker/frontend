@@ -74,7 +74,7 @@
 
     dime.resources.activity.persist(newActivity).then(function (newActivity) {
       timeslice.activity = newActivity.id;
-      newActivity.timeslices.push(timeslice);
+      newActivity.timeslices.push(dime.resources.timeslice.config.model(timeslice));
       dime.resources.timeslice.persist(timeslice);
       e.target.value = '';
     });

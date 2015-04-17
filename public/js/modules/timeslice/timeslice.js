@@ -9,6 +9,7 @@
   // register resource
   dime.resources.timeslice = new Resource({
     url: dime.apiUrl + "timeslice",
+    model: dime.model.Timeslice,
     empty: {
       activity: null,
       startedAt: null,
