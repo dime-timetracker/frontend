@@ -35,7 +35,7 @@
     }));
 
     var list = [
-      m('h2', t(type)),
+      m('h2', t(type + 's')),
       m('table.bordered.responsive-table', [header, rows])
     ];
     dime.events.emit('crud-' + type + '-list-view-after', {
