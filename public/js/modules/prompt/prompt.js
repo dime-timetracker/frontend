@@ -25,7 +25,14 @@
               placeholder: t('Add an activity'),
               onfocus: function() { scope.help = true },
               onblur: function() { scope.help = false },
-              onchange: submit
+              onkeyup: function(e) {
+                if (13 === e.keyCode) { //ENTER
+                  return submit(e);
+                }
+                _.forEach(dime.modules.prompt.autocompletions, function (autocomplete) {
+                  autocomplete(e);
+                });
+              }
             }),
             m("div.form-help.form-help-msg" + showHelp, [
               m("span.basics", t('Enter a description to start an activity.')),
@@ -45,6 +52,9 @@
       );
     }
   };
+
+  dime.modules.prompt.autocompletion = {};
+  dime.modules.prompt.autocompletions = [];
 
   var submit = function (e) {
     var newActivity = dime.parser.parse(e.target.value);
