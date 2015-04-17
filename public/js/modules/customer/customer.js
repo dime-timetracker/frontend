@@ -1,6 +1,6 @@
 'use strict';
 
-(function (dime, document, m) {
+(function (dime, m) {
 
   dime.modules.customer = {
     controller: function () {
