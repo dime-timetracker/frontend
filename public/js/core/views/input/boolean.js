@@ -2,10 +2,10 @@
 
 (function (dime, m, _) {
 
-  if (false === _.isObject(dime.views)) {
+  if (false === _.isObject(dime.inputs)) {
     dime.inputs = {};
   }
-  dime.inputs.boolean = function (current, value, onchange) {
+  dime.inputs.boolean = function (current, value, update) {
     var t = dime.translate || function (s) { return s; };
     var options = [
       {
@@ -20,7 +20,7 @@
       }
     ];
     return m("select", {
-        onchange: function (e) { onchange(e.target.value); }
+        onchange: function (e) { update(e.target.value); }
     }, options.map(function (option) {
       return m("option", { value: option.value, selected: option.selected }, option.label);
     }));

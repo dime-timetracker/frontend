@@ -37,6 +37,7 @@
 
     var inlineForm = function (customer) {
       var allowDelete = false;
+      return dime.modules.crud.views.form(customer, 'customer', dime.model.Customer.properties, allowDelete, onSave);
       return dime.modules.customer.views.form(customer, allowDelete, onSave);
     };
 

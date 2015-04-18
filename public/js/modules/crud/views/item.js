@@ -21,17 +21,29 @@
     }
 
     var columns = properties.map(function(property) {
-      if (false === _.isUndefined(property.type)) {
-        if ('boolean' === property.type) {
+      if (_.isUndefined(property.type)) {
+        property.type = text;
+      }
+      var value = item[property.key];
+      if (_.isFunction(property.get)) {
+        value = property.get(item);
+      }
+      switch (property.type) {
+        case 'boolean':
           return m('td.' + property.key,
-            dime.inputs.boolean(item, property.key, function(value) {
+            dime.inputs.boolean(item, value, function update (value) {
               item[property.key] = value;
               dime.resources[type].persist(item);
             })
           );
-        }
+        default:
+          return m('td.' + property.key,
+            dime.inputs.text(item, value, function update (value) {
+              item[property.key] = value;
+              dime.resources[type].persist(item);
+            })
+          );
       }
-      return textColumn(property);
     });
     dime.events.emit('crud-' + type + '-list-item-view-after', {
       item: item,
