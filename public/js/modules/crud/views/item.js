@@ -7,13 +7,17 @@
   dime.modules.crud.views.item = function (item, type, properties) {
 
     var textColumn = function (property) {
+      var value = item[property.key];
+      if (_.isFunction(property.get)) {
+        value = property.get(item);
+      }
       return m('td.' + property.key, {
         contenteditable: true,
         oninput: function(e) {
           item[property.key] = e.target.textContent;
           dime.resources[type].persist(item);
         }
-      }, item[property.key]);
+      }, value);
     }
 
     var columns = properties.map(function(property) {

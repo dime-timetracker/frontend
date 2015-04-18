@@ -9,28 +9,7 @@
       return scope;
     },
     view: function (scope) {
-      return dime.modules.crud.views.list('service', [
-        {
-          key: 'name',
-          title: 'name',
-          type: 'text'
-        },
-        {
-          key: 'alias',
-          title: 'alias',
-          type: 'text'
-        },
-        {
-          key: 'rate',
-          title: 'rate',
-          type: 'number'
-        },
-        {
-          key: 'enabled',
-          title: 'enabled',
-          type: 'boolean'
-        }
-      ]);
+      return dime.modules.crud.views.list('service', dime.model.Service.properties);
     },
     views: {}
   }

@@ -3,6 +3,37 @@
 
   var t = dime.translate;
 
+  dime.events.on('model-project-properties', function (context) {
+    if (_.isObject(context.model)) {
+      var namespace = 'ticketLink';
+      var namePattern = context.model.alias + '/pattern';
+      var nameUrlSchema = context.model.alias + '/urlSchema';
+    }
+    context.properties.push({
+      key: 'ticketlink-pattern',
+      title: 'Ticket Tag pattern',
+      description: t('Enter a regular expression to extract ticket numbers out of tags, e.g. "[A-Z]+-[0-9]+" for JIRA tickets'),
+      type: 'text',
+      get: function () {
+        return dime.modules.setting.get(namespace, namePattern);
+      },
+      set: function () {
+        return dime.modules.setting.set(namespace, namePattern);
+      },
+    });
+    context.properties.push({
+      key: 'ticketlink-url',
+      title: 'Ticket URL',
+      type: 'url',
+      get: function () {
+        return dime.modules.setting.get(namespace, nameUrlSchema);
+      },
+      set: function () {
+        return dime.modules.setting.set(namespace, nameUrlSchema);
+      },
+    });
+  });
+
   dime.events.on('project-form-rows-view-after', function(context) {
     if (false === _.isString(context.project.alias)) {
       return;

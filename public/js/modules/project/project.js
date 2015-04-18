@@ -9,28 +9,7 @@
       return scope;
     },
     view: function (scope) {
-      return dime.modules.crud.views.list('project', [
-        {
-          key: 'name',
-          title: 'name',
-          type: 'text'
-        },
-        {
-          key: 'alias',
-          title: 'alias',
-          type: 'text'
-        },
-        {
-          key: 'rate',
-          title: 'rate',
-          type: 'number'
-        },
-        {
-          key: 'enabled',
-          title: 'enabled',
-          type: 'boolean'
-        }
-      ]);
+      return dime.modules.crud.views.list('project', dime.model.Project.properties);
     },
     views: {}
   }

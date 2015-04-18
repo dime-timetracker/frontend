@@ -9,23 +9,7 @@
       return scope;
     },
     view: function() {
-      return dime.modules.crud.views.list('customer', [
-        {
-          key: 'name',
-          title: 'name',
-          type: 'text'
-        },
-        {
-          key: 'alias',
-          title: 'alias',
-          type: 'text'
-        },
-        {
-          key: 'enabled',
-          title: 'enabled',
-          type: 'boolean'
-        }
-      ]);
+      return dime.modules.crud.views.list('customer', dime.model.Customer.properties);
     },
     views: {}
   }
