@@ -4,7 +4,7 @@
 
   var t = dime.translate;
 
-  dime.modules.crud.views.form = function (item, type, properties, allowDelete, onSave, onCancel) {
+  dime.core.views.form = function (item, type, properties, allowDelete, onSave, onCancel) {
     allowDelete = _.isUndefined(allowDelete) ? true : allowDelete;
     var disabled = item.enabled ? '' : '.disabled';
 
@@ -36,19 +36,17 @@
           return row(
             dime.inputs.boolean(item, value, function update (value) {
               item[property.key] = value;
-              dime.resources[type].persist(item);
             })
           );
         default:
           return row(
             dime.inputs.input(property.type, value, function update (value) {
               item[property.key] = value;
-              dime.resources[type].persist(item);
             })
           );
       }
     });
-    dime.events.emit('crud-' + type + '-form-item-view-after', {
+    dime.events.emit('core-' + type + '-form-item-view-after', {
       item: item,
       properties: properties,
       type: type,

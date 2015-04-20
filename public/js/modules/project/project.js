@@ -9,7 +9,7 @@
       return scope;
     },
     view: function (scope) {
-      return dime.modules.crud.views.list('project', dime.model.Project.properties);
+      return dime.core.views.list('project', dime.model.Project.properties);
     },
     views: {}
   }

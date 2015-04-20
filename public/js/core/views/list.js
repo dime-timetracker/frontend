@@ -4,7 +4,7 @@
 
   var t = dime.translate;
 
-  dime.modules.crud.views.list = function(type, properties) {
+  dime.core.views.list = function(type, properties) {
     var items = dime.resources[type].findAll() || [];
 
     var headers = properties().map(function(property) {
@@ -24,21 +24,21 @@
     );
 
     var header = m('thead', m('tr', headers));
-    dime.events.emit('crud-' + type + '-list-header-view-after', {
+    dime.events.emit('core-' + type + '-list-header-view-after', {
       properties: properties(),
       type: type,
       view: header,
     });
 
     var rows = m('tbody', items.map(function (item) {
-      return dime.modules.crud.views.item(item, type, properties(item))
+      return dime.core.views.item(item, type, properties(item))
     }));
 
     var list = [
       m('h2', t(type + 's')),
       m('table.bordered.responsive-table', [header, rows])
     ];
-    dime.events.emit('crud-' + type + '-list-view-after', {
+    dime.events.emit('core-' + type + '-list-view-after', {
       properties: properties(),
       type: type,
       view: list,

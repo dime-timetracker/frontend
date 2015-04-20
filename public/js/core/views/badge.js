@@ -4,7 +4,7 @@
 
   var t = dime.translate;
 
-  dime.modules.crud.views.badge = function (type, activity) {
+  dime.core.views.badge = function (type, activity) {
     var item = activity[type],
         model = dime.model[type.charAt(0).toUpperCase() + type.substr(1)],
         cssClass = ".empty",
@@ -31,7 +31,7 @@
             dime.configuration.set({name: activity.id, namespace: 'activity/' + type + '/visibility', value: visibility});
             return false;
           } }, model.shortcut + (item && item.alias ? item.alias : "")),
-      dime.modules.crud.views.select(type, activity)
+      dime.core.views.select(type, activity)
     ]);
   };
 

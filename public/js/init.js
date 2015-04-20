@@ -6,6 +6,7 @@ var dime = {
   model: {},
   modules: {},
   routes: {},
+  core: { views: {} },
   
   events: new Evemit(),
   resources: {}

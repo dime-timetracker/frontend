@@ -2,7 +2,7 @@
 
 (function (dime, m, _) {
 
-  dime.modules.crud.views.select = function (type, activity) {
+  dime.core.views.select = function (type, activity) {
 
     var items = dime.resources[type].findAll() || [];
 
@@ -27,7 +27,7 @@
 
     var inlineForm = function (item) {
       var allowDelete = false;
-      return dime.modules.crud.views.form(item, type, model.properties, allowDelete, onSave, onCancel);
+      return dime.core.views.form(item, type, model.properties, allowDelete, onSave, onCancel);
     };
 
     activity[type] = activity[type] || dime.resources[type].empty();

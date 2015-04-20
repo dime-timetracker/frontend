@@ -4,7 +4,7 @@
 
   var t = dime.translate;
 
-  dime.modules.crud.views.item = function (item, type, properties) {
+  dime.core.views.item = function (item, type, properties) {
 
     var textColumn = function (property) {
       var value = item[property.key];
@@ -45,7 +45,7 @@
           );
       }
     });
-    dime.events.emit('crud-' + type + '-list-item-view-after', {
+    dime.events.emit('core-' + type + '-list-item-view-after', {
       item: item,
       properties: properties,
       type: type,
