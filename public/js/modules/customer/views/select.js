@@ -35,10 +35,13 @@
       dime.resources.activity.persist(activity);
     };
 
+    var onCancel = function (customer) {
+      setEditable(false);
+    }
+
     var inlineForm = function (customer) {
       var allowDelete = false;
-      return dime.modules.crud.views.form(customer, 'customer', dime.model.Customer.properties, allowDelete, onSave);
-      return dime.modules.customer.views.form(customer, allowDelete, onSave);
+      return dime.modules.crud.views.form(customer, 'customer', dime.model.Customer.properties, allowDelete, onSave, onCancel);
     };
 
     activity.customer = activity.customer || dime.resources.customer.empty();
@@ -51,15 +54,13 @@
       dime.modules.setting.local['customer/edit-inline/' + alias] = value;
     }
 
+    var editButton = m("a[href=#]", {
+      onclick: function() { setEditable(true); return false; }
+    }, [ m("span.icon.icon-edit"), activity.customer.name ]);
+
     options.unshift(
       m("li.current", [
-        m("a[href=#]", {
-          onclick: function() { setEditable(!isEditable()); return false; }
-        }, [
-          m("span.icon.icon-edit"),
-          isEditable() ? '' : activity.customer.name
-        ]),
-        isEditable() ? inlineForm(activity.customer) : ''
+        isEditable() ? inlineForm(activity.customer) : editButton
       ])
     );
 

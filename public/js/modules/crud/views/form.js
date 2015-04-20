@@ -4,7 +4,7 @@
 
   var t = dime.translate;
 
-  dime.modules.crud.views.form = function (item, type, properties, allowDelete, onSave) {
+  dime.modules.crud.views.form = function (item, type, properties, allowDelete, onSave, onCancel) {
     allowDelete = _.isUndefined(allowDelete) ? true : allowDelete;
     var disabled = item.enabled ? '' : '.disabled';
 
@@ -17,7 +17,7 @@
 
     var columns = properties(item).map(function(property) {
       if (_.isUndefined(property.type)) {
-        property.type = text;
+        property.type = 'text';
       }
       var value = item[property.key];
       if (_.isFunction(property.get)) {
@@ -25,8 +25,10 @@
       }
       var row = function (field) {
         return m('.form-row.' + property.key, [
-          m('label', t(property.title)),
-          field
+          m('label', [
+            t(property.title),
+            field
+          ]),
         ]);
       }
       switch (property.type) {
@@ -63,9 +65,16 @@
     }
 
     columns.push(
+      m("input[type=button].cancel", {
+        onclick: onCancel,
+        value: t('Cancel')
+      })
+    );
+
+    columns.push(
       m("input[type=submit].save", {
         onclick: saveForm,
-        value: 'Save'
+        value: t('Save')
       })
     );
 
