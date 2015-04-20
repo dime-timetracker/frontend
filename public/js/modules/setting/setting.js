@@ -1,7 +1,35 @@
-'use strict';
+/**
+  * Configuration object pattern:
+  *
+  * {
+  *   foo: {
+  *     title: "Tab Foo",
+  *     weight: 0
+  *     children: {
+  *       bar: {
+  *         title: "Section Bar",
+  *         weight: 0
+  *         children: {
+  *           baz: {
+  *             title: "Item Baz",
+  *             description: "Foo bar baz",
+  *             onRead: function(value, namespace, name) {},
+  *             onWrite: function(value, oldValue, namespace, name) {},
+  *             defaultValue: "Default value",
+  *             display: function(namespace, name) { return true; },
+  *             type: "number"
+  *           }
+  *         }
+  *       }
+  *     }
+  *   },
+  *   boo: {...}
+  * }
+  */
 
 (function (dime, _, m) {
-
+  'use strict';
+  
   var t = dime.translate;
 
   dime.modules.setting = {
@@ -10,83 +38,62 @@
 
       return scope;
     },
-    view: function() {
+    views: {
+      card: function (section) {
+        var content = [m('h2.content-sub-heading', t(section.title))];
 
-      var list = [m('h2', t('Settings'))];
+        // sections
+        var children = [];
+        _.forOwn(section.children, function (value, ckey) {
+          children.push(m('p.card-heading', t(value.title)));
 
-      /**
-       * Configuration object pattern:
-       *
-       * {
-       *   foo: {
-       *     title: "Tab Foo",
-       *     weight: 0
-       *     children: {
-       *       bar: {
-       *         title: "Section Bar",
-       *         weight: 0
-       *         children: {
-       *           baz: {
-       *             title: "Item Baz",
-       *             description: "Foo bar baz",
-       *             onRead: function(value, namespace, name) {},
-       *             onWrite: function(value, oldValue, namespace, name) {},
-       *             defaultValue: "Default value",
-       *             display: function(namespace, name) { return true; },
-       *             type: "number"
-       *           }
-       *         }
-       *       }
-       *     }
-       *   },
-       *   boo: {...}
-       * }
-       */
+          _.forOwn(value.children, function (v) {
+            children.push(dime.modules.setting.views.form(v));
+          });
+        });
+        content.push(m('div.card', m('div.card-main', m('.card-inner', children))));
 
-      var activeTabIndex = dime.configuration.get({namespace: 'settings', name: 'tab/selected', defaultValue: 'general'});
-      var tabList = [];
-      Object.keys(dime.settings).map(function (key) {
-        tabList.push(dime.modules.setting.views.tab(key, activeTabIndex));
-      });
-      list.push(m('nav.tab-nav', m('ul.nav.nav-justified', tabList)));
+        return content;
+      },
+      form: function (current) {
+        if (_.isFunction(current.onRender) && false === current.onRender()) {
+          return null;
+        }
+        var type = current.type ? current.type : 'text';
+        var onchange = function(value) {
+          if (_.isFunction(current.onWrite)) {
+            value = current.onWrite(value);
+          }
+          dime.modules.setting.set(current.namespace, current.name, value);
+        };
+        var value = dime.modules.setting.get(current.namespace, current.name, current.defaultValue);
+        if (_.isFunction(current.onRead)) {
+          value = current.onRead(value);
+        }
+        var input = m('input', {
+          type: type,
+          value: value,
+          onchange: function (e) { onchange(e.target.value); }
+        });
+        if (dime.inputs[type]) {
+          input = dime.inputs[type](current, value, onchange);
+        }
 
-      list.push(dime.modules.setting.views.tabContents(dime.settings[activeTabIndex]));
-
-      if ('1' == getSetting('config', 'settings/view/all')) {
-        var settings = dime.resources.setting.findAll() || [];
-        list.concat(
-          m('table.bordered.responsive-table', [
-            m("thead",
-              m("tr", [
-                m("th", "Namespace"),
-                m("th", "Name"),
-                m("th", "Value")
-              ])
-            ),
-            settings.map(dime.modules.setting.views.item)
-          ]),
-          dime.modules.setting.view.form
-        );
+        return m('p.row.form-group#setting-' + current.namespace + '/' + current.name, [
+          m('.col-md-3', t(current.title)),
+          m('.col-md-9', [input, m('span.form-help', t(current.description))])
+        ]);
       }
-      return m("div", list);
-
-      var settings = dime.resources.setting.findAll() || [];
-      var list = [m('h2', t('Settings'))].concat(
-        m('table.bordered.responsive-table', [
-          m("thead",
-            m("tr", [
-              m("th", "Namespace"),
-              m("th", "Name"),
-              m("th", "Value")
-            ])
-          ),
-          settings.map(dime.modules.setting.views.item)
-        ]),
-        dime.modules.setting.view.form
-      );
-      return m("div", list);
     },
-    views: {},
+    view: function() {
+      var content = [];
+
+      _.forOwn(dime.settings, function (value) {
+        content.push(dime.modules.setting.views.card(value))
+      });
+
+      return content;
+    }
   }
 
   var getSetting = function (namespace, name) {

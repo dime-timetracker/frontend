@@ -6,7 +6,7 @@
     dime.inputs = {};
   }
   dime.inputs.text = function (current, value, update) {
-    return m('span', {
+    return m('span.form-control', {
       contenteditable: true,
       oninput: function(e) {
         update(e.target.textContent);

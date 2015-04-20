@@ -6,7 +6,7 @@
     dime.inputs = {};
   }
   dime.inputs.input = function (type, value, update) {
-    return m('input', {
+    return m('input.form-control', {
       type: type,
       value: value,
       oninput: function(e) {
