@@ -23,6 +23,14 @@
       if (_.isFunction(property.get)) {
         value = property.get(item);
       }
+      var setValue = function (value) {
+        if (_.isFunction(property.get)) {
+          property.set(value);
+        } else {
+          item[property.key] = value;
+        }
+      }
+
       var row = function (field) {
         return m('.form-row.' + property.key, [
           m('label', [
@@ -33,17 +41,9 @@
       }
       switch (property.type) {
         case 'boolean':
-          return row(
-            dime.inputs.boolean(item, value, function update (value) {
-              item[property.key] = value;
-            })
-          );
+          return row(dime.inputs.boolean(item, value, setValue));
         default:
-          return row(
-            dime.inputs.input(property.type, value, function update (value) {
-              item[property.key] = value;
-            })
-          );
+          return row(dime.inputs.input(property.type, value, setValue));
       }
     });
     dime.events.emit('core-' + type + '-form-item-view-after', {

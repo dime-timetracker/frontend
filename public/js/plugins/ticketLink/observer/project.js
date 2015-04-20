@@ -17,8 +17,8 @@
       get: function () {
         return dime.modules.setting.get(namespace, namePattern);
       },
-      set: function () {
-        return dime.modules.setting.set(namespace, namePattern);
+      set: function (value) {
+        return dime.modules.setting.set(namespace, namePattern, value);
       },
     });
     context.properties.push({
@@ -28,8 +28,8 @@
       get: function () {
         return dime.modules.setting.get(namespace, nameUrlSchema);
       },
-      set: function () {
-        return dime.modules.setting.set(namespace, nameUrlSchema);
+      set: function (value) {
+        return dime.modules.setting.set(namespace, nameUrlSchema, value);
       },
     });
   });
