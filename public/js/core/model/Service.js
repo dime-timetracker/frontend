@@ -7,6 +7,8 @@ dime.model.Service = function(data) {
   _.extend(this, data || {});
 }
 
+dime.model.Service.shortcut = ':';
+
 dime.model.Service.properties = function properties (model) {
   var context = {
     model: model,

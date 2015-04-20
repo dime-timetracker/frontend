@@ -7,6 +7,8 @@ dime.model.Customer = function(data) {
   _.extend(this, data || {});
 };
 
+dime.model.Customer.shortcut = '@';
+
 dime.model.Customer.properties = function properties (model) {
   var context = {
     model: model,

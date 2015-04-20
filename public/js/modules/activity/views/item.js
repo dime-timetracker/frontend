@@ -28,9 +28,9 @@
 
     var badges = [
       m('li', m('a[href=#]', m('span.icon.icon-add'))),
-      dime.modules.customer.views.badge(current),
-      dime.modules.project.views.badge(current),
-      dime.modules.service.views.badge(current),
+      dime.modules.crud.views.badge('customer', current),
+      dime.modules.crud.views.badge('project', current),
+      dime.modules.crud.views.badge('service', current),
     ];
 
     var badgesView = m('ul.nav.nav-list.badge-list.badge-list-small', badges);

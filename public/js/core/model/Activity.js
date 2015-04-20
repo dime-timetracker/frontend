@@ -16,6 +16,35 @@ dime.model.Activity = function(data) {
 dime.model.Activity.prototype = new dime.Model();
 dime.model.Activity.prototype.constructor = dime.model.Activity;
 
+dime.model.Activity.prototype.onSwitchRelation = function(relation, item) {
+  this[relation] = item;
+  switch (relation) {
+    case 'customer':
+      if (this.project) {
+        // reset project after selecting a different customer
+        if (this.project.customer
+          && this.project.customer.alias
+          && this.project.customer.alias !== relation.alias
+        ) {
+          this.project = null;
+        }
+        // assign customer to project, if it has none
+        if (this.customer && "" == this.project.customer.alias) {
+          this.project.customer = this.customer;
+        }
+      }
+      dime.resources.activity.persist(this);
+    case 'project':
+      if (item.customer && item.customer.alias) {
+        this.customer = item.customer;
+      }
+      if (!item.customer || "" == item.customer.alias) {
+        this.project.customer = this.customer;
+      }
+      dime.resources.activity.persist(this);
+  }
+}
+
 dime.model.Activity.prototype.running = function () {
   return this.timeslices.some(function (timeslice) {
     return timeslice.isRunning();
