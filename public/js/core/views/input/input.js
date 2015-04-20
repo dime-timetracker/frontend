@@ -10,7 +10,7 @@
       type: type,
       value: value,
       oninput: function(e) {
-        update(e.target.textContent);
+        update(e.target.value);
       }
     });
   }
