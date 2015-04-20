@@ -58,7 +58,7 @@
       t = dime.translate,
       menuItem = [],
       children = (item.children || []).sort(sort),
-      visibility = dime.configuration.get({name: item.id, namespace: 'menu/visibility', defaultValue: 0}),
+      visibility = dime.modules.setting.local['menu/visibility/' + item.id] || 0,
       active = (1 === visibility || m.route() === item.route) ? '.active' : '',
       dropdown = '';
 
@@ -68,7 +68,7 @@
         menuItem.push(m('a[href=#].dropdown-toggle', {
           onclick: function() {
             visibility = Math.abs(visibility - 1);
-            dime.configuration.set({name: item.id, namespace: 'menu/visibility', value: visibility});
+            dime.modules.setting.local['menu/visibility/' + item.id] = visibility;
             return false;
           }
         }, t(item.name)));
