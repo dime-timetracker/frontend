@@ -29,7 +29,10 @@ dime.model.Activity.prototype.onSwitchRelation = function(relation, item) {
           this.project = null;
         }
         // assign customer to project, if it has none
-        if (this.customer && "" == this.project.customer.alias) {
+        if (this.customer
+          && _.isObject(this.project.customer)
+          && "" == this.project.customer.alias
+        ) {
           this.project.customer = this.customer;
         }
       }
