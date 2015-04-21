@@ -30,6 +30,7 @@
           words[words.length - 1] = words[words.length - 1].substr(0, 1) + suggestion.alias;
           e.target.value = words.join(' ');
           suggestion.selected = true;
+          m.redraw();
         }
       }
 
@@ -81,7 +82,6 @@
           if (false === cycled) {
             applySuggestion(e, reloop(scope.suggestions));
           }
-          m.redraw();
         }
       }
 
@@ -103,6 +103,7 @@
 
       var clearSuggestions = function clearSuggestions(e) {
         scope.suggestions = [];
+        m.redraw();
       }
 
       Mousetrap.bind('space', clearSuggestions);
