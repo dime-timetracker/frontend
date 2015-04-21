@@ -24,15 +24,76 @@
         shortcuts[key] = dime.modules.setting.get(setting);
       });
       
+      var applySuggestion = function (e, suggestion) {
+        var words = e.target.value.split(' ');
+        if (words.length) {
+          words[words.length - 1] = words[words.length - 1].substr(0, 1) + suggestion.alias;
+          e.target.value = words.join(' ');
+          suggestion.selected = true;
+        }
+      }
+
+      var autocomplete = function (keyEvent) {
+        _.forEach(dime.modules.prompt.autocompletions, function (autocomplete) {
+          autocomplete(keyEvent, scope);
+          if (scope.suggestions.length) {
+            applySuggestion(keyEvent, scope.suggestions[0]);
+          }
+        });
+        return false;
+      };
+
       var initPrompt = function initPrompt (e) {
         Mousetrap(e.target).bind(shortcuts.blurPrompt, function () {
           e.target.value = '';
           e.target.blur();
         });
-        Mousetrap(e.target).bind(shortcuts.cycleSuggestions, function () {
-          console.log('Not yet implemented.');
-          // TODO cycle through autocompletion suggestions
-          return false;
+
+        Mousetrap(e.target).bind(shortcuts.triggerAutocompletion, autocomplete);
+        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsLeft, function (keyEvent) {
+          var prevKey = undefined;
+          var cycled = false;
+          if (scope.suggestions.length) {
+            _.forEachRight(scope.suggestions, function (suggestion, key) {
+              if (_.isUndefined(prevKey)) {
+                if (_.isBoolean(suggestion.selected) && suggestion.selected) {
+                  prevKey = key;
+                  suggestion.selected = false;
+                }
+              } else if (false === cycled) {
+                applySuggestion(e, suggestion);
+                cycled = true;
+                return;
+              }
+            });
+            if (false === cycled) {
+              applySuggestion(e, scope.suggestions[scope.suggestions.length - 1]);
+              //scope.suggestions[scope.suggestions.length - 1].selected = true;
+            }
+          }
+        });
+        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsRight, function (keyEvent) {
+          var prevKey = undefined;
+          var cycled = false;
+          if (scope.suggestions.length) {
+            _.forEach(scope.suggestions, function (suggestion, key) {
+              if (_.isUndefined(prevKey)) {
+                if (_.isBoolean(suggestion.selected) && suggestion.selected) {
+                  prevKey = key;
+                  suggestion.selected = false;
+                }
+              } else if (false === cycled) {
+                applySuggestion(e, suggestion);
+                //suggestion.selected = true;
+                cycled = true;
+                return;
+              }
+            });
+            if (false === cycled) {
+              applySuggestion(e, scope.suggestions[0]);
+              //scope.suggestions[0].selected = true;
+            }
+          }
         });
         scope.help = true;
         return true;
@@ -44,6 +105,22 @@
         return;
       }
 
+      var updateSuggestions = function updateSuggestions(e) {
+        // some char added
+        if ((e.keyCode && 1 == e.keyCode.length) || (e.which && 1 == e.which.length)) {
+          if (scope.suggestions.length) {
+            autocompletion(e);
+            return;
+          }
+        }
+      }
+
+      var clearSuggestions = function clearSuggestions(e) {
+        scope.suggestions = [];
+      }
+
+      Mousetrap.bind('space', clearSuggestions);
+
       Mousetrap.bind(shortcuts.focusPrompt, function(e) {
         document.getElementById('prompt').focus()
       });
@@ -54,14 +131,21 @@
             m("input#prompt.form-control.mousetrap", {
               placeholder: t('Add an activity'),
               onfocus: initPrompt,
-              onblur: blurPrompt
+              onblur: blurPrompt,
+              onkeydown: updateSuggestions
             }),
-            m("div.form-help.form-help-msg.suggestions" + showHelp, [
+            m("div.row.suggestions" + showHelp, [
               scope.suggestions.map(function (suggestion) {
-                return m('div.suggestion' + (suggestion.selected ? '.selected' : ''), [
-                  m('.alias', suggestion.alias),
-                  m('.name', suggestion.name),
-                ]);
+                return m('div.col-lg-2.col-md-3.col-sm-4',
+                  m('div.card.suggestion.' + (suggestion.selected ? '.card-blue-bg' : ''),
+                    m('div.card-main',
+                      m('div.card-inner', [
+                        m('p.card-heading.alias', suggestion.alias),
+                        m('p.name', suggestion.name || t('(Please edit details!)')),
+                      ])
+                    )
+                  )
+                );
               })
             ]),
             m("div.form-help.form-help-msg" + showHelp, [
@@ -110,13 +194,29 @@
             type: "text",
             defaultValue: 'esc'
           },
-          cycleSuggestions: {
+          triggerAutocompletion: {
+            title: 'Trigger autocompletion',
+            description: 'Press this key to trigger prompt autocompletion',
+            namespace: "prompt",
+            name: "shortcuts/triggerAutocompletion",
+            type: "text",
+            defaultValue: 'tab'
+          },
+          cycleSuggestionsLeft: {
             title: 'Cycle suggestions',
             description: 'Press this key to cycle suggestions of prompt autocompletion',
             namespace: "prompt",
-            name: "shortcuts/cycleSuggestions",
+            name: "shortcuts/cycleSuggestionsLeft",
             type: "text",
-            defaultValue: 'tab'
+            defaultValue: 'left'
+          },
+          cycleSuggestionsRight: {
+            title: 'Cycle suggestions',
+            description: 'Press this key to cycle suggestions of prompt autocompletion',
+            namespace: "prompt",
+            name: "shortcuts/cycleSuggestionsRight",
+            type: "text",
+            defaultValue: 'right'
           }
         }
       }

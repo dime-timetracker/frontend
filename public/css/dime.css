@@ -9879,6 +9879,9 @@ table {
 .header .nav li:hover {
   background: #3C9F40; }
 
+#prompt-container .suggestions .suggestion {
+  font-size: 0.8em; }
+
 .collection .list-item {
   position: relative; }
 
