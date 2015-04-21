@@ -9,6 +9,11 @@
     var model = dime.model[type.charAt(0).toUpperCase() + type.substr(1)];
 
     var options = items.map(function(item) {
+      if ((activity.hasCustomer() && activity.customer.alias === item.alias)
+        || (false === activity.hasCustomer() && '' === item.alias)
+      ) {
+        return undefined;
+      }
       return m("li", m("a", {
         href: "#",
         onclick: function() { activity.onSwitchRelation(type, item); }
