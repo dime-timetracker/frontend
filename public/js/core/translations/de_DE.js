@@ -24,7 +24,8 @@
     'Please edit project details': 'Bitte Projektdetails bearbeiten',
     'Please edit service details': 'Bitte Servicedetails bearbeiten',
     'Please select a customer before creating a new project!': 'Bitte erst einen Kunden wählen, bevor ein neues Projekt angelegt wird!',
-    '(Please edit details!)': '(Bitte Details bearbeiten!)'
+    '(Please edit details!)': '(Bitte Details bearbeiten!)',
+    '(Click here to enter a description!)': '(Hier klicken um eine Beschreibung einzugeben!)',
   });
 
    dime.translation.add('de_DE', {

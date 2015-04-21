@@ -28,7 +28,28 @@
       });
       activities = activities.findAll();
 
-      return m(".tile-wrap", activities.map(dime.modules.activity.views.item));
+      var addActivity = function addActivity () {
+        dime.resources.activity.persist({
+          description: t('(Click here to enter a description!)'),
+          timeslices: []
+        });
+      }
+
+      var addButton = m('.fbtn-container',
+        m('.fbtn-inner',
+          m('a[href=#].fbtn.fbtn-red', {
+            onclick: addActivity
+          }, [
+            m('span.fbtn-text', t('Add Activity')),
+            m('span.icon.icon-add'),
+          ])
+        )
+      );
+
+      return m(".tile-wrap", [
+        activities.map(dime.modules.activity.views.item),
+        addButton
+      ]);
     },
     views: {}
   };
