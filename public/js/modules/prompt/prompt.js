@@ -1,13 +1,14 @@
 'use strict';
 
-(function (dime, moment, m) {
+(function (dime, moment, m, Mousetrap) {
 
   var t = dime.translate;
 
   dime.modules.prompt = {
     controller: function () {
       var scope = {
-        help: false
+        help: false,
+        suggestions: []
       };
 
       return scope;
@@ -17,23 +18,52 @@
       if (scope.help) {
         showHelp = "";
       }
+
+      var shortcuts = {};
+      _.map(dime.settings.prompt.children.shortcuts.children, function (setting, key) {
+        shortcuts[key] = dime.modules.setting.get(setting);
+      });
       
+      var initPrompt = function initPrompt (e) {
+        Mousetrap(e.target).bind(shortcuts.blurPrompt, function () {
+          e.target.value = '';
+          e.target.blur();
+        });
+        Mousetrap(e.target).bind(shortcuts.cycleSuggestions, function () {
+          console.log('Not yet implemented.');
+          // TODO cycle through autocompletion suggestions
+          return false;
+        });
+        scope.help = true;
+        return true;
+      }
+
+      var blurPrompt = function blurPrompt (e) {
+        scope.help = false;
+        Mousetrap(e.target).reset();
+        return;
+      }
+
+      Mousetrap.bind(shortcuts.focusPrompt, function(e) {
+        document.getElementById('prompt').focus()
+      });
+
       return m(".card", 
         m(".card-main", 
           m(".card-inner", [
-            m("input.form-control", {
+            m("input#prompt.form-control.mousetrap", {
               placeholder: t('Add an activity'),
-              onfocus: function() { scope.help = true },
-              onblur: function() { scope.help = false },
-              onkeyup: function(e) {
-                if (13 === e.keyCode) { //ENTER
-                  return submit(e);
-                }
-                _.forEach(dime.modules.prompt.autocompletions, function (autocomplete) {
-                  autocomplete(e);
-                });
-              }
+              onfocus: initPrompt,
+              onblur: blurPrompt
             }),
+            m("div.form-help.form-help-msg.suggestions" + showHelp, [
+              scope.suggestions.map(function (suggestion) {
+                return m('div.suggestion' + (suggestion.selected ? '.selected' : ''), [
+                  m('.alias', suggestion.alias),
+                  m('.name', suggestion.name),
+                ]);
+              })
+            ]),
             m("div.form-help.form-help-msg" + showHelp, [
               m("span.basics", t('Enter a description to start an activity.')),
               m("ul", [
@@ -55,6 +85,43 @@
 
   dime.modules.prompt.autocompletion = {};
   dime.modules.prompt.autocompletions = [];
+
+  dime.settings.prompt = {
+    title: t('Prompt'),
+    description: t('Prompt settings'),
+    children: {
+      shortcuts: {
+        title: t('Shortcuts'),
+        description: t('Keyboard shortcuts'),
+        children: {
+          focusPrompt: {
+            title: 'Add new activity',
+            description: 'Press this key to focus prompt',
+            namespace: "prompt",
+            name: "shortcuts/focusPrompt",
+            type: "text",
+            defaultValue: '+'
+          },
+          blurPrompt: {
+            title: 'Blur prompt',
+            description: 'Press this key to blur prompt',
+            namespace: "prompt",
+            name: "shortcuts/blurPrompt",
+            type: "text",
+            defaultValue: 'esc'
+          },
+          cycleSuggestions: {
+            title: 'Cycle suggestions',
+            description: 'Press this key to cycle suggestions of prompt autocompletion',
+            namespace: "prompt",
+            name: "shortcuts/cycleSuggestions",
+            type: "text",
+            defaultValue: 'tab'
+          }
+        }
+      }
+    }
+  };
 
   var submit = function (e) {
     var newActivity = dime.parser.parse(e.target.value);
@@ -80,4 +147,4 @@
     });
   };
 
-}) (dime, moment, m)
+}) (dime, moment, m, Mousetrap)

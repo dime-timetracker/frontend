@@ -1,7 +1,7 @@
 'use strict';
 
 (function (dime, m, _) {
-  dime.modules.prompt.autocompletion.alias = function(e, relation, trigger) {
+  dime.modules.prompt.autocompletion.alias = function(e, scope, relation, trigger) {
     if (e.key.length > 1) { // no character added
       return;
     }
@@ -11,9 +11,9 @@
       var matching = _.filter(relation, function(item) {
         return item.alias.startsWith(alias);
       });
-      if (1 === matching.length) {
-        e.target.value = e.target.value.replace(trigger + alias, trigger + matching[0].alias);
-      }
+      _.forEach(matching, function(item) {
+        scope.suggestions.push(item);
+      });
     }
   }
 })(dime, m, _)
