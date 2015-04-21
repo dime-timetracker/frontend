@@ -13,6 +13,41 @@ dime.model.Activity = function(data) {
   }
 };
 
+dime.model.Activity.properties = function properties (model) {
+  var context = {
+    model: model,
+    properties: [
+      {
+        key: 'description',
+        title: 'description',
+        type: 'text'
+      },
+      {
+        key: 'customer',
+        title: 'customer',
+        type: 'relation'
+      },
+      {
+        key: 'project',
+        title: 'project',
+        type: 'relation'
+      },
+      {
+        key: 'service',
+        title: 'service',
+        type: 'relation'
+      },
+      {
+        key: 'tags',
+        title: 'tags',
+        type: 'tags'
+      }
+    ]
+  };
+  dime.events.emit('model-activity-properties', context);
+  return context.properties;
+}
+
 dime.model.Activity.prototype = new dime.Model();
 dime.model.Activity.prototype.constructor = dime.model.Activity;
 

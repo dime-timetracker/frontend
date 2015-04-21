@@ -13,11 +13,12 @@
     view: function (scope) {
 
       // first of all, we accept all of them
-      scope.filters = [
-        function (activity) { return true; }
-      ];
-
-      // TODO: render filter view
+      dime.filters = {
+        'default': {
+          value: null,
+          by: function (activity) { return true; }
+        }
+      };
 
       var activities = new dime.Collection({
         model: dime.model.Activity
@@ -46,12 +47,34 @@
         )
       );
 
-      return m(".tile-wrap", [
-        activities.map(dime.modules.activity.views.item),
-        addButton
+      var filterButton = m('a[href=#].btn waves-button waves-effect', {
+        onclick: function () { scope.showFilters = !scope.showFilters; return false; }
+      }, [
+        m('span.fbtn-text', t('Filter Activities')),
+        m('span.icon.icon-filter-list')
+      ]);
+
+      var filterForm = m('#activity-filter',
+        'Hier kommen die Filter hin...'
+      );
+
+      return m('div', [
+        filterButton,
+        scope.showFilters ? dime.modules.activity.views.filter(scope) : undefined,
+        m(".tile-wrap", [
+          activities.map(dime.modules.activity.views.item),
+          addButton
+        ]),
       ]);
     },
     views: {}
+  };
+
+  dime.modules.activity.filters = {
+    'default': {
+      value: null,
+      by: function (activity) { return true; }
+    }
   };
 
   var getLatestUpdate = function (activity) {
