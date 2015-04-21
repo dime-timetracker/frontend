@@ -68,7 +68,10 @@
     var timeslicesView = dime.modules.activity.views.timeslices(current);
     dime.events.emit('activity-item-timeslices-view-after', {view: timeslicesView, item: current});
 
-    var result = m('.tile', [
+
+    var tileClass = (t('(Click here to enter a description!)') === current.description) ? 'text-red' : '';
+
+    var result = m('.tile.' + tileClass, [
       m('.pull-left.tile-side', badgesView),
       m('.tile-action.tile-action-show', actionsView),
       m('.tile-inner', [descriptionsView, tagBadgesView]),
