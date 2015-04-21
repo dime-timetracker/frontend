@@ -27,7 +27,6 @@
     var className = current.showTimeslices ? '' : '.hide';
 
     var badges = [
-      m('li', m('a[href=#]', m('span.icon.icon-add'))),
       dime.core.views.badge('customer', current),
       dime.core.views.badge('project', current),
       dime.core.views.badge('service', current),
