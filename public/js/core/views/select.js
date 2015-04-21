@@ -4,7 +4,7 @@
 
   dime.core.views.select = function (type, activity) {
 
-    var items = dime.resources[type].findAll() || [];
+    var items = _.sortBy(dime.resources[type].findAll(), 'name') || [];
 
     var model = dime.model[type.charAt(0).toUpperCase() + type.substr(1)];
 
