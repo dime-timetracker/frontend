@@ -50,53 +50,39 @@
         });
 
         Mousetrap(e.target).bind(shortcuts.triggerAutocompletion, autocomplete);
-        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsLeft, function (keyEvent) {
-          var prevKey = undefined;
-          var cycled = false;
-          if (scope.suggestions.length) {
-            _.forEachRight(scope.suggestions, function (suggestion, key) {
-              if (_.isUndefined(prevKey)) {
-                if (_.isBoolean(suggestion.selected) && suggestion.selected) {
-                  prevKey = key;
-                  suggestion.selected = false;
-                }
-              } else if (false === cycled) {
-                applySuggestion(e, suggestion);
-                cycled = true;
-                return;
-              }
-            });
-            if (false === cycled) {
-              applySuggestion(e, scope.suggestions[scope.suggestions.length - 1]);
-              //scope.suggestions[scope.suggestions.length - 1].selected = true;
-            }
-          }
+        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsLeft, function () {
+          cycleSuggestions('left', e); return false;
         });
-        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsRight, function (keyEvent) {
-          var prevKey = undefined;
-          var cycled = false;
-          if (scope.suggestions.length) {
-            _.forEach(scope.suggestions, function (suggestion, key) {
-              if (_.isUndefined(prevKey)) {
-                if (_.isBoolean(suggestion.selected) && suggestion.selected) {
-                  prevKey = key;
-                  suggestion.selected = false;
-                }
-              } else if (false === cycled) {
-                applySuggestion(e, suggestion);
-                //suggestion.selected = true;
-                cycled = true;
-                return;
-              }
-            });
-            if (false === cycled) {
-              applySuggestion(e, scope.suggestions[0]);
-              //scope.suggestions[0].selected = true;
-            }
-          }
+        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsRight, function () {
+          cycleSuggestions('right', e); return false;
         });
         scope.help = true;
         return true;
+      }
+
+      var cycleSuggestions = function cycleSuggestions (direction, e) {
+        var loop = ('left' === direction) ? _.forEachRight : _.forEach;
+        var reloop = ('left' === direction) ? _.last : _.first;
+        var prevKey = undefined;
+        var cycled = false;
+        if (scope.suggestions.length) {
+          loop(scope.suggestions, function (suggestion, key) {
+            if (_.isUndefined(prevKey)) {
+              if (_.isBoolean(suggestion.selected) && suggestion.selected) {
+                prevKey = key;
+                suggestion.selected = false;
+              }
+            } else if (false === cycled) {
+              applySuggestion(e, suggestion);
+              cycled = true;
+              return;
+            }
+          });
+          if (false === cycled) {
+            applySuggestion(e, reloop(scope.suggestions));
+          }
+          m.redraw();
+        }
       }
 
       var blurPrompt = function blurPrompt (e) {
