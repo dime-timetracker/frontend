@@ -44,11 +44,17 @@
       onclick: function() { setEditable(true); return false; }
     }, [ m("span.icon.icon-edit"), activity[type].name ]);
 
-    options.unshift(
-      m("li.current", [
-        isEditable() ? inlineForm(activity[type]) : editButton
-      ])
-    );
+    var currentAction = null;
+    if ('project' === type && false === activity.hasProject() && false === activity.hasCustomer()) {
+      currentAction = m('a',
+        dime.translate('Please select a customer before creating a new project!')
+      );
+    } else if (isEditable()) {
+      currentAction = inlineForm(activity[type]);
+    } else {
+      currentAction = editButton;
+    }
+    options.unshift(m("li.current", [currentAction]));
 
     return m("ul.dropdown-menu", options);
   }

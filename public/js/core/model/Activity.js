@@ -45,6 +45,24 @@ dime.model.Activity.prototype.onSwitchRelation = function(relation, item) {
   }
 }
 
+dime.model.Activity.prototype.hasCustomer = function () {
+  return _.isObject(this.customer)
+    && _.isString(this.customer.alias)
+    && 0 < this.customer.alias.length;
+};
+
+dime.model.Activity.prototype.hasProject = function () {
+  return _.isObject(this.project)
+    && _.isString(this.project.alias)
+    && 0 < this.project.alias.length;
+};
+
+dime.model.Activity.prototype.hasService = function () {
+  return _.isObject(this.service)
+    && _.isString(this.service.alias)
+    && 0 < this.service.alias.length;
+};
+
 dime.model.Activity.prototype.running = function () {
   return this.timeslices.some(function (timeslice) {
     return timeslice.isRunning();
