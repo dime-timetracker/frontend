@@ -26,6 +26,11 @@
     'Please select a customer before creating a new project!': 'Bitte erst einen Kunden wählen, bevor ein neues Projekt angelegt wird!',
     '(Please edit details!)': '(Bitte Details bearbeiten!)',
     '(Click here to enter a description!)': '(Hier klicken um eine Beschreibung einzugeben!)',
+    'ctrl': 'Strg',
+    'shift': 'Umschalt',
+    'alt': 'Alt',
+    'Add an activity': 'Eine Aktivität hinzufügen',
+    'Filter activities': 'Aktivitäten filtern'
   });
 
    dime.translation.add('de_DE', {

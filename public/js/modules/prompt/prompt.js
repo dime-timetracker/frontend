@@ -65,18 +65,23 @@
         dime.helper.prompt.blur(e, scope);
       };
 
+      var humanReadableShortcut = function (key) {
+        var shortcuts = dime.helper.prompt.shortcuts()
+        return dime.helper.format.mousetrapCommand(shortcuts[key], t);
+      }
+
       return m('.card',
         m('.card-main',
           m('.card-inner', [
             m('.row', [
               m('div.col-md-6', m('input#prompt.form-control.mousetrap', {
-                placeholder: t('Add an activity'),
+                placeholder: t('Add an activity') + ' (' + humanReadableShortcut('focusPrompt') + ')',
                 onfocus: function (e) { dime.helper.prompt.init(e, scope, submit); },
                 onblur: function (e) { dime.helper.prompt.blur(e, scope); },
                 onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
               })),
               m('div.col-md-6', m('input#filter.form-control.mousetrap.text-right', {
-                placeholder: t('Filter activities'),
+                placeholder: t('Filter activities') + ' (' + humanReadableShortcut('focusFilter') + ')',
                 onfocus: function (e) { dime.helper.prompt.init(e, scope, updateFilter); },
                 onblur: function (e) { dime.helper.prompt.blur(e, scope); },
                 onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
