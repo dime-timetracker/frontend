@@ -39,6 +39,7 @@
     },
 
     blur: function blur (e, scope) {
+      dime.helper.prompt.clearSuggestions(e, scope);
       scope.help = false;
       Mousetrap(e.target).reset();
     },
