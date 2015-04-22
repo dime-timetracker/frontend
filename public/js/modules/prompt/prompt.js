@@ -19,95 +19,6 @@
         showHelp = "";
       }
 
-      var shortcuts = {};
-      _.map(dime.settings.prompt.children.shortcuts.children, function (setting, key) {
-        shortcuts[key] = dime.modules.setting.get(setting);
-      });
-      
-      var applySuggestion = function (e, suggestion) {
-        var words = e.target.value.split(' ');
-        if (words.length) {
-          words[words.length - 1] = words[words.length - 1].substr(0, 1) + suggestion.alias;
-          e.target.value = words.join(' ');
-          suggestion.selected = true;
-          m.redraw();
-        }
-      }
-
-      var autocomplete = function (keyEvent) {
-        _.forEach(dime.modules.prompt.autocompletions, function (autocomplete) {
-          autocomplete(keyEvent, scope);
-          if (scope.suggestions.length) {
-            applySuggestion(keyEvent, scope.suggestions[0]);
-          }
-        });
-        return false;
-      };
-
-      var initPrompt = function initPrompt (e) {
-        Mousetrap(e.target).bind(shortcuts.blurPrompt, function () {
-          e.target.value = '';
-          e.target.blur();
-        });
-
-        Mousetrap(e.target).bind(shortcuts.triggerAutocompletion, autocomplete);
-        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsLeft, function () {
-          cycleSuggestions('left', e); return false;
-        });
-        Mousetrap(e.target).bind(shortcuts.cycleSuggestionsRight, function () {
-          cycleSuggestions('right', e); return false;
-        });
-        Mousetrap(e.target).bind(shortcuts.submitPrompt, submit);
-        scope.help = true;
-        return true;
-      }
-
-      var cycleSuggestions = function cycleSuggestions (direction, e) {
-        var loop = ('left' === direction) ? _.forEachRight : _.forEach;
-        var reloop = ('left' === direction) ? _.last : _.first;
-        var prevKey = undefined;
-        var cycled = false;
-        if (scope.suggestions.length) {
-          loop(scope.suggestions, function (suggestion, key) {
-            if (_.isUndefined(prevKey)) {
-              if (_.isBoolean(suggestion.selected) && suggestion.selected) {
-                prevKey = key;
-                suggestion.selected = false;
-              }
-            } else if (false === cycled) {
-              applySuggestion(e, suggestion);
-              cycled = true;
-              return;
-            }
-          });
-          if (false === cycled) {
-            applySuggestion(e, reloop(scope.suggestions));
-          }
-        }
-      }
-
-      var blurPrompt = function blurPrompt (e) {
-        scope.help = false;
-        e.target.blur();
-        Mousetrap(e.target).reset();
-        return;
-      }
-
-      var updateSuggestions = function updateSuggestions(e) {
-        // some char added
-        if ((e.keyCode && 1 == e.keyCode.length) || (e.which && 1 == e.which.length)) {
-          if (scope.suggestions.length) {
-            autocomplete(e);
-            return;
-          }
-        }
-      }
-
-      var clearSuggestions = function clearSuggestions(e) {
-        scope.suggestions = [];
-        m.redraw();
-      }
-
       var submit = function (e) {
         var newActivity = dime.parser.parse(e.target.value);
         var timeslice = {
@@ -131,13 +42,12 @@
           e.target.value = '';
         });
 
-        blurPrompt(e);
+        dime.helper.prompt.blur(e, scope);
       };
 
-      Mousetrap.bind('space', clearSuggestions);
-
-      Mousetrap.bind(shortcuts.focusPrompt, function(e) {
-        document.getElementById('prompt').focus()
+      Mousetrap.bind(dime.helper.prompt.shortcuts().focusPrompt, function(e) {
+        document.getElementById('prompt').focus();
+        return false;
       });
 
       return m(".card", 
@@ -145,9 +55,9 @@
           m(".card-inner", [
             m("input#prompt.form-control.mousetrap", {
               placeholder: t('Add an activity'),
-              onfocus: initPrompt,
-              onblur: blurPrompt,
-              onkeydown: updateSuggestions
+              onfocus: function (e) { dime.helper.prompt.init(e, scope, submit) },
+              onblur: function (e) { dime.helper.prompt.blur(e, scope) },
+              onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope) }
             }),
             m("div.row.suggestions" + showHelp, [
               scope.suggestions.map(function (suggestion) {
@@ -199,7 +109,7 @@
             namespace: "prompt",
             name: "shortcuts/focusPrompt",
             type: "text",
-            defaultValue: '+'
+            defaultValue: 'mod+a'
           },
           submitPrompt: {
             title: 'Submit prompt',

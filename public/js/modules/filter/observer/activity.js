@@ -4,7 +4,7 @@
 
   dime.events.on('activity-view-collection-load', function(context) {
     _.forEach(dime.modules.activity.filters, function(filter) {
-      context.collection.filter(filter.by);
+      context.collection.filter(filter);
     });
       
   });
