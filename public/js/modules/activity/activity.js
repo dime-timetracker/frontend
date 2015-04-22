@@ -24,6 +24,12 @@
         collection: activities,
         scope: scope
       });
+
+      // filter activities
+      _.forEach(dime.modules.activity.filters, function(filter) {
+        activities.filter(filter);
+      });
+
       activities = activities.findAll();
 
       var addActivity = function addActivity () {
@@ -44,13 +50,12 @@
         )
       );
 
-      return m('div', [
-        dime.modules.activity.views.filter(scope),
+      return [
         m(".tile-wrap", [
           activities.map(dime.modules.activity.views.item),
           addButton
         ]),
-      ]);
+      ];
     },
     views: {}
   };
