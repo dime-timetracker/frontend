@@ -83,6 +83,9 @@
         if (scope.suggestions.length) {
           dime.helper.prompt.applySuggestion(e, scope.suggestions[0]);
         }
+        if (1 == scope.suggestions.length) {
+          dime.helper.prompt.clearSuggestions(e, scope);
+        }
       });
       return false;
     },
