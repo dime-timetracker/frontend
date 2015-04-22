@@ -23,7 +23,13 @@
         content.push(scope.views[i](scope));
       }
     }
-    return content;
+    
+    var color = dime.modules.setting.get(dime.settings.general.children.customize.children.headerColor);
+    if (color) {
+      color = '.' + color.split(' ').join('.');
+    }
+
+    return m('header.header' + color, content);
   };
 
   module.views = {
@@ -31,5 +37,19 @@
       return m('a[href="#/"].header-logo', [m('span.icon.' + scope.icon), ' ', scope.name]);
     }
   };
+
+  dime.settings.general.children.customize = {
+    title: "Pimp my dime",
+    children: {
+      headerColor: {
+        title: 'Header color',
+        description: 'Change header color (red)',
+        namespace: 'general',
+        name: 'customize/header/color',
+        type: 'text',
+        defaultValue: 'green',
+      }
+    }
+  }
 
 })(dime);
