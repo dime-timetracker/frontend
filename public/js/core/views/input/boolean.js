@@ -19,7 +19,7 @@
         selected: value==false
       }
     ];
-    return m("select", {
+    return m("select.form-control", {
         onchange: function (e) { update(e.target.value); }
     }, options.map(function (option) {
       return m("option", { value: option.value, selected: option.selected }, option.label);

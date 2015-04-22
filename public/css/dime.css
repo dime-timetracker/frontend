@@ -9934,24 +9934,22 @@ table {
   .badge-list.badge-list-small > li {
     font-size: .7rem;
     min-width: auto; }
-    .badge-list.badge-list-small > li form {
-      background: #F5F5F5;
-      border-bottom: dashed 1px black;
-      color: #26A69A;
-      padding: 1.3em 0;
-      width: 11rem; }
-      .badge-list.badge-list-small > li form .form-row {
-        margin-left: 1em;
-        text-align: left;
-        width: 100%; }
-        .badge-list.badge-list-small > li form .form-row label {
-          display: block;
-          font-size: 0.9em;
-          line-height: 1em;
-          margin-top: 1em; }
-        .badge-list.badge-list-small > li form .form-row input, .badge-list.badge-list-small > li form .form-row select, .badge-list.badge-list-small > li form .form-row textarea {
-          display: block;
-          width: 14em; }
+
+.form-inline {
+  background: #F5F5F5;
+  border-bottom: dashed 1px black;
+  color: #26A69A;
+  padding: 1.3em 0; }
+  .form-inline .form-group {
+    margin: 0 1em;
+    text-align: left; }
+    .form-inline .form-group label {
+      display: block;
+      font-size: 0.9em;
+      line-height: 1em;
+      margin-top: 1em; }
+  .form-inline .push-down {
+    margin-top: 1.3em; }
 
 .nav.tag-badges a {
   display: inline;

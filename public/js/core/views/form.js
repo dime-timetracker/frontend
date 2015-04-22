@@ -1,12 +1,10 @@
-'use strict';
-
-(function (dime, m, _) {
+;(function (dime, m, _) {
+  'use strict';
 
   var t = dime.translate;
 
   dime.core.views.form = function (item, type, properties, allowDelete, onSave, onCancel) {
     allowDelete = _.isUndefined(allowDelete) ? true : allowDelete;
-    var disabled = item.enabled ? '' : '.disabled';
 
     var saveForm = function (e) {
       dime.resources[type].persist(item);
@@ -29,53 +27,50 @@
         } else {
           item[property.key] = value;
         }
-      }
+      };
 
-      var row = function (field) {
-        return m('.form-row.' + property.key, [
-          m('label', [
-            t(property.title),
-            field
-          ]),
-        ]);
-      }
+      var input = undefined;
       switch (property.type) {
         case 'boolean':
-          return row(dime.inputs.boolean(item, value, setValue));
+          input = dime.inputs.boolean(item, value, setValue);
+          break;
         default:
-          return row(dime.inputs.input(property.type, value, setValue));
+          input = dime.inputs.input(property.type, value, setValue);
       }
+      return m('.form-group', [ m('label', t(property.title)), input ] );
     });
+    
     dime.events.emit('core-' + type + '-form-item-view-after', {
       item: item,
       properties: properties,
       type: type,
-      view: columns,
+      view: columns
     });
+    
+    columns.unshift(
+      m(".form-group", m("input[type=button].btn.btn-block.cancel", {
+        onclick: onCancel,
+        value: t('Cancel')
+      }))
+    );
 
     if (allowDelete) {
       columns.push(
-        m("input[type=submit].delete", {
-          onclick: function() { confirm('Really?') && current.delete(current.id) },
+        m("input[type=submit].btn.btn-block.delete", {
+          onclick: function() { confirm('Really?') && item.delete(item.id); },
           value: 'Delete'
         })
       );
     }
 
     columns.push(
-      m("input[type=button].cancel", {
-        onclick: onCancel,
-        value: t('Cancel')
-      })
+      m(".form-group.push-down", m("button[type=submit].btn.btn-block.save", {
+        onclick: saveForm
+      }, t('Save')))
     );
 
-    columns.push(
-      m("input[type=submit].save", {
-        onclick: saveForm,
-        value: t('Save')
-      })
-    );
 
-    return m('form' + disabled, columns);
-  }
+    return m('form.form-inline', columns);
+  };
+  
 })(dime, m, _)
