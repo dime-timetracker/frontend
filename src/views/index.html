@@ -19,12 +19,10 @@
     <meta name="apple-mobile-web-app-title" content="Dime Timetracker">
   </head>
   <body>
-    <header class="header">
-      <div class="clearfix pull-left">
-        <a class="header-logo" href="#/"><i class="icon icon-access-time"></i> Dime Timetracker</a>
-      </div>
-      <div id="app-menu" class="pull-right"></div>
-    </header>
+    <header id="app-header" class="header"></header>
+
+    <div id="app-menu"></div>
+    
     <section  class="content">
       <div class="content-heading"></div>
       <div class="content-inner">
@@ -55,12 +53,14 @@
 
     <!-- helper -->
     <script src="packages/dime/frontend/js/helper/duration.js"></script>
+    <script src="packages/dime/frontend/js/helper/format.js"></script>
     <script src="packages/dime/frontend/js/helper/number.js"></script>
     <script src="packages/dime/frontend/js/helper/parser.js"></script>
     <script src="packages/dime/frontend/js/helper/prompt.js"></script>
 
     <!-- views -->
-    <script src="packages/dime/frontend/js/modules/menu/menu.js"></script>
+    <script src="packages/dime/frontend/js/modules/header.js"></script>
+    <script src="packages/dime/frontend/js/modules/menu.js"></script>
 
     <!-- modules -->
     <script src="packages/dime/frontend/js/modules/setting/init.js"></script>
@@ -70,6 +70,8 @@
 
     <script src="packages/dime/frontend/js/modules/setting/setting.js"></script>
 
+    <script src="packages/dime/frontend/js/modules/crud.js"></script>
+
     <script src="packages/dime/frontend/js/modules/activity/activity.js"></script>
 
     <script src="packages/dime/frontend/js/modules/prompt/prompt.js"></script>
@@ -78,11 +80,7 @@
     <script src="packages/dime/frontend/js/modules/activity/views/item.js"></script>
     <script src="packages/dime/frontend/js/modules/activity/views/timeslice.js"></script>
 
-    <script src="packages/dime/frontend/js/modules/customer/customer.js"></script>
-
-    <script src="packages/dime/frontend/js/modules/project/project.js"></script>
-
-    <script src="packages/dime/frontend/js/modules/service/service.js"></script>
+    <script src="packages/dime/frontend/js/modules/prompt/prompt.js"></script>
 
     <script src="packages/dime/frontend/js/modules/filter/observer/activity.js"></script>
 

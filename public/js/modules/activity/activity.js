@@ -103,11 +103,4 @@
     }
   }
 
-  // add menu item
-  dime.menu.unshift({
-    id: "activities",
-    name: t('Activities'),
-    route: "/",
-    weight: -10
-  });
 })(dime, _, moment, m)

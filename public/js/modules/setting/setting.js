@@ -147,11 +147,12 @@
   dime.resources.setting.fetch();
 
   // add menu item
-  dime.menu.filter(function(item) { return item.id === 'administration'; })[0].children.push({
+  dime.menu.push({
     id: 'settings',
     route: '/setting',
-    name: t('Settings'),
+    name: 'Settings',
+    icon: 'icon-settings',
     weight: 100
   });
-  
+ 
 })(dime, _, m)
