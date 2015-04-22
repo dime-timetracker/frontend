@@ -57,6 +57,7 @@
         Mousetrap(e.target).bind(shortcuts.cycleSuggestionsRight, function () {
           cycleSuggestions('right', e); return false;
         });
+        Mousetrap(e.target).bind(shortcuts.submitPrompt, submit);
         scope.help = true;
         return true;
       }
@@ -87,6 +88,7 @@
 
       var blurPrompt = function blurPrompt (e) {
         scope.help = false;
+        e.target.blur();
         Mousetrap(e.target).reset();
         return;
       }
@@ -95,7 +97,7 @@
         // some char added
         if ((e.keyCode && 1 == e.keyCode.length) || (e.which && 1 == e.which.length)) {
           if (scope.suggestions.length) {
-            autocompletion(e);
+            autocomplete(e);
             return;
           }
         }
@@ -105,6 +107,32 @@
         scope.suggestions = [];
         m.redraw();
       }
+
+      var submit = function (e) {
+        var newActivity = dime.parser.parse(e.target.value);
+        var timeslice = {
+          startedAt: _.isEmpty(newActivity.startedAt) ? moment().format('YYYY-MM-DD HH:mm:ss') : newActivity.startedAt,
+        };
+
+        if (false == _.isEmpty(newActivity.stoppedAt)) {
+          timeslice.stoppedAt = newActivity.stoppedAt;
+        }
+
+        if (_.isArray(newActivity.tags)) {
+          newActivity.tags = newActivity.tags.map(function (tag) {
+            return {'name': tag};
+          })
+        }
+
+        dime.resources.activity.persist(newActivity).then(function (newActivity) {
+          timeslice.activity = newActivity.id;
+          newActivity.timeslices.push(dime.resources.timeslice.config.model(timeslice));
+          dime.resources.timeslice.persist(timeslice);
+          e.target.value = '';
+        });
+
+        blurPrompt(e);
+      };
 
       Mousetrap.bind('space', clearSuggestions);
 
@@ -166,12 +194,20 @@
         description: t('Keyboard shortcuts'),
         children: {
           focusPrompt: {
-            title: 'Add new activity',
+            title: 'Focus prompt',
             description: 'Press this key to focus prompt',
             namespace: "prompt",
             name: "shortcuts/focusPrompt",
             type: "text",
             defaultValue: '+'
+          },
+          submitPrompt: {
+            title: 'Submit prompt',
+            description: 'Press this key to submit prompt',
+            namespace: "prompt",
+            name: "shortcuts/submitPrompt",
+            type: "text",
+            defaultValue: 'enter'
           },
           blurPrompt: {
             title: 'Blur prompt',
@@ -208,30 +244,6 @@
         }
       }
     }
-  };
-
-  var submit = function (e) {
-    var newActivity = dime.parser.parse(e.target.value);
-    var timeslice = {
-      startedAt: _.isEmpty(newActivity.startedAt) ? moment().format('YYYY-MM-DD HH:mm:ss') : newActivity.startedAt,
-    };
-
-    if (false == _.isEmpty(newActivity.stoppedAt)) {
-      timeslice.stoppedAt = newActivity.stoppedAt;
-    }
-
-    if (_.isArray(newActivity.tags)) {
-      newActivity.tags = newActivity.tags.map(function (tag) {
-        return {'name': tag};
-      })
-    }
-
-    dime.resources.activity.persist(newActivity).then(function (newActivity) {
-      timeslice.activity = newActivity.id;
-      newActivity.timeslices.push(dime.resources.timeslice.config.model(timeslice));
-      dime.resources.timeslice.persist(timeslice);
-      e.target.value = '';
-    });
   };
 
 }) (dime, moment, m, Mousetrap)
