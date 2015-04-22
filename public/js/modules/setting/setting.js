@@ -1,36 +1,44 @@
-/**
-  * Configuration object pattern:
-  *
-  * {
-  *   foo: {
-  *     title: "Tab Foo",
-  *     weight: 0
-  *     children: {
-  *       bar: {
-  *         title: "Section Bar",
-  *         weight: 0
-  *         children: {
-  *           baz: {
-  *             title: "Item Baz",
-  *             description: "Foo bar baz",
-  *             onRead: function(value, namespace, name) {},
-  *             onWrite: function(value, oldValue, namespace, name) {},
-  *             defaultValue: "Default value",
-  *             display: function(namespace, name) { return true; },
-  *             type: "number"
-  *           }
-  *         }
-  *       }
-  *     }
-  *   },
-  *   boo: {...}
-  * }
-  */
+/*
+ * Configuration object pattern:
+ *
+ * {
+ *   foo: {
+ *     title: 'Tab Foo',
+ *     weight: 0
+ *     children: {
+ *       bar: {
+ *         title: 'Section Bar',
+ *         weight: 0
+ *         children: {
+ *           baz: {
+ *             title: 'Item Baz',
+ *             description: 'Foo bar baz',
+ *             onRead: function(value, namespace, name) {},
+ *             onWrite: function(value, oldValue, namespace, name) {},
+ *             defaultValue: 'Default value',
+ *             display: function(namespace, name) { return true; },
+ *             type: 'number'
+ *           }
+ *         }
+ *       }
+ *     }
+ *   },
+ *   boo: {...}
+ * }
+ */
 
-(function (dime, _, m) {
+;(function (dime, _, m) {
   'use strict';
   
   var t = dime.translate;
+
+  var headerWithDescription = function (setting) {
+    var header = [t(setting.title)];
+    if (setting.description) {
+      header.push(m('span.help', t(setting.description)));
+    }
+    return header;
+  };
 
   dime.modules.setting = {
     controller: function () {
@@ -40,13 +48,13 @@
     },
     views: {
       card: function (section) {
-        var content = [m('h2.content-sub-heading', t(section.title))];
+        var content = [m('h2.content-sub-heading', headerWithDescription(section))];
 
         // sections
         var children = [];
         _.forOwn(section.children, function (value, ckey) {
-          children.push(m('p.card-heading', t(value.title)));
-
+          children.push(m('p.card-heading', headerWithDescription(value)));
+          
           _.forOwn(value.children, function (v) {
             children.push(dime.modules.setting.views.form(v));
           });
@@ -89,17 +97,17 @@
       var content = [];
 
       _.forOwn(dime.settings, function (value) {
-        content.push(dime.modules.setting.views.card(value))
+        content.push(dime.modules.setting.views.card(value));
       });
 
       return content;
     }
-  }
+  };
 
   var getSetting = function (namespace, name) {
     var filter = { namespace: namespace, name: name };
     return dime.resources.setting.find(filter) || filter;
-  }
+  };
 
   dime.modules.setting.get = function (namespace, name, defaultValue) {
     if (_.isObject(namespace)) {
@@ -129,20 +137,21 @@
   dime.modules.setting.local = {};
 
   // register route
-  dime.routes["/setting"] = dime.modules.setting;
+  dime.routes['/setting'] = dime.modules.setting;
 
   // register schema
   dime.resources.setting = new Resource({
-    url: dime.apiUrl + "setting",
+    url: dime.apiUrl + 'setting',
     model: dime.modules.setting.model
   });
   dime.resources.setting.fetch();
 
   // add menu item
-  dime.menu.filter(function(item) { return item.id=="administration" })[0].children.push({
-    id: "settings",
-    route: "/setting",
+  dime.menu.filter(function(item) { return item.id === 'administration'; })[0].children.push({
+    id: 'settings',
+    route: '/setting',
     name: t('Settings'),
     weight: 100
   });
+  
 })(dime, _, m)

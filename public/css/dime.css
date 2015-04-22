@@ -6732,7 +6732,7 @@ textarea.picker__select--year {
     margin-top: 24px;
     margin-right: 16px; }
 
-.form-help {
+.form-help, .help {
   display: block;
   font-size: 12px;
   font-weight: 400;
@@ -9959,109 +9959,11 @@ table {
 .tile-action-show {
   z-index: 2; }
 
-/*.badge {
-  background-color: #26A69A;
-  background-clip: padding-box;
-  border-radius: 2px;
-  box-sizing: border-box;
-
-  font-size: 1rem;
-  color: #FFF;
-
-  min-width: 3rem;
-  margin-right: 6px;
-  padding: 0px 6px;
-  text-align: center;
-  line-height: inherit;
-}
-
-*/
 .badge.incomplete {
   background-color: #FBC02D; }
-
 .badge.empty {
   background-color: #F44336; }
 
-/*
-
-.badge:hover .dropdown-menu {
-  display: block;
-}
-
-.badge .dropdown-menu {
-  border: 1px solid #4CAF50;
-  color: #212121;
-  display: none;
-  list-style: none;
-  margin: -2px 0 0 0;
-  position: absolute;
-  text-align: left;
-  z-index: 2
-}
-
-.badge .dropdown-menu li {
-  background-color: #ffffff;
-  line-height: 20px;
-  margin: 0 0 0 -32px;
-  padding: 0 15px;
-}
-
-.badge .dropdown-menu li:hover {
-  background-color: #dedede;
-}
-
-.badge .dropdown-menu li .icon {
-  margin-right: 5px;
-}
-
-.badge .dropdown-menu li.current,
-.badge .dropdown-menu li.current:hover {
-  background: #6CCF70;
-}
-
-.badge .dropdown-menu li a {
-  color: #212121;
-  text-decoration: none;
-}
-
-.badge .dropdown-menu li dl {
-  margin: -20px 0 0 20px;
-}
-
-.badge .dropdown-menu li dl dd {
-  height: 20px;
-}
-
-.badge .dropdown-menu li dl dd[contenteditable] {
-  background: #FCFFFC;
-  font-size: 0.9em;
-  padding: 0 5px;
-}
-
-.tag-badges.editable {
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  border-radius: 2px;
-  padding: 2px
-}
-
-.tag-badges a.remove {
-  display: none;
-}
-
-.tag-badges.editable a.remove {
-  color: #FFF;
-  display: inherit;
-  margin-left: 3px;
-}
-
-.tag-badges.editable a.remove:hover {
-  color: #F00;
-  text-decoration: none;
-}
-
-.tag-badges input {
-  border: none;
-}*/
 .hide {
   display: none; }
 
