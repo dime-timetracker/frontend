@@ -9987,4 +9987,12 @@ table {
 .hide {
   display: none; }
 
+.filter-icon {
+  background: url("../img/filter-gray.png") no-repeat center left;
+  padding-left: 28px; }
+
+.activity-icon {
+  background: url("../img/activity-gray.png") no-repeat center right;
+  padding-right: 28px; }
+
 /*# sourceMappingURL=dime.css.map */
