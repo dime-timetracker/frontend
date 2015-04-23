@@ -1,8 +1,6 @@
 'use strict';
 (function (dime, m, _) {
 
-  var t = dime.translate;
-
   dime.events.on('model-project-properties', function (context) {
     if (_.isObject(context.model)) {
       var namespace = 'ticketLink';

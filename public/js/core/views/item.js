@@ -2,8 +2,6 @@
 
 (function (dime, m, _) {
 
-  var t = dime.translate;
-
   dime.core.views.item = function (item, type, properties) {
 
     var textColumn = function (property) {

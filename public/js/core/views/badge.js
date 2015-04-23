@@ -1,8 +1,5 @@
-;
-(function (dime, m) {
+;(function (dime, m) {
   'use strict';
-
-  var t = dime.translate;
 
   dime.core.views.badge = function (type, activity) {
     var item = activity[type],

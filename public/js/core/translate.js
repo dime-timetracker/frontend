@@ -1,16 +1,5 @@
-'use strict';
-
-(function (dime, _) {
-
-  dime.translation = {};
-  dime.translation.add = function (languageCode, translations) {
-    if (false === _.isObject(dime.translation[languageCode])) {
-      dime.translation[languageCode] = {};
-    }
-    _.forIn(translations, function (target, source) {
-      dime.translation[languageCode][source] = target;
-    });
-  }
+window.t = (function (dime, _) {
+  'use strict';
 
   dime.settings.general.children.translation = {
     title: "Translation",
@@ -24,20 +13,31 @@
         defaultValue: 'de_DE'
       }
     }
-  }
-
-  dime.translate = function (string) {
-    var setting = dime.settings.general.children.translation.children.preferredLanguages;
-    var preferredLanguages = dime.modules.setting.get(setting).split(',');
-    _.detect(preferredLanguages, function findTranslation (languageCode) {
-      if (_.isObject(dime.translation[languageCode])
-        && _.isString(dime.translation[languageCode][string])
-      ) {
-        string = dime.translation[languageCode][string];
-        return true;
-      }
-    });
-    return string;
   };
 
-})(dime, _)
+  dime.translation = dime.translation || {};
+  dime.translation.add = function (languageCode, translations) {
+    if (false === _.isObject(dime.translation[languageCode])) {
+      dime.translation[languageCode] = {};
+    }
+    _.forIn(translations, function (target, source) {
+      dime.translation[languageCode][source] = target;
+    });
+  }
+
+  var t = function (string) {
+    var setting = dime.settings.general.children.translation.children.preferredLanguages;
+      var preferredLanguages = dime.modules.setting.get(setting).split(',');
+      _.detect(preferredLanguages, function findTranslation (languageCode) {
+        if (_.isObject(dime.translation[languageCode])
+          && _.isString(dime.translation[languageCode][string])
+        ) {
+          string = dime.translation[languageCode][string];
+          return true;
+        }
+      });
+      return string;
+  };
+
+  return t;
+})(dime, _);

@@ -40,9 +40,7 @@
 
     var currentAction = undefined;
     if ('project' === type && false === activity.hasProject() && false === activity.hasCustomer()) {
-      currentAction = m('a',
-              dime.translate('Please select a customer before creating a new project!')
-              );
+      currentAction = m('a', t('Please select a customer before creating a new project!'));
     } else if (isEditable()) {
       currentAction = inlineForm(activity[type]);
     } else {

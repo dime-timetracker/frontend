@@ -1,8 +1,6 @@
 'use strict';
 (function (dime, m, moment, _) {
 
-  var t = dime.translate;
-
   dime.modules.activity.views.timesliceItem = function (item) {
     item = dime.model.Timeslice(item);
     var activity = this;

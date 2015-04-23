@@ -2,8 +2,6 @@
 
 (function (dime, m) {
 
-  var t = dime.translate;
-
   dime.core.views.list = function(type, properties) {
     var items = dime.resources[type].findAll() || [];
 

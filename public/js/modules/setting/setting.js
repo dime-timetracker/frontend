@@ -29,8 +29,6 @@
 
 ;(function (dime, _, m) {
   'use strict';
-  
-  var t = dime.translate;
 
   var headerWithDescription = function (setting) {
     var header = [t(setting.title)];

@@ -1,8 +1,6 @@
 'use strict';
 (function (dime, m, moment, _) {
 
-  var t = dime.translate;
-
   dime.timer = setInterval(m.redraw, 1000);
 
   var startStopButton = function(current) {

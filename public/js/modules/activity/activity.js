@@ -2,8 +2,6 @@
 
 (function (dime, _, moment, m) {
 
-  var t = dime.translate;
-
   dime.modules.activity = {
     controller: function () {
       var scope = {

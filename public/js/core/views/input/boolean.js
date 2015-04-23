@@ -6,7 +6,6 @@
     dime.inputs = {};
   }
   dime.inputs.boolean = function (current, value, update) {
-    var t = dime.translate || function (s) { return s; };
     var options = [
       {
         value: 1,

@@ -23,8 +23,6 @@
 
 ;(function (dime, m, _) {
   'use strict';
-
-  var t = dime.translate;
   
   dime.menu = [{
     id: 'home',
@@ -87,7 +85,6 @@
     item: function (item) {
       var menuItem = [];
       var text = [];
-      var t = dime.translate;
       var active = (m.route() === item.route) ? '.active' : '';
       
       if (item.icon) {

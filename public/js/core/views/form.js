@@ -1,8 +1,6 @@
 ;(function (dime, m, _) {
   'use strict';
 
-  var t = dime.translate;
-
   dime.core.views.form = function (item, type, properties, allowDelete, onSave, onCancel) {
     allowDelete = _.isUndefined(allowDelete) ? true : allowDelete;
 
