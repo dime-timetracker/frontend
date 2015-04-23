@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="initial-scale=1.0, width=device-width" name="viewport">
+    <title>Dime Timetracker</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="css/dime.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon" sizes="16x16 32x32 64x64 128x128 256x256" />
+
+    <meta name="application-name" content="Dime Timetracker" />
+    <meta name="msapplication-TileColor" content="#4CAF50" />
+    <meta name="msapplication-square150x150logo" content="img/tile150.png" />
+    <meta name="msapplication-wide310x150logo" content="img/tile310x150.png" />
+    <meta name="msapplication-square310x310logo" content="img/tile310.png" />
+    <meta name="apple-mobile-web-app-title" content="Dime Timetracker">
+  </head>
+  <body>
+    <div id="app-header"></div>
+
+    <div id="app-menu"></div>
+    
+    <section  class="content">
+      <div class="content-heading"></div>
+      <div class="content-inner">
+        <div id="prompt-container" class="container"></div>
+        <div id="app" class="container"></div>
+      </div>
+    </section>
+
+    <!-- vendors -->
+    <script src="js/vendor/mithril.js"></script>
+    <script src="js/vendor/evemit.min.js"></script>
+    <script src="js/vendor/lodash.min.js"></script>
+    <script src="js/vendor/mousetrap.min.js"></script>
+    <script src="js/vendor/moment.js"></script>
+    <script src="js/vendor/resource.js"></script>
+
+    <!-- init app -->
+    <script src="js/init.js"></script>
+    <script src="js/parameters.js"></script>
+    <script src="js/core/collection.js"></script>
+    <script src="js/core/model.js"></script>
+    <script src="js/core/model/Activity.js"></script>
+    <script src="js/core/model/Customer.js"></script>
+    <script src="js/core/model/Project.js"></script>
+    <script src="js/core/model/Service.js"></script>
+    <script src="js/core/model/Setting.js"></script>
+    <script src="js/core/model/Tag.js"></script>
+    <script src="js/core/model/Timeslice.js"></script>
+
+    <!-- helper -->
+    <script src="js/helper/duration.js"></script>
+    <script src="js/helper/format.js"></script>
+    <script src="js/helper/number.js"></script>
+    <script src="js/helper/parser.js"></script>
+    <script src="js/helper/prompt.js"></script>
+
+    <!-- modules -->
+    <script src="js/modules/setting/init.js"></script>
+    <script src="js/core/translate.js"></script>
+    <script src="js/core/translations/de_DE.js"></script>
+
+    <script src="js/modules/header.js"></script>
+    <script src="js/modules/menu.js"></script>
+
+    <script src="js/modules/setting/setting.js"></script>
+
+    <script src="js/modules/crud.js"></script>
+
+    <script src="js/modules/activity/activity.js"></script>
+
+    <script src="js/modules/prompt/prompt.js"></script>
+
+    <script src="js/modules/activity/views/item.js"></script>
+    <script src="js/modules/activity/views/timeslice.js"></script>
+
+    <script src="js/modules/prompt/autocompletion/alias.js"></script>
+    <script src="js/modules/prompt/autocompletion/customer.js"></script>
+    <script src="js/modules/prompt/autocompletion/project.js"></script>
+    <script src="js/modules/prompt/autocompletion/service.js"></script>
+
+    <script src="js/modules/timeslice/timeslice.js"></script>
+
+    <script src="js/modules/tag/tag.js"></script>
+    <script src="js/modules/tag/views/item.js"></script>
+    <script src="js/modules/tag/views/input.js"></script>
+
+    <!-- plugins -->
+    <script src="js/plugins/showIncome/i18n/de_DE.js"></script>
+    <script src="js/plugins/showIncome/observer/activity.js"></script>
+    <script src="js/plugins/showIncome/observer/timeslice.js"></script>
+
+    <script src="js/plugins/ticketLink/i18n/de_DE.js"></script>
+    <script src="js/plugins/ticketLink/observer/project.js"></script>
+
+    <!-- generic views -->
+    <script src="js/core/views/badge.js"></script>
+    <script src="js/core/views/form.js"></script>
+    <script src="js/core/views/item.js"></script>
+    <script src="js/core/views/list.js"></script>
+    <script src="js/core/views/select.js"></script>
+    <script src="js/core/views/input/boolean.js"></script>
+    <script src="js/core/views/input/input.js"></script>
+    <script src="js/core/views/input/text.js"></script>
+
+
+    <!-- launch app -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

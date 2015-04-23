@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     // Watch task config
     watch: {
       sass: {
-        files: "src/Resources/sass/*.scss",
+        files: "sass/*.scss",
         tasks: ['sass']
       }
     },
@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         dev: {
             files: {
                 // destination         // source file
-                "public/css/dime.css" : "src/Resources/sass/dime.scss"
+                "public/css/dime.css" : "sass/dime.scss"
             }
         }
     }
