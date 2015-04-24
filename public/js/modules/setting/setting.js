@@ -140,8 +140,11 @@
   // register schema
   dime.resources.setting = new Resource({
     url: dime.apiUrl + 'setting',
-    model: dime.modules.setting.model
+    model: dime.modules.setting.model,
+    fail: dime.modules.login.redirect,
+    success: dime.modules.login.success
   });
+
   dime.resources.setting.fetch();
 
   // add menu item

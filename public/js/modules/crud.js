@@ -40,7 +40,9 @@
   // register project
   dime.resources.project = new Resource({
     url: dime.apiUrl + "project",
-    model: dime.model.Project
+    model: dime.model.Project,
+    fail: dime.modules.login.redirect,
+    success: dime.modules.login.success
   });
   dime.menu.push({
     id: "projects",

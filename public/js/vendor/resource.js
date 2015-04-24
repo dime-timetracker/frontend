@@ -18,6 +18,13 @@ var Resource = function (options) {
     sorted: false,
     empty: {}
   }, options);
+
+  this.extractResponse = function (xhr, options) {
+    if (xhr.status != 200) {
+      throw xhr.status;
+    }
+    return xhr.status != 200 ? xhr.status : xhr.responseText
+  }
 };
 
 /**
@@ -54,7 +61,8 @@ Resource.prototype.fetch = function () {
       deferred = m.deferred();
 
   m
-  .request({ method: 'GET', url: this.config.url })
+  .request({ method: 'GET', url: this.config.url, config: function(xhr) {xhr.withCredentials = true;}, user: this.config.user, password: this.config.password })
+
   .then(function (list) {
     var c = _.isFunction(that.config.sort) ? list.sort(that.config.sort) : list;
 //    that.collection = _.isFunction(that.config.sort) ? list.sort(that.config.sort) : list;
@@ -66,10 +74,16 @@ Resource.prototype.fetch = function () {
 
     that.collection = c;
     deferred.resolve(that.collection);
-    return that.collection;
+
+    deferred.promise(that.collection);
+  })
+  .then(null, function (httpStatus) {
+    if (_.isFunction(that.config.fail(httpStatus))) {
+      that.config.fail(httpStatus);
+    }
+    deferred.reject({httpStatus: httpStatus});
   });
 
-  deferred.promise(this.collection);
   return deferred.promise;
 };
 
@@ -85,7 +99,7 @@ Resource.prototype.persist = function (data) {
   }
 
   m
-  .request({ method: method, url: url, data: data })
+  .request({ method: method, url: url, data: data, extract: that.extractResponse })
   .then(function (response) {
     if (method === 'POST') { // create new
       if (_.isFunction(that.config.model)) {
@@ -98,6 +112,12 @@ Resource.prototype.persist = function (data) {
     }
     deferred.resolve(response);
     return response;
+  })
+  .then(null, function (httpStatus) {
+    if (_.isFunction(that.config.fail(httpStatus))) {
+      that.config.fail(httpStatus);
+    }
+    deferred.reject({httpStatus: httpStatus});
   });
 
   deferred.promise(data);
@@ -115,7 +135,7 @@ Resource.prototype.remove = function (data) {
     url = this.config.url + '/' + id;
 
     m
-    .request({method: method, url: url})
+    .request({ method: method, url: url, extract: that.extractResponse })
     .then(function (response) {
       var idx = that.collection.indexOf(data),
               item = data;
@@ -124,6 +144,12 @@ Resource.prototype.remove = function (data) {
       }
       deferred.resolve(item);
       return item;
+    })
+    .then(null, function (httpStatus) {
+      if (_.isFunction(that.config.fail(httpStatus))) {
+        that.config.fail(httpStatus);
+      }
+      deferred.reject({httpStatus: httpStatus});
 
     });
     deferred.promise({});

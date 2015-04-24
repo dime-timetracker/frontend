@@ -5,30 +5,34 @@
   dime.modules.activity = {
     controller: function () {
       var scope = {
+        activities: [],
         filter: {
           help: false,
           suggestions: []
         }
       };
 
+      dime.resources.activity.fetch().then(function (result) {
+        dime.authorized = true;
+        var activities = new dime.Collection({
+          model: dime.model.Activity
+        }, dime.resources.activity.findAll() || []);
+        dime.events.emit('activity-view-collection-load', {
+          collection: activities,
+          scope: scope
+        });
+
+        // filter activities
+        _.forEach(dime.modules.activity.filters, function(filter) {
+          activities.filter(filter);
+        });
+
+        scope.activities = activities.findAll();
+      });
+
       return scope;
     },
     view: function (scope) {
-
-      var activities = new dime.Collection({
-        model: dime.model.Activity
-      }, dime.resources.activity.findAll() || []);
-      dime.events.emit('activity-view-collection-load', {
-        collection: activities,
-        scope: scope
-      });
-
-      // filter activities
-      _.forEach(dime.modules.activity.filters, function(filter) {
-        activities.filter(filter);
-      });
-
-      activities = activities.findAll();
 
       var addActivity = function addActivity () {
         dime.resources.activity.persist({
@@ -50,7 +54,7 @@
 
       return [
         m(".tile-wrap", [
-          activities.map(dime.modules.activity.views.item),
+          scope.activities.map(dime.modules.activity.views.item),
           addButton
         ]),
       ];
@@ -79,6 +83,8 @@
   dime.resources.activity = new Resource({
     url: dime.apiUrl + "activity",
     model: dime.model.Activity,
+    fail: dime.modules.login.redirect,
+    success: dime.modules.login.success,
     sort: function (activityA, activityB) {
       var a = getLatestUpdate(activityA);
       var b = getLatestUpdate(activityB);
@@ -92,7 +98,6 @@
       return 0;
     }
   });
-  dime.resources.activity.fetch();
 
   // add settings section
   dime.settings.activity = {
