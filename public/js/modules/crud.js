@@ -34,6 +34,7 @@
     id: "customers",
     route: "/customer",
     name: "Customers",
+    icon: 'icon-people',
     weight: 0
   });
 
@@ -48,6 +49,7 @@
     id: "projects",
     route: "/project",
     name: "Projects",
+    icon: 'icon-poll',
     weight: 0
   });
 
@@ -60,6 +62,7 @@
     id: "services",
     route: "/service",
     name: "Services",
+    icon: 'icon-work',
     weight: 0
   });
   
