@@ -12,23 +12,27 @@
         }
       };
 
-      dime.resources.activity.fetch().then(function (result) {
-        dime.authorized = true;
-        var activities = new dime.Collection({
-          model: dime.model.Activity
-        }, dime.resources.activity.findAll() || []);
-        dime.events.emit('activity-view-collection-load', {
-          collection: activities,
-          scope: scope
-        });
+      dime.modules.activity.fetch = function(addUrl) {
+        dime.resources.activity.fetch(addUrl).then(function (result) {
+          dime.authorized = true;
+          var activities = new dime.Collection({
+            model: dime.model.Activity
+          }, dime.resources.activity.findAll() || []);
+          dime.events.emit('activity-view-collection-load', {
+            collection: activities,
+            scope: scope
+          });
 
-        // filter activities
-        _.forEach(dime.modules.activity.filters, function(filter) {
-          activities.filter(filter);
-        });
+          // filter activities
+          _.forEach(dime.modules.activity.filters, function(filter) {
+            activities.filter(filter);
+          });
 
-        scope.activities = activities.findAll();
-      });
+          scope.activities = activities.findAll();
+        });
+      }
+
+      dime.modules.activity.fetch();
 
       return scope;
     },
@@ -39,6 +43,17 @@
           description: t('(Click here to enter a description!)'),
           timeslices: []
         });
+      }
+
+      var list = scope.activities.map(dime.modules.activity.views.item);
+
+      if (dime.modules.setting.local.activityShowLoadMore) {
+        list.push(m('div', m('a[href=#].btn.btn-block.margin-top', {
+          onclick: function () {
+            dime.modules.activity.fetch(dime.modules.setting.local.activityPager.next);
+            return false;
+          }
+        }, t('Show more'))));
       }
 
       var addButton = m('.fbtn-container',
@@ -52,12 +67,7 @@
         )
       );
 
-      return [
-        m(".tile-wrap", [
-          scope.activities.map(dime.modules.activity.views.item),
-          addButton
-        ]),
-      ];
+      return [ m(".tile-wrap", [ list, addButton ]), ];
     },
     views: {}
   };
@@ -96,6 +106,18 @@
         return 1;
       }
       return 0;
+    }
+  }, function handleHeader (xhr, options) {
+    if ('GET' === options.method) {
+      dime.modules.setting.local.activityPager = {};
+      var links = xhr.getResponseHeader('X-Dime-Link').split(', ');
+      links.forEach(function (link) {
+        var url = link.split('; ')[0];
+        var rel = link.match(/ rel="?(.+)"?$/)[1];
+        dime.modules.setting.local.activityPager[rel] = url;
+      });
+      var pagerUrls = dime.modules.setting.local.activityPager;
+      dime.modules.setting.local.activityShowLoadMore = (pagerUrls.next == pagerUrls.next);
     }
   });
 

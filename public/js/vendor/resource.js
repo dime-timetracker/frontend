@@ -9,7 +9,7 @@
  * @param {object} options Resource configuration
  * @returns {Resource}
  */
-var Resource = function (options) {
+var Resource = function (options, extract) {
   var that = this;
 
   this.collection = [];
@@ -20,6 +20,9 @@ var Resource = function (options) {
   }, options);
 
   this.extractResponse = function (xhr, options) {
+    if (_.isFunction(extract)) {
+      extract(xhr, options);
+    }
     if (xhr.status != 200) {
       throw xhr.status;
     }
@@ -56,13 +59,21 @@ Resource.prototype.findAll = function () {
   return this.collection;
 };
 
-Resource.prototype.fetch = function () {
+Resource.prototype.fetch = function (addPageUrl) {
+  var replaceCollection = _.isUndefined(addPageUrl);
+  var url = replaceCollection ? this.config.url : addPageUrl;
   var that = this,
       deferred = m.deferred();
 
   m
-  .request({ method: 'GET', url: this.config.url, config: function(xhr) {xhr.withCredentials = true;}, user: this.config.user, password: this.config.password })
-
+  .request({
+    method: 'GET',
+    url: url,
+    config: function(xhr) {xhr.withCredentials = true;},
+    user: this.config.user,
+    password: this.config.password,
+    extract: that.extractResponse
+  })
   .then(function (list) {
     var c = _.isFunction(that.config.sort) ? list.sort(that.config.sort) : list;
 //    that.collection = _.isFunction(that.config.sort) ? list.sort(that.config.sort) : list;
@@ -72,9 +83,9 @@ Resource.prototype.fetch = function () {
       });
     }
 
-    that.collection = c;
-    deferred.resolve(that.collection);
+    that.collection = replaceCollection ? c : that.collection.concat(c);
 
+    deferred.resolve(that.collection);
     deferred.promise(that.collection);
   })
   .then(null, function (httpStatus) {

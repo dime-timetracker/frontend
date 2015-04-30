@@ -133,7 +133,7 @@ dime.model.Activity.prototype.startStopTimeslice = function () {
     });
   } else {
     var timeslice = new dime.model.Timeslice({
-      activity: activity.id
+      activity_id: activity.id
     });
     dime.resources.timeslice.persist(timeslice).then(function (startedTimeslice) {
       activity.timeslices.add(startedTimeslice);
