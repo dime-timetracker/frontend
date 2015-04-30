@@ -29,6 +29,7 @@
     'ctrl': 'Strg',
     'shift': 'Umschalt',
     'alt': 'Alt',
+    'Show more': 'Weitere anzeigen',
     'Add an activity': 'Eine Aktivität hinzufügen',
     'Filter activities': 'Aktivitäten filtern'
   });
