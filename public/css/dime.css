@@ -9952,8 +9952,7 @@ table {
       color: inherit;
       padding: 0px 3px; }
   .badge-list.badge-list-small > li {
-    font-size: .7rem;
-    min-width: auto; }
+    font-size: .7rem; }
 
 .form-inline {
   background: #F5F5F5;
