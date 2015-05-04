@@ -21,7 +21,7 @@
     ]);
   }
 
-  dime.modules.activity.views.item = function (current) {
+  dime.modules.activity.views.item = function (current, idx) {
     var className = current.showTimeslices ? '' : '.hide';
 
     var badges = [
@@ -68,6 +68,10 @@
 
 
     var tileClass = (t('(Click here to enter a description!)') === current.description) ? 'text-red' : '';
+
+    if (dime.modules.activity.selectedIdx === idx) {
+      tileClass += ' green lighten-4';
+    }
 
     var result = m('.tile.' + tileClass, [
       m('.pull-left.tile-side', badgesView),

@@ -39,6 +39,42 @@
     },
     view: function (scope) {
 
+      Mousetrap.bind(dime.modules.setting.get(
+        dime.settings.activity.children.shortcuts.children.selectNext
+      ), function(e) {
+        if (_.isUndefined(dime.modules.activity.selectedIdx)) {
+          dime.modules.activity.selectedIdx = 0;
+        } else if (dime.modules.activity.selectedIdx === scope.activities.length-1) {
+          dime.modules.activity.selectedIdx = undefined;
+        } else {
+          dime.modules.activity.selectedIdx++;
+        }
+        m.redraw();
+      });
+
+      Mousetrap.bind(dime.modules.setting.get(
+        dime.settings.activity.children.shortcuts.children.selectPrevious
+      ), function(e) {
+        if (_.isUndefined(dime.modules.activity.selectedIdx)) {
+          dime.modules.activity.selectedIdx = scope.activities.length-1;
+        } else if (0 === dime.modules.activity.selectedIdx) {
+          dime.modules.activity.selectedIdx = undefined;
+        } else {
+          dime.modules.activity.selectedIdx--;
+        }
+        m.redraw();
+      });
+
+      Mousetrap.bind(dime.modules.setting.get(
+        dime.settings.activity.children.shortcuts.children.startStop
+      ), function(e) {
+        if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
+          scope.activities[dime.modules.activity.selectedIdx].startStopTimeslice();
+          m.redraw();
+          return false;
+        }
+      });
+
       var addActivity = function addActivity () {
         dime.resources.activity.persist({
           description: t('(Click here to enter a description!)'),
@@ -130,6 +166,32 @@
       display: {
         title: t('Display settings'),
         children: {}
+      },
+      shortcuts: {
+        title: t('Shortcuts'),
+        children: {
+          selectNext: {
+            title: 'Select next activity',
+            namespace: 'activity',
+            name: 'shortcuts/selectNext',
+            type: 'text',
+            defaultValue: 'j',
+          },
+          selectPrevious: {
+            title: 'Select previous activity',
+            namespace: 'activity',
+            name: 'shortcuts/selectPrevious',
+            type: 'text',
+            defaultValue: 'k',
+          },
+          startStop: {
+            title: 'Start/stop activity',
+            namespace: 'activity',
+            name: 'shortcuts/startStop',
+            type: 'text',
+            defaultValue: 'space',
+          }
+        }
       }
     }
   }
