@@ -17,6 +17,7 @@
       Mousetrap(e.target).bind(shortcuts.blurPrompt, function () {
         e.target.value = '';
         e.target.blur();
+        dime.helper.prompt.blur(e, scope);
       });
 
       Mousetrap(e.target).bind(shortcuts.triggerAutocompletion, function(triggerEvent) {
@@ -42,6 +43,7 @@
       dime.helper.prompt.clearSuggestions(e, scope);
       scope.help = false;
       Mousetrap(e.target).reset();
+      e.target.blur();
     },
 
     cycleSuggestions: function cycleSuggestions (direction, e, scope) {
