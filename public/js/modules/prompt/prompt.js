@@ -59,6 +59,7 @@
             return _.contains(activity.description, filter.description);
           };
         }
+        dime.modules.activity.applyFilter();
 
         dime.helper.prompt.blur(e, scope);
       };
