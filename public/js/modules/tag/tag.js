@@ -7,9 +7,9 @@
   };
   
   // register schema
-  dime.resources.tag = new Resource({
-    url: dime.apiUrl + "tag",
-    model: dime.modules.tag.model,
+  dime.resources.tag = new dime.Collection({
+    url: 'tag',
+    model: dime.model.Tag,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success
   });

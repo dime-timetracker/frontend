@@ -138,9 +138,9 @@
   dime.routes['/setting'] = dime.modules.setting;
 
   // register schema
-  dime.resources.setting = new Resource({
-    url: dime.apiUrl + 'setting',
-    model: dime.modules.setting.model,
+  dime.resources.setting = new dime.Collection({
+    url: 'setting',
+    model: dime.model.Setting,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success
   });

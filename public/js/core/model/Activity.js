@@ -6,11 +6,10 @@ dime.model.Activity = function(data) {
   }
   _.extend(this, data || {});
 
-  if (this.timeslices !== undefined) {
-    this.timeslices = new dime.Collection({
-      model: dime.model.Timeslice
-    }, this.timeslices);
-  }
+  this.timeslices = new dime.Collection({
+    url: "timeslice",
+    model: dime.model.Timeslice
+  }, this.timeslices || []);
 };
 
 dime.model.Activity.properties = function properties (model) {
@@ -126,18 +125,14 @@ dime.model.Activity.prototype.startStopTimeslice = function () {
       if (timeslice.isRunning()) {
         timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
         timeslice.duration = moment(timeslice.stoppedAt).diff(moment(timeslice.startedAt), 'seconds');
-        dime.resources.timeslice.persist(timeslice).then(function (stoppedTimeslice) {
-          activity.timeslices[idx] = new dime.model.Timeslice(stoppedTimeslice);
-        });
+        activity.timeslices.persist(timeslice);
       }
     });
   } else {
-    var timeslice = new dime.model.Timeslice({
+    var timeslice = this.timeslices.create({
       activity: parseInt(activity.id) // we could submit the whole activity, but this is not required here
     });
-    dime.resources.timeslice.persist(timeslice).then(function (startedTimeslice) {
-      activity.timeslices.add(startedTimeslice);
-    });
+    activity.timeslices.persist(timeslice);
   }
 };
 
@@ -154,10 +149,6 @@ dime.model.Activity.prototype.updateDescription = function (description) {
 };
 
 dime.model.Activity.prototype.removeTimeslice = function (timeslice) {
-  var idx = this.timeslices.indexOf(timeslice);
-  if (-1 < idx) {
-    this.timeslices.splice(idx, 1);
-    dime.resources.timeslice.remove(timeslice);
-  }
+  this.timeslices.remove(timeslice);
   return timeslice;
 };

@@ -17,10 +17,11 @@
       }
 
       var submit = function (e) {
-        var newActivity = dime.parser.parse(e.target.value);
-        var timeslice = {
+        var newActivity = new dime.resources.activity.create(dime.parser.parse(e.target.value));
+
+        var timeslice = newActivity.timeslices.add({
           startedAt: _.isEmpty(newActivity.startedAt) ? moment().format('YYYY-MM-DD HH:mm:ss') : newActivity.startedAt
-        };
+        });
 
         if (false === _.isEmpty(newActivity.stoppedAt)) {
           timeslice.stoppedAt = newActivity.stoppedAt;
@@ -32,12 +33,7 @@
           });
         }
 
-        dime.resources.activity.persist(newActivity).then(function (newActivity) {
-          timeslice.activity = newActivity.id;
-          newActivity.timeslices.push(dime.resources.timeslice.config.model(timeslice));
-          dime.resources.timeslice.persist(timeslice);
-          e.target.value = '';
-        });
+        dime.resources.activity.persist(newActivity);
 
         dime.helper.prompt.blur(e, scope);
       };

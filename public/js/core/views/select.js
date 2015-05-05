@@ -28,7 +28,7 @@
       dime.modules.setting.local[type + '/edit-inline/' + alias] = value;
     };
 
-    activity[type] = activity[type] || dime.resources[type].empty();
+    activity[type] = activity[type] || dime.resources[type].create({});
     var alias = 'activity-' + activity.id;
 
     var editButton = m('button.btn.btn-flat', {
@@ -47,7 +47,7 @@
       currentAction = editButton;
     }
 
-    var items = _.sortBy(dime.resources[type].findAll(), 'name') || [];
+    var items = _.sortBy(dime.resources[type], 'name') || [];
     var options = items.map(function (item) {
 //      var result = undefined;
 //

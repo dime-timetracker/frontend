@@ -1,7 +1,7 @@
 'use strict';
 
 var dime = {
-  apiUrl: 'api/',
+  apiUrl: 'api',
   icon: 'icon-access-time',
   name: 'Dime Timetracker',
   

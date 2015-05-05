@@ -7,17 +7,11 @@
   };
 
   // register resource
-  dime.resources.timeslice = new Resource({
-    url: dime.apiUrl + "timeslice",
+  dime.resources.timeslice = new dime.Collection({
+    url: 'timeslice',
     model: dime.model.Timeslice,
     fail: dime.modules.login.redirect,
-    success: dime.modules.login.success,
-    empty: {
-      activity: null,
-      startedAt: null,
-      stoppedAt: null,
-      duration: 0
-    }
+    success: dime.modules.login.success
   });
 
 })(dime, m, moment);

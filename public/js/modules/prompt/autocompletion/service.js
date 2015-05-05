@@ -1,8 +1,6 @@
-'use strict';
-
-(function (dime, m, _) {
+;(function (dime, m, _) {
+  'use strict';
   dime.modules.prompt.autocompletions.push(function(e, scope) {
-    var services = dime.resources.service.findAll() || [];
-    return dime.modules.prompt.autocompletion.alias(e, scope, services, ':');
+    return dime.modules.prompt.autocompletion.alias(e, scope, dime.resources.service, ':');
   });
-})(dime, m, _)
+})(dime, m, _);

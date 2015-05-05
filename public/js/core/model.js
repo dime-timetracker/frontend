@@ -16,3 +16,5 @@ dime.Model = function() {
 
 dime.Model.prototype = new Object();
 dime.Model.prototype.constructor = dime.Model;
+
+dime.Model.prototype.parent = m.prop('parent');

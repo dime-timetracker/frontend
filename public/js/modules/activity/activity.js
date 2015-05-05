@@ -13,24 +13,22 @@
       };
 
       dime.modules.activity.fetch = function (addUrl) {
-        dime.resources.activity.fetch(addUrl).then(function (result) {
+        dime.resources.activity.fetch({ url: addUrl }).then(function (result) {
           dime.authorized = true;
           dime.modules.activity.applyFilter();
         });
-      }
+      };
 
       dime.modules.activity.applyFilter = function () {
-        var activities = new dime.Collection({
-          model: dime.model.Activity
-        }, dime.resources.activity.findAll() || []);
+        scope.activities = dime.resources.activity;
+
         dime.events.emit('activity-view-collection-load', {
-          collection: activities,
+          collection: dime.resources.activity,
           scope: scope
         });
         _.forEach(dime.modules.activity.filters, function(filter) {
-          activities.filter(filter);
+          dime.resources.activity.filter(filter);
         });
-        scope.activities = activities.findAll();
       };
 
       dime.modules.activity.fetch();
@@ -127,8 +125,8 @@
   dime.routes['/'] = dime.modules.activity;
 
   // register resource
-  dime.resources.activity = new Resource({
-    url: dime.apiUrl + "activity",
+  dime.resources.activity = new dime.Collection({
+    url: 'activity',
     model: dime.model.Activity,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success,
@@ -143,18 +141,19 @@
         return 1;
       }
       return 0;
-    }
-  }, function handleHeader (xhr, options) {
-    if ('GET' === options.method) {
-      dime.modules.setting.local.activityPager = {};
-      var links = xhr.getResponseHeader('X-Dime-Link').split(', ');
-      links.forEach(function (link) {
-        var url = link.split('; ')[0];
-        var rel = link.match(/ rel="?(.+)"?$/)[1];
-        dime.modules.setting.local.activityPager[rel] = url;
-      });
-      var pagerUrls = dime.modules.setting.local.activityPager;
-      dime.modules.setting.local.activityShowLoadMore = (pagerUrls.next == pagerUrls.next);
+    },
+    extract: function (xhr, options) {
+      if ('GET' === options.method) {
+        dime.modules.setting.local.activityPager = {};
+        var links = xhr.getResponseHeader('X-Dime-Link').split(', ');
+        links.forEach(function (link) {
+          var url = link.split('; ')[0];
+          var rel = link.match(/ rel="?(.+)"?$/)[1];
+          dime.modules.setting.local.activityPager[rel] = url;
+        });
+        var pagerUrls = dime.modules.setting.local.activityPager;
+        dime.modules.setting.local.activityShowLoadMore = (pagerUrls.next == pagerUrls.next);
+      }
     }
   });
 

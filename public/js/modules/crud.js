@@ -26,8 +26,8 @@
   dime.routes["/:name"] = dime.modules.crud;
 
   // register customer
-  dime.resources.customer = new Resource({
-    url: dime.apiUrl + "customer",
+  dime.resources.customer = new dime.Collection({
+    url: "customer",
     model: dime.model.Customer
   });
   dime.menu.push({
@@ -39,8 +39,8 @@
   });
 
   // register project
-  dime.resources.project = new Resource({
-    url: dime.apiUrl + "project",
+  dime.resources.project = new dime.Collection({
+    url: "project",
     model: dime.model.Project,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success
@@ -54,8 +54,8 @@
   });
 
   // register service
-  dime.resources.service = new Resource({
-    url: dime.apiUrl + "service",
+  dime.resources.service = new dime.Collection({
+    url: "service",
     model: dime.model.Service
   });
   dime.menu.push({

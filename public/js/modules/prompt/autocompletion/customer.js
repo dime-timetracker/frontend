@@ -1,8 +1,6 @@
-'use strict';
-
-(function (dime, m, _) {
+;(function (dime, m, _) {
+  'use strict';
   dime.modules.prompt.autocompletions.push(function(e, scope) {
-    var customers = dime.resources.customer.findAll() || [];
-    return dime.modules.prompt.autocompletion.alias(e, scope, customers, '@');
+    return dime.modules.prompt.autocompletion.alias(e, scope, dime.resources.customer, '@');
   });
-})(dime, m, _)
+})(dime, m, _);

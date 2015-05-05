@@ -203,7 +203,7 @@ if ("undefined" == typeof(moment)) {
 
   parser.parseDescription = function () {
     parser.result.description = parser.result.string.trim().replace(/ +/, ' ');
-    parser.result.string = null;
+    delete parser.result.string;
   };
 
   "undefined" != typeof(module) && (module.exports = parser);
