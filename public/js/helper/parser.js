@@ -26,6 +26,44 @@ if ("undefined" == typeof(moment)) {
     return parser.result;
   };
 
+  parser.parseFilter = function (string) {
+    parser.parse(string);
+    if (null === parser.result.startedAt && null === parser.result.stoppedAt) {
+      parser.parseFilterTimes();
+    }
+    return parser.result;
+  };
+
+  parser.parseFilterTimes = function () {
+    var string = parser.result.description;
+    [
+      {
+        'keyword': 'today',
+        'start': moment().hour(0).minute(0).second(0),
+        'stop': moment().hour(23).minute(59).second(59)
+      }, {
+        'keyword': 'yesterday',
+        'start': moment().subtract(1, 'day').hour(0).minute(0).second(0),
+        'stop': moment().subtract(1, 'day').hour(23).minute(59).second(59)
+      }, {
+        'keyword': 'last month',
+        'start': moment().date(1).subtract(1, 'month').hour(0).minute(0).second(0),
+        'stop': moment().date(0).hour(23).minute(59).second(59)
+      }, {
+        'keyword': 'current month',
+        'start': moment().date(0).hour(0).minute(0).second(0)
+      }
+    ].forEach(function (pattern) {
+      var regex = new RegExp('\\b' + pattern.keyword + '\\b');
+      if (string.match(regex)) {
+        parser.result.startedAt = pattern.start;
+        parser.result.stoppedAt = pattern.stop;
+        parser.result.description = parser.result.description.replace(regex, '', 'g');
+        parser.result.description = parser.result.description.replace(/ +/, ' ', 'g');
+      }
+    });
+  };
+
   parser.parseCustomer = function () {
     var string = parser.result.string;
     parser.result.customer = {};

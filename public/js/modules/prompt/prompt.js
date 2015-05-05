@@ -46,7 +46,7 @@
         dime.modules.activity.filters = {
           'default': function (activity) { return true; }
         };
-        var filter = dime.parser.parse(e.target.value);
+        var filter = dime.parser.parseFilter(e.target.value);
         _.forIn(filter, function(value, key) {
           if (_.isObject(value) && _.isString(value.alias)) {
             dime.modules.activity.filters[key] = function(activity) {
@@ -57,6 +57,20 @@
         if (filter.description.length) {
           dime.modules.activity.filters.description = function(activity) {
             return _.contains(activity.description, filter.description);
+          };
+        }
+        if (filter.startedAt) {
+          dime.modules.activity.filters.startedAt = function (activity) {
+            return activity.timeslices.some(function (timeslice) {
+              return moment(timeslice.startedAt).isAfter(filter.startedAt);
+            });
+          };
+        }
+        if (filter.stoppedAt) {
+          dime.modules.activity.filters.stoppedAt = function (activity) {
+            return activity.timeslices.some(function (timeslice) {
+              return moment(timeslice.stoppedAt).isBefore(filter.stoppedAt);
+            });
           };
         }
         dime.modules.activity.applyFilter();
