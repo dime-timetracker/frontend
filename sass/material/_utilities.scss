@@ -172,6 +172,14 @@
 	}
 }
 
+.modal-scrollbar-measure {
+	height: 50px;
+	overflow: scroll;
+	position: absolute;
+		top: -99999px;
+	width: 50px;
+}
+
 .no-overflow {
 	overflow: hidden;
 }
@@ -190,12 +198,12 @@
 	float: right;
 }
 
-.scrollbar-measure {
-	height: 50px;
-	overflow: scroll;
-	position: absolute;
-		top: -99999px;
-	width: 50px;
+.text-break {
+	word-break: break-all;
+	-webkit-hyphens: auto;
+	   -moz-hyphens: auto;
+	    -ms-hyphens: auto;
+	        hyphens: auto;
 }
 
 .text-overflow {
@@ -206,7 +214,7 @@
 	white-space: nowrap;
 }
 
-// text alignment
+// alignment
 	.text-center {
 		text-align: center;
 	}
@@ -219,43 +227,35 @@
 		text-align: right;
 	}
 
-// text color
-	.text-alt {
-		color: $brand-color;
+// color
+	.text-bg {
+		color: $black-bg;
 	}
 
 	.text-black {
+		color: $black;
+	}
+
+	.text-default {
 		color: $black-text;
-	}
-
-	.text-blue {
-		color: $palette-blue;
-	}
-
-	.text-green {
-		color: $palette-green;
 	}
 
 	.text-hint {
 		color: $black-hint;
 	}
 
-	.text-purple {
-		color: $palette-purple;
-	}
-
-	.text-red {
-		color: $palette-red;
-	}
-
 	.text-sec {
 		color: $black-sec;
 	}
 
-	.text-yellow {
-		color: $palette-yellow;
-	}
-
 	.text-white {
 		color: $white;
+	}
+
+	@each $color in $palette-list {
+		$i: index($palette-list, $color);
+		
+		.text-#{$color} {
+			color: nth($palette-color, $i);
+		}
 	}

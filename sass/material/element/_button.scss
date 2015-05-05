@@ -19,8 +19,8 @@
 	text-transform: uppercase;
 	vertical-align: middle;
 	white-space: nowrap;
-	@include box-shadow(0 1px 5px rgba(0, 0, 0, 0.15), 0 1px 5px rgba(0, 0, 0, 0.15));
-	@include transition(all 0.3s $timing);
+	@include box-shadow(0 1px 5px rgba(0, 0, 0, 0.15), 0 1px 5px 1px rgba(0, 0, 0, 0.15));
+	@include transition(background-color 0.3s $timing, box-shadow 0.3s $timing);
 	@include user-select(none);
 	&:active,
 	&:focus,
@@ -28,7 +28,7 @@
 		color: $black-text;
 		outline: 0;
 		text-decoration: none;
-		@include box-shadow(0 1px 5px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15));
+		@include box-shadow(0 1px 5px rgba(0, 0, 0, 0.15), 0 5px 10px 1px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15));
 	}
 	&[disabled],
 	fieldset[disabled] & {
@@ -39,12 +39,6 @@
 		border: 0;
 		padding: (($btn-height - $line-height) / 2) $grid-gutter;
 	}
-}
-
-.btn-block {
-	display: block;
-	white-space: normal;
-	width: 100%;
 }
 
 // colour
@@ -66,40 +60,6 @@
 		}
 	}
 
-// flat
-	.btn-flat {
-		background-color: transparent;
-		@include box-shadow(none);
-		&:active,
-		&:focus,
-		&:hover {
-			background-color: $black-bg;
-			@include box-shadow(none);
-		}
-		&[disabled],
-		fieldset[disabled] & {
-			color: $black-text;
-		}
-	}
-	
-	// flat colour
-		@each $color in $palette-list {
-			$i: index($palette-list, $color);
-
-			.btn-flat.btn-#{$color} {
-				color: nth($palette-color, $i);
-				&:active,
-				&:focus,
-				&:hover {
-					background-color: nth($palette-color-light, $i);
-				}
-				&[disabled],
-				fieldset[disabled] & {
-					color: nth($palette-color, $i);
-				}
-			}
-		}
-
 // size
 	.btn-sm {
 		font-size: $font-size-h6;
@@ -110,12 +70,50 @@
 		}
 	}
 
-// text
-	.btn-text {
-		color: $black-text;
-		display: inline-block;
-		font-size: $font-size;
-		font-weight: 400;
-		line-height: $line-height;
-		padding: (($btn-height - $line-height) / 2) 0;
+.btn-block {
+	display: block;
+	white-space: normal;
+	width: 100%;
+}
+
+.btn-flat {
+	background-color: transparent;
+	@include box-shadow(none);
+	&:active,
+	&:focus,
+	&:hover {
+		background-color: $black-bg;
+		@include box-shadow(none);
 	}
+	&[disabled],
+	fieldset[disabled] & {
+		color: $black-text;
+	}
+}
+
+// colour
+	@each $color in $palette-list {
+		$i: index($palette-list, $color);
+
+		.btn-flat.btn-#{$color} {
+			color: nth($palette-color, $i);
+			&:active,
+			&:focus,
+			&:hover {
+				background-color: nth($palette-color-light, $i);
+			}
+			&[disabled],
+			fieldset[disabled] & {
+				color: nth($palette-color, $i);
+			}
+		}
+	}
+
+.btn-text {
+	color: $black-text;
+	display: inline-block;
+	font-size: $font-size;
+	font-weight: 400;
+	line-height: $line-height;
+	padding: (($btn-height - $line-height) / 2) 0;
+}

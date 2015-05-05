@@ -28,7 +28,7 @@
     );
     dime.events.emit('activity-timeslice-table-head-view-after', {view: tableHead, activity: current});
 
-    return m('table.bordered.responsive-table', [
+    return m('table.table.bordered.table-responsive', [
       tableHead,
       m('tbody', items.map(dime.modules.activity.views.timesliceItem, current))
     ]);

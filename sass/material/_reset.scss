@@ -1,8 +1,4 @@
-@font-face{font-family:"Roboto";src:url("fonts/Roboto-Thin.ttf");font-weight:200;}
-@font-face{font-family:"Roboto";src:url("fonts/Roboto-Light.ttf");font-weight:300;}
-@font-face{font-family:"Roboto";src:url("fonts/Roboto-Regular.ttf");font-weight:400;}
-@font-face{font-family:"Roboto";src:url("fonts/Roboto-Medium.ttf");font-weight:500;}
-@font-face{font-family:"Roboto";src:url("fonts/Roboto-Bold.ttf");font-weight:700;}
+// @import url(http://fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic);
 
 *,
 *:after,
@@ -203,7 +199,91 @@
 		overflow: auto;
 	}
 
-// heading
+// text
+	a {
+		background-color: transparent;
+		background-image: none;
+		color: $link-color;
+		text-decoration: none;
+		&:focus,
+		&:hover {
+			color: $link-color-hover;
+			outline: 0;
+			text-decoration: underline;
+		}
+	}
+
+	abbr {
+		border-bottom: 1px dotted $black-hint;
+		cursor: help;
+	}
+
+	address {
+		font-size: $font-size;
+		font-style: normal;
+		font-weight: 400;
+		line-height: $line-height;
+		margin: $line-height 0;
+	}
+
+	b,
+	strong {
+		font-weight: 700;
+	}
+
+	blockquote,
+	q {
+		font-size: $font-size-h4;
+		font-style: italic;
+		font-weight: 300;
+		line-height: $line-height-h4;
+		margin: ($line-height * 1.5) 0;
+		padding-right: ($grid-gutter * 2);
+		padding-left: ($grid-gutter * 2);
+		position: relative;
+		&:after,
+		&:before {
+			color: $brand-color;
+			display: block;
+			font-size: $font-size-h1;
+			font-weight: 700;
+			line-height: 0;
+			position: absolute;
+				top: 0;
+		}
+		&:after {
+			content: close-quote;
+			// position
+				right: 0;
+		}
+		&:before {
+			border-right: 1px solid $brand-color-light;
+			content: open-quote;
+			// position
+				bottom: 0;
+				left: 0;
+			width: ($grid-gutter / 2);
+		}
+	}
+
+	dd,
+	dt,
+	li {
+		line-height: $line-height;
+	}
+
+	dd {
+		margin: 0;
+	}
+
+	dl {
+		margin: $line-height 0;
+	}
+
+	dt {
+		font-weight: 700;
+	}
+
 	h1,
 	h2,
 	h3,
@@ -273,7 +353,6 @@
 		}
 	}
 
-// hr
 	hr,
 	.hr {
 		border: 0;
@@ -285,43 +364,9 @@
 		@include box-sizing(content-box);
 	}
 
-// image
 	img {
 		border: 0;
 		vertical-align: middle;
-	}
-
-// link
-	a {
-		background-color: transparent;
-		background-image: none;
-		color: $link-color;
-		text-decoration: none;
-		&:focus,
-		&:hover {
-			color: $link-color-hover;
-			outline: 0;
-			text-decoration: underline;
-		}
-	}
-
-// list
-	dd,
-	dt,
-	li {
-		line-height: $line-height;
-	}
-
-	dd {
-		margin: 0;
-	}
-
-	dl {
-		margin: $line-height 0;
-	}
-
-	dt {
-		font-weight: 700;
 	}
 
 	ol,
@@ -333,40 +378,6 @@
 			margin-top: 0;
 			margin-bottom: 0;
 		}
-	}
-
-// table
-	table {
-		border-collapse: collapse;
-		border-spacing: 0;
-	}
-
-	td,
-	th {
-		padding: 0;
-	}
-
-	th {
-		text-align: left;
-	}
-
-// text
-	abbr {
-		border-bottom: 1px dotted $black-hint;
-		cursor: help;
-	}
-
-	address {
-		font-size: $font-size;
-		font-style: normal;
-		font-weight: 400;
-		line-height: $line-height;
-		margin: $line-height 0;
-	}
-
-	b,
-	strong {
-		font-weight: 700;
 	}
 
 	p {
@@ -394,4 +405,18 @@
 	sup {
 		// position
 			top: -0.5em;
+	}
+
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+	}
+
+	td,
+	th {
+		padding: 0;
+	}
+
+	th {
+		text-align: left;
 	}

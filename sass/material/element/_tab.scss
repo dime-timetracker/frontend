@@ -3,7 +3,6 @@
 	margin-top: $line-height;
 	margin-bottom: $line-height;
 	position: relative;
-	text-align: center;
 	.nav {
 		margin-top: 0;
 		margin-bottom: -1px;
@@ -41,23 +40,11 @@
 	}
 }
 
-.tab-pane {
-	display: none;
-	visibility: hidden;
-	&.active {
-		display: block;
-		visibility: visible;
-	}
-}
-
 // colour
 	@each $color in $palette-list {
 		$i: index($palette-list, $color);
 		
 		.tab-nav-#{$color} {
-			.tab-nav-indicator {
-				background-color: nth($palette-color, $i);
-			}
 			.nav {
 				> li {
 					> a {
@@ -72,5 +59,17 @@
 					}
 				}
 			}
+			.tab-nav-indicator {
+				background-color: nth($palette-color, $i);
+			}
 		}
 	}
+
+.tab-pane {
+	display: none;
+	visibility: hidden;
+	&.active {
+		display: block;
+		visibility: visible;
+	}
+}

@@ -3,7 +3,16 @@
 		right: 0;
 		bottom: 0;
 		left: 0;
-	z-index: ($top-base + 1);
+	z-index: ($content-base + 1);
+	a {
+		color: lighten($link-color, 30%);
+		cursor: pointer;
+		&:focus,
+		&:hover {
+			color: lighten($link-color, 15%);
+			text-decoration: none;
+		}
+	}
 	.tooltip {
 		position: static !important;
 	}
@@ -27,6 +36,8 @@
 	@include clearfix();
 	@include transform(translate3d(0, 200%, 0));
 	@include transition(all 0.3s $timing);
+	-webkit-transition-property: -webkit-transform;
+	        transition-property: transform;
 	.toast-show & {
 		@include transform(translate3d(0, 0, 0));
 	}
@@ -44,26 +55,14 @@
 		}
 }
 
-// action
-	[data-dismiss="toast"] {
-		cursor: pointer;
-		float: right;
-		font-weight: 700;
-		margin-left: $grid-gutter;
-		text-transform: uppercase;
-	}
+.toast-text {
+	overflow: hidden;
+}
 
-	.toast a {
-		color: lighten($link-color, 30%);
-		cursor: pointer;
-		&:focus,
-		&:hover {
-			color: lighten($link-color, 15%);
-			text-decoration: none;
-		}
-	}
-
-// text
-	.toast-text {
-		overflow: hidden;
-	}
+[data-dismiss="toast"] {
+	cursor: pointer;
+	float: right;
+	font-weight: 700;
+	margin-left: $grid-gutter;
+	text-transform: uppercase;
+}

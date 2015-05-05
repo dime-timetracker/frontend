@@ -34,7 +34,7 @@
 
     var list = [
       m('h2', t(type + 's')),
-      m('table.bordered.responsive-table', [header, rows])
+      m('table.table.table-responsive', [header, rows])
     ];
     dime.events.emit('core-' + type + '-list-view-after', {
       properties: properties(),
