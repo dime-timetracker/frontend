@@ -40,18 +40,28 @@ if ("undefined" == typeof(moment)) {
       {
         'keyword': 'today',
         'start': moment().hour(0).minute(0).second(0),
-        'stop': moment().hour(23).minute(59).second(59)
       }, {
         'keyword': 'yesterday',
         'start': moment().subtract(1, 'day').hour(0).minute(0).second(0),
         'stop': moment().subtract(1, 'day').hour(23).minute(59).second(59)
       }, {
-        'keyword': 'last month',
-        'start': moment().date(1).subtract(1, 'month').hour(0).minute(0).second(0),
-        'stop': moment().date(0).hour(23).minute(59).second(59)
+        'keyword': 'current week',
+        'start': moment().day(0).hour(0).minute(0).second(0),
+      }, {
+        'keyword': 'last week',
+        'start': moment().day(-7*2+1).subtract(1, 'month').hour(0).minute(0).second(0),
+        'stop': moment().day(-7).hour(23).minute(59).second(59)
+      }, {
+        'keyword': 'last 4 weeks',
+        'start': moment().day(-7*4+1).subtract(1, 'month').hour(0).minute(0).second(0),
+        'stop': moment().day(0).hour(23).minute(59).second(59)
       }, {
         'keyword': 'current month',
         'start': moment().date(0).hour(0).minute(0).second(0)
+      }, {
+        'keyword': 'last month',
+        'start': moment().date(1).subtract(1, 'month').hour(0).minute(0).second(0),
+        'stop': moment().date(0).hour(23).minute(59).second(59)
       }
     ].forEach(function (pattern) {
       var regex = new RegExp('\\b' + pattern.keyword + '\\b');
