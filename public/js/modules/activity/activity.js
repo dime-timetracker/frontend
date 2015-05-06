@@ -78,14 +78,14 @@
           description: t('(Click here to enter a description!)'),
           timeslices: []
         });
-      }
+      };
 
       var list = scope.activities.map(dime.modules.activity.views.item);
 
-      if (dime.modules.setting.local.activityShowLoadMore) {
+      if (dime.resources.activity.pager.hasMore()) {
         list.push(m('div', m('a[href=#].btn.btn-block.margin-top', {
           onclick: function () {
-            dime.modules.activity.fetch(dime.modules.setting.local.activityPager.next);
+            dime.resources.activity.pager.next();
             return false;
           }
         }, t('Show more'))));
@@ -141,19 +141,6 @@
         return 1;
       }
       return 0;
-    },
-    extract: function (xhr, options) {
-      if ('GET' === options.method) {
-        dime.modules.setting.local.activityPager = {};
-        var links = xhr.getResponseHeader('X-Dime-Link').split(', ');
-        links.forEach(function (link) {
-          var url = link.split('; ')[0];
-          var rel = link.match(/ rel="?(.+)"?$/)[1];
-          dime.modules.setting.local.activityPager[rel] = url;
-        });
-        var pagerUrls = dime.modules.setting.local.activityPager;
-        dime.modules.setting.local.activityShowLoadMore = (pagerUrls.next == pagerUrls.next);
-      }
     }
   });
 

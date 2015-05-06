@@ -40,7 +40,7 @@
   Collection.prototype = new Array();
   Collection.prototype.constructor = Collection;
   Collection.prototype.parent = m.prop('parent');
-
+  
   dime.Collection = Collection;
 
   Collection.prototype.configure = function (name, value) {
@@ -93,6 +93,16 @@
     return (this.length > 0) ? this[this.length - 1] : undefined;
   };
 
+  Collection.prototype.order = function (func) {
+    var data = this;
+    if (_.isFunction(func)) {
+      data = new Collection(this.config, this.sort(func));
+    } else if (_.isFunction(this.config.sort)) {
+      data = new Collection(this.config, this.sort(this.config.sort));
+    }
+    return data;
+  };
+
   Collection.prototype.reset = function () {
     this.length = 0;
   };
@@ -100,6 +110,7 @@
   // REST API
 
   Collection.prototype.request = function (resource, data, options) {
+    var that = this;
     // Build url
     var url = [];
     if (dime.apiUrl && resource.indexOf(dime.apiUrl) === -1) {
@@ -122,6 +133,8 @@
         options: options
       });
 
+      that.pager = new dime.Pager(that, xhr);
+
       if (xhr.status !== 200) {
         throw xhr.status;
       }
@@ -141,13 +154,18 @@
   };
 
   Collection.prototype.fetch = function (options) {
+    options = options || {};
     var that = this;
     var replaceCollection = true;
     var url = this.config.url;
-    if (options && options.url) {
-      url = options.url;
-      delete options.url;
-      replaceCollection = false;
+    if (_.isPlainObject(options)) {
+      if (!_.isUndefined(options.url)) {
+        url = options.url;
+        delete options.url;
+      }
+      if (!_.isUndefined(options.reset)) {
+        replaceCollection = options.reset;
+      }
     }
 
     // TODO Paginate
