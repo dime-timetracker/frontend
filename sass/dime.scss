@@ -156,3 +156,42 @@
   background: url('../img/activity-gray.png') no-repeat center right;
   padding-right: 28px;
 }
+
+// Table
+
+.table-inline {
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  th,
+  td {
+    border: none;
+  }
+
+
+  // Cells
+  > thead,
+  > tbody,
+  > tfoot {
+    > tr {
+      > th,
+      > td {
+	      background-color: transparent;
+        padding: 0 $grid-gutter/2;
+        line-height: $line-height;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  // Bottom align for column headings
+  > thead > tr > th {
+    border-bottom: 2px solid $black-bg;
+    font-weight: 700;
+  }
+
+  &.table-bordered > tbody > tr > td {
+    border-bottom: 1px solid $black-bg;
+  }
+
+}

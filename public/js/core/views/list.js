@@ -3,7 +3,7 @@
 (function (dime, m) {
 
   dime.core.views.list = function(type, properties) {
-    var items = dime.resources[type].findAll() || [];
+    var items = dime.resources[type] || [];
 
     var headers = properties().map(function(property) {
       var options = property.options || {};

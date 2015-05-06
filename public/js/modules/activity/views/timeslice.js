@@ -7,7 +7,7 @@
       m('td.start', moment(item.startedAt).format('DD.MM.YYYY HH:mm:ss')),
       m('td.stop', item.stoppedAt ? moment(item.stoppedAt).format('DD.MM.YYYY HH:mm:ss') : ''),
       m('td.duration#timeslice-duration-' + item.id, dime.helper.duration.format(item.totalDuration(), 'seconds')),
-      m('td.actions.right-align', [
+      m('td.actions.text-right', [
         m('a.btn.btn-flat[href=#]', { onclick: function() { activity.removeTimeslice(item); return false; } }, m('span.icon.icon-delete'))
       ])
     ]);
@@ -23,12 +23,12 @@
         m('th', t('Start')),
         m('th', t('End')),
         m('th', t('Duration')),
-        m('th.right-align', m('a.btn.btn-flat[href=#]', m('span.icon.icon-add')))
+        m('th.text-right', m('a.btn.btn-flat[href=#]', m('span.icon.icon-add')))
       ])
     );
     dime.events.emit('activity-timeslice-table-head-view-after', {view: tableHead, activity: current});
 
-    return m('table.table.bordered.table-responsive', [
+    return m('table.table.table-inline.table-bordered.table-hover', [
       tableHead,
       m('tbody', items.map(dime.modules.activity.views.timesliceItem, current))
     ]);

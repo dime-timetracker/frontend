@@ -10594,4 +10594,26 @@ textarea.picker__select--year {
   background: url("../img/activity-gray.png") no-repeat center right;
   padding-right: 28px; }
 
+.table-inline {
+  margin-top: 10px;
+  margin-bottom: 10px; }
+  .table-inline th,
+  .table-inline td {
+    border: none; }
+  .table-inline > thead > tr > th,
+  .table-inline > thead > tr > td,
+  .table-inline > tbody > tr > th,
+  .table-inline > tbody > tr > td,
+  .table-inline > tfoot > tr > th,
+  .table-inline > tfoot > tr > td {
+    background-color: transparent;
+    padding: 0 8px;
+    line-height: 24px;
+    vertical-align: middle; }
+  .table-inline > thead > tr > th {
+    border-bottom: 2px solid #e0e0e0;
+    font-weight: 700; }
+  .table-inline.table-bordered > tbody > tr > td {
+    border-bottom: 1px solid #e0e0e0; }
+
 /*# sourceMappingURL=dime.css.map */
