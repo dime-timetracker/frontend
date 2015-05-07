@@ -39,29 +39,28 @@ if ("undefined" == typeof(moment)) {
     [
       {
         'keyword': 'today',
-        'start': moment().hour(0).minute(0).second(0),
+        'start': moment().startOf('day')
       }, {
         'keyword': 'yesterday',
-        'start': moment().subtract(1, 'day').hour(0).minute(0).second(0),
-        'stop': moment().subtract(1, 'day').hour(23).minute(59).second(59)
+        'start': moment().subtract(1, 'day').startOf('day'),
+        'stop': moment().subtract(1, 'day').endOf('day')
       }, {
         'keyword': 'current week',
-        'start': moment().day(0).hour(0).minute(0).second(0),
+        'start': moment().startOf('week')
       }, {
         'keyword': 'last week',
-        'start': moment().day(-7*2+1).subtract(1, 'month').hour(0).minute(0).second(0),
-        'stop': moment().day(-7).hour(23).minute(59).second(59)
+        'start': moment().subtract(1, 'week').startOf('week'),
+        'stop': moment().subtract(1, 'week').endOf('week')
       }, {
         'keyword': 'last 4 weeks',
-        'start': moment().day(-7*4+1).subtract(1, 'month').hour(0).minute(0).second(0),
-        'stop': moment().day(0).hour(23).minute(59).second(59)
+        'start': moment().subtract(4, 'weeks').startOf('day')
       }, {
         'keyword': 'current month',
-        'start': moment().date(0).hour(0).minute(0).second(0)
+        'start': moment().startOf('month')
       }, {
         'keyword': 'last month',
-        'start': moment().date(1).subtract(1, 'month').hour(0).minute(0).second(0),
-        'stop': moment().date(0).hour(23).minute(59).second(59)
+        'start': moment().subtract(1, 'month').startOf('month'),
+        'stop': moment().subtract(1, 'month').endOf('month')
       }
     ].forEach(function (pattern) {
       var regex = new RegExp('\\b' + pattern.keyword + '\\b');
