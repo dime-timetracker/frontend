@@ -40,7 +40,7 @@
   Collection.prototype = new Array();
   Collection.prototype.constructor = Collection;
   Collection.prototype.parent = m.prop('parent');
-  
+
   dime.Collection = Collection;
 
   Collection.prototype.configure = function (name, value) {
@@ -59,7 +59,11 @@
   Collection.prototype.add = function (data) {
     if (data !== undefined && _.isObject(data)) {
       var item = this.create(data);
-      item.parent(this);
+      if (item.parent) {
+        item.parent(this);
+      } else {
+        console.log(this.config);
+      }
       this.push(item);
     }
     return item;
@@ -168,7 +172,6 @@
       }
     }
 
-    // TODO Paginate
     return this
             .request(url, {}, _.extend({}, options))
             .then(function (list) {

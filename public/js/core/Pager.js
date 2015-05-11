@@ -1,6 +1,5 @@
 ;(function (dime) {
   'use strict';
-
   /**
    * Pager object to navigate to next page.
    *
@@ -31,8 +30,6 @@
 
   Pager.prototype = new Object();
   Pager.prototype.constructor = Pager;
-  
-  dime.Pager = Pager;
 
   Pager.prototype.next = function () {
     this.collection.fetch({ url: this.pagination.next, reset: false });
@@ -61,5 +58,7 @@
     }
     return result;
   };
-  
+
+  dime.Pager = Pager;
+
 })(dime);
