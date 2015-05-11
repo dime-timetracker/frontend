@@ -46,8 +46,7 @@
     },
     views: {
       card: function (section) {
-        var content = [m('h2.content-sub-heading', headerWithDescription(section))];
-
+        var content = [];
         // sections
         var children = [];
         _.forOwn(section.children, function (value, ckey) {
@@ -57,8 +56,10 @@
             children.push(dime.modules.setting.views.form(v));
           });
         });
-        content.push(m('div.card', m('div.card-main', m('.card-inner', children))));
-
+        if (children.length > 0) {
+          content.push(m('h2.content-sub-heading', headerWithDescription(section)));
+          content.push(m('div.card', m('div.card-main', m('.card-inner', children))));
+        }
         return content;
       },
       form: function (current) {
