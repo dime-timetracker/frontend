@@ -1,6 +1,6 @@
-'use strict';
+;(function (dime, _) {
+  'use strict';
 
-(function (dime, _) {
   dime.helper.number = {
     formatCurrency: function(amount, pattern) {
       if (_.isUndefined(pattern)) {
@@ -17,4 +17,5 @@
       return pattern.replace('{number}', number);
     }
   }
+  
 })(dime, _);

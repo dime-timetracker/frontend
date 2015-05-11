@@ -1,6 +1,6 @@
-'use strict';
-
-(function (dime, _, m, Mousetrap) {
+;(function (dime, _, m, Mousetrap) {
+  'use strict';
+  
   dime.helper.prompt = {
 
     shortcuts: function shortcuts() {
@@ -86,7 +86,7 @@
         if (scope.suggestions.length) {
           dime.helper.prompt.applySuggestion(e, scope.suggestions[0]);
         }
-        if (1 == scope.suggestions.length) {
+        if (1 === scope.suggestions.length) {
           dime.helper.prompt.clearSuggestions(e, scope);
         }
       });
@@ -95,7 +95,7 @@
 
     updateSuggestions: function updateSuggestions(e, scope) {
       // some char added
-      if ((e.keyCode && 1 == e.keyCode.length) || (e.which && 1 == e.which.length)) {
+      if ((e.keyCode && 1 === e.keyCode.length) || (e.which && 1 === e.which.length)) {
         if (scope.suggestions.length) {
           dime.helper.prompt.autocomplete(e, scope);
           return;
@@ -108,5 +108,6 @@
       m.redraw();
     }
 
-  }
+  };
+  
 })(dime, _, m, Mousetrap);

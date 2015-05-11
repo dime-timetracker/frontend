@@ -1,5 +1,3 @@
-'use strict';
-
 if ("undefined" == typeof(dime)) {
   var dime = {};
 }
@@ -8,6 +6,8 @@ if ("undefined" == typeof(moment)) {
 }
 
 (function (dime, moment) {
+  'use strict';
+
   var parser = {
     result: {}
   };
@@ -21,7 +21,7 @@ if ("undefined" == typeof(moment)) {
       parser.parseTimes,
       parser.parseDescription
     ].forEach(function(parser) {
-      parser()
+      parser();
     });
     return parser.result;
   };
