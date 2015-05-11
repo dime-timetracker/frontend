@@ -37,8 +37,8 @@
     },
     view: function (scope) {
 
-      Mousetrap.bind(dime.modules.setting.get(
-        dime.settings.activity.children.shortcuts.children.selectNext
+      Mousetrap.bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.selectNext
       ), function(e) {
         if (_.isUndefined(dime.modules.activity.selectedIdx)) {
           dime.modules.activity.selectedIdx = 0;
@@ -50,8 +50,8 @@
         m.redraw();
       });
 
-      Mousetrap.bind(dime.modules.setting.get(
-        dime.settings.activity.children.shortcuts.children.selectPrevious
+      Mousetrap.bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.selectPrevious
       ), function(e) {
         if (_.isUndefined(dime.modules.activity.selectedIdx)) {
           dime.modules.activity.selectedIdx = scope.activities.length-1;
@@ -63,8 +63,8 @@
         m.redraw();
       });
 
-      Mousetrap.bind(dime.modules.setting.get(
-        dime.settings.activity.children.shortcuts.children.startStop
+      Mousetrap.bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.startStop
       ), function(e) {
         if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
           scope.activities[dime.modules.activity.selectedIdx].startStopTimeslice();
@@ -145,7 +145,7 @@
   });
 
   // add settings section
-  dime.settings.activity = {
+  dime.configuration.activity = {
     title: t('Activity'),
     description: t('Activity settings'),
     children: {

@@ -6,7 +6,7 @@
     var tags = activity.tags || [];
     var hasTags = 0 < tags.length;
     var tagClass = hasTags ? "" : ".empty";
-    var editable = 1===dime.modules.setting.get("activity/tags/editable", activity.id, 0);
+    var editable = 1===dime.configuration.get("activity/tags/editable", activity.id, 0);
 
     var addTag = function (name) {
       var filter = {name: name};
@@ -48,7 +48,7 @@
     });
 
     var setEditable = function (value) {
-      dime.modules.setting.set("activity/tags/editable", activity.id, value); 
+      dime.configuration.set("activity/tags/editable", activity.id, value); 
     }
 
     var ok = m("a[href=#].close", {

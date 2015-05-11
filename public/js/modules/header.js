@@ -24,7 +24,7 @@
       }
     }
     
-    var color = dime.modules.setting.get(dime.settings.general.children.customize.children.headerColor);
+    var color = dime.configuration.get(dime.configuration.general.children.customize.children.headerColor);
     if (color) {
       color = '.' + color.split(' ').join('.');
     }
@@ -38,7 +38,7 @@
     }
   };
 
-  dime.settings.general.children.customize = {
+  dime.configuration.general.children.customize = {
     title: "Pimp my dime",
     children: {
       headerColor: {

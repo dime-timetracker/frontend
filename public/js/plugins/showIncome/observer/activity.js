@@ -17,7 +17,7 @@
   }
 
   var isDependencyMet = function (dependency) {
-    return true == dime.modules.setting.get(dependency);
+    return true == dime.configuration.get(dependency);
   }
 
   var areDependenciesMet = function (dependencies) {
@@ -25,15 +25,15 @@
   }
 
   dime.events.on('activity-item-actions-view-after', function(context) {
-    if (false == dime.modules.setting.get('activity', 'display/showIncome', false)
-      || false == dime.modules.setting.get('activity', 'display/showActivityIncome', false)
+    if (false == dime.configuration.get('activity', 'display/showIncome', false)
+      || false == dime.configuration.get('activity', 'display/showActivityIncome', false)
     ) {
       return;
     }
 
     var children = [];
-    var precisionSeconds = dime.modules.setting.get(
-      dime.settings.activity.children.display.children.incomePrecisionSeconds
+    var precisionSeconds = dime.configuration.get(
+      dime.configuration.activity.children.display.children.incomePrecisionSeconds
     );
     _.forEach(context.view.children, function(child, idx) {
       if (idx === 2) {
@@ -50,7 +50,7 @@
     context.view.children = children;
   });
 
-  dime.settings.activity.children.display.children.showIncome = {
+  dime.configuration.activity.children.display.children.showIncome = {
     title: "Show Income",
     namespace: "activity",
     name: "display/showIncome",
@@ -58,7 +58,7 @@
     defaultValue: false
   };
 
-  dime.settings.activity.children.display.children.showActivityIncome = {
+  dime.configuration.activity.children.display.children.showActivityIncome = {
     title: "Show income for activities",
     namespace: "activity",
     name: "display/showActivityIncome",
@@ -66,13 +66,13 @@
     type: "boolean",
     onRender: function() {
       return isDependencyMet(
-        dime.settings.activity.children.display.children.showIncome
+        dime.configuration.activity.children.display.children.showIncome
       );
     },
     display: function() {return false;}
   };
 
-  dime.settings.activity.children.display.children.incomePrecisionSeconds = {
+  dime.configuration.activity.children.display.children.incomePrecisionSeconds = {
     title: "Income Precision (in minutes)",
     description: "Round each timeslice duration according to this precision",
     namespace: "activity",
@@ -81,8 +81,8 @@
     onRead: function(value) { return value/60; },
     onRender: function() {
       return areDependenciesMet([
-        dime.settings.activity.children.display.children.showIncome,
-        dime.settings.activity.children.display.children.showActivityIncome
+        dime.configuration.activity.children.display.children.showIncome,
+        dime.configuration.activity.children.display.children.showActivityIncome
       ]);
     },
     onWrite: function(value) { return value*60; },

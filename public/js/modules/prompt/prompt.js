@@ -132,7 +132,7 @@
   dime.modules.prompt.autocompletion = {};
   dime.modules.prompt.autocompletions = [];
 
-  dime.settings.prompt = {
+  dime.configuration.prompt = {
     title: t('Prompt'),
     description: t('Prompt settings'),
     children: {

@@ -70,9 +70,9 @@
           if (_.isFunction(current.onWrite)) {
             value = current.onWrite(value);
           }
-          dime.modules.setting.set(current.namespace, current.name, value);
+          dime.configuration.set(current.namespace, current.name, value);
         };
-        var value = dime.modules.setting.get(current.namespace, current.name, current.defaultValue);
+        var value = dime.configuration.get(current.namespace, current.name, current.defaultValue);
         if (_.isFunction(current.onRead)) {
           value = current.onRead(value);
         }
@@ -94,7 +94,7 @@
     view: function() {
       var content = [];
 
-      _.forOwn(dime.settings, function (value) {
+      _.forOwn(dime.configuration, function (value) {
         content.push(dime.modules.setting.views.card(value));
       });
 

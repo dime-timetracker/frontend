@@ -2,7 +2,7 @@
 
 (function (dime) {
 
-  dime.settings = {
+  dime.configuration = {
     general: {
       title: 'General',
       description: 'General Settings',

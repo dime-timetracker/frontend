@@ -21,11 +21,11 @@
     };
 
     var isEditable = function () {
-      return dime.modules.setting.local[type + '/edit-inline/' + alias] || false;
+      return dime.configuration.local[type + '/edit-inline/' + alias] || false;
     };
 
     var setEditable = function (value) {
-      dime.modules.setting.local[type + '/edit-inline/' + alias] = value;
+      dime.configuration.local[type + '/edit-inline/' + alias] = value;
     };
 
     activity[type] = activity[type] || dime.resources[type].create({});

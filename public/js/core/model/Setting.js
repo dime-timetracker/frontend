@@ -1,11 +1,16 @@
-'use strict';
+;(function (dime, _) {
+  'use strict';
 
-dime.model.Setting = function(data) {
-  if (!(this instanceof dime.model.Setting)) {
-      return new dime.model.Setting(data);
-  }
-  _.extend(this, data || {});
-};
+  var Setting = function (data) {
+    if (!(this instanceof Setting)) {
+      return new Setting(data);
+    }
+    _.extend(this, data || {});
+  };
 
-dime.model.Setting.prototype = new dime.Model();
-dime.model.Setting.prototype.constructor = dime.model.Setting;
+  Setting.prototype = new dime.Model();
+  Setting.prototype.constructor = Setting;
+
+  dime.model.Setting = Setting;
+  
+})(dime, _);

@@ -12,14 +12,14 @@
   };
 
   var closeHelp = function () {
-    dime.modules.setting.local.showHelp = false;
+    dime.configuration.local.showHelp = false;
     m.redraw();
     return false;
   }
 
   module.view = function (scope) {
 
-    if (dime.modules.setting.local.showHelp) {
+    if (dime.configuration.local.showHelp) {
       Mousetrap.bind('esc', closeHelp);
       return m('.modal-open', m('.modal', {
           style: 'display: block'
@@ -49,7 +49,7 @@
   };
 
   Mousetrap.bind('?', function(e) {
-    dime.modules.setting.local.showHelp = true;
+    dime.configuration.local.showHelp = true;
     m.redraw();
     return false;
   });

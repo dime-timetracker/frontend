@@ -13,10 +13,10 @@
       description: t('Enter a regular expression to extract ticket numbers out of tags, e.g. "[A-Z]+-[0-9]+" for JIRA tickets'),
       type: 'text',
       get: function () {
-        return dime.modules.setting.get(namespace, namePattern);
+        return dime.configuration.get(namespace, namePattern);
       },
       set: function (value) {
-        return dime.modules.setting.set(namespace, namePattern, value);
+        return dime.configuration.set(namespace, namePattern, value);
       },
     });
     context.properties.push({
@@ -24,10 +24,10 @@
       title: 'Ticket URL',
       type: 'url',
       get: function () {
-        return dime.modules.setting.get(namespace, nameUrlSchema);
+        return dime.configuration.get(namespace, nameUrlSchema);
       },
       set: function (value) {
-        return dime.modules.setting.set(namespace, nameUrlSchema, value);
+        return dime.configuration.set(namespace, nameUrlSchema, value);
       },
     });
   });
@@ -46,11 +46,11 @@
       m('.form-row.ticketlink-pattern', [
         m('label', t('Ticket Tag pattern')),
         m('input', {
-          value: dime.modules.setting.get(namespace, namePattern),
+          value: dime.configuration.get(namespace, namePattern),
           type: 'text',
           title: t('Enter a regular expression to extract ticket numbers out of tags, e.g. "[A-Z]+-[0-9]+" for JIRA tickets'),
           oninput: function (e) {
-            dime.modules.setting.set(namespace, namePattern, e.target.value);
+            dime.configuration.set(namespace, namePattern, e.target.value);
           }
         })
       ])
@@ -61,11 +61,11 @@
       m('.form-row.ticketlink-url', [
         m('label', t('Ticket URL')),
         m('input', {
-          value: dime.modules.setting.get(namespace, nameUrlSchema),
+          value: dime.configuration.get(namespace, nameUrlSchema),
           type: 'url',
           title: t('Enter a ticket URL and use [TICKET] to be replaced by the ticket number'),
           oninput: function (e) {
-            dime.modules.setting.set(namespace, nameUrlSchema, e.target.value);
+            dime.configuration.set(namespace, nameUrlSchema, e.target.value);
           }
         })
       ])
@@ -81,8 +81,8 @@
     var namePattern = projectAlias + '/pattern';
     var nameUrlSchema = projectAlias + '/urlSchema';
 
-    var pattern   = dime.modules.setting.get(namespace, namePattern, '');
-    var urlSchema = dime.modules.setting.get(namespace, nameUrlSchema, '');
+    var pattern   = dime.configuration.get(namespace, namePattern, '');
+    var urlSchema = dime.configuration.get(namespace, nameUrlSchema, '');
     if (0 == pattern.length || 0 === urlSchema.length) {
       return;
     }

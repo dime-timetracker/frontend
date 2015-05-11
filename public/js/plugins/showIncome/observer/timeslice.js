@@ -2,7 +2,7 @@
 (function (dime, m, _, t) {
 
   dime.events.on('activity-timeslice-table-head-view-after', function(context) {
-    if (false == dime.modules.setting.get('activity', 'display/showIncome', false)) {
+    if (false == dime.configuration.get('activity', 'display/showIncome', false)) {
       return;
     }
     context.view.children[0].children[4] = context.view.children[0].children[3];
@@ -10,10 +10,10 @@
   });
 
   dime.events.on('activity-timeslice-table-row-view-after', function(context) {
-    if (false == dime.modules.setting.get('activity', 'display/showIncome', false)) {
+    if (false == dime.configuration.get('activity', 'display/showIncome', false)) {
       return;
     }
-    var precision = dime.modules.setting.get('activity', 'display/incomePrecisionSeconds', 15*60);
+    var precision = dime.configuration.get('activity', 'display/incomePrecisionSeconds', 15*60);
     var income = context.activity.rate * Math.ceil(context.item.totalDuration(precision)) / 60 / 60;
     context.view.children[4] = context.view.children[3];
     context.view.children[3] = m('td.text-right', dime.helper.number.formatCurrency(income, '{number} €'));

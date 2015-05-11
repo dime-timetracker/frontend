@@ -53,7 +53,7 @@
     var scope = {};
     
     scope.items = dime.menu.sort(sort);
-    dime.modules.setting.local['menu/visibility'] = false;
+    dime.configuration.local['menu/visibility'] = false;
 
     dime.events.emit('menu-before-view', scope);
 
@@ -62,7 +62,7 @@
 
   module.view = function (scope) {
     var open = '';
-    if (dime.modules.setting.local['menu/visibility']) {
+    if (dime.configuration.local['menu/visibility']) {
       open = '.open';
     }
     return m('nav.menu' + open, m('.menu-scroll', m('.menu-wrap', m('.menu-content', module.views.list(scope.items)))));
@@ -72,7 +72,7 @@
     menuBtn: function (scope) {
       return m('ul.nav.nav-list.pull-left', m('li', m('a[href=#].menu-toggle', { onclick: function (e) {
           e.preventDefault();
-          dime.modules.setting.local['menu/visibility'] = !dime.modules.setting.local['menu/visibility'];
+          dime.configuration.local['menu/visibility'] = !dime.configuration.local['menu/visibility'];
      }}, [
         m('span.access-hide', 'Menu'),
         m('span.icon.icon-menu'),

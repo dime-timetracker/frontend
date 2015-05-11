@@ -5,8 +5,8 @@
 
     shortcuts: function shortcuts() {
       var shortcuts = {};
-      _.map(dime.settings.prompt.children.shortcuts.children, function (setting, key) {
-        shortcuts[key] = dime.modules.setting.get(setting);
+      _.map(dime.configuration.prompt.children.shortcuts.children, function (setting, key) {
+        shortcuts[key] = dime.configuration.get(setting);
       });
       return shortcuts;
     },
