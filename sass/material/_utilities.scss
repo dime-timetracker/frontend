@@ -34,6 +34,60 @@
 	}
 }
 
+.avoid-fout,
+.el-loading {
+	position: relative;
+}
+
+body.avoid-fout,
+body.el-loading {
+	position: static;
+}
+
+.avoid-fout-indicator,
+.el-loading-indicator {
+	font-family: sans-serif !important;
+	height: 0;
+	min-height: ($base / 2);
+	overflow: hidden;
+	position: absolute;
+		top: 0;
+		left: 0;
+	text-align: center;
+	width: 0;
+	z-index: 2;
+}
+
+.avoid-fout > .avoid-fout-indicator,
+.el-loading > .el-loading-indicator {
+	background-color: $white;
+	height: 100%;
+	padding: $line-height $grid-gutter;
+	width: 100%;
+	@include box-shadow(0 -1px 0 $black-bg, 0 0 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.15));
+	@include opacity(1);
+}
+
+.avoid-fout-done > .avoid-fout-indicator,
+.el-loading-done > .el-loading-indicator {
+	height: 0;
+	padding: 0;
+	width: 0;
+	@include opacity(0);
+	@include transition(height 0s 0.3s, opacity 0.3s $timing, padding 0s 0.3s, width 0s 0.3s);
+}
+
+.avoid-fout-indicator-fixed,
+.el-loading-indicator-fixed {
+	position: fixed;
+	z-index: ($top-base + 1);
+}
+
+.avoid-fout-indicator-linear,
+.el-loading-indicator-linear {
+	padding: 0 !important;
+}
+
 .clearfix {
 	@include clearfix();
 }
@@ -194,6 +248,10 @@
 	float: left;
 }
 
+.pull-none {
+	float: none !important;
+}
+
 .pull-right {
 	float: right;
 }
@@ -204,6 +262,12 @@
 	   -moz-hyphens: auto;
 	    -ms-hyphens: auto;
 	        hyphens: auto;
+}
+
+.text-lead {
+	font-size: $font-size-h4;
+	font-weight: 300;
+	line-height: $line-height-h4;
 }
 
 .text-overflow {

@@ -1,10 +1,5 @@
 // Source: https://github.com/Dogfalo/materialize/blob/master/sass/components/_color.scss
 // Utility Color Classes
-
-//.success {
-//
-//}
-
 // Google Color Palette defined: http://www.google.com/design/spec/style/color.html
 
 $red: (
@@ -395,4 +390,3 @@ $colors: (
   @warn "Unknown `#{name}` in $colors.";
   @return null;
 }
-
