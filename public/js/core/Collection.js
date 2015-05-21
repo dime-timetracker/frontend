@@ -61,8 +61,6 @@
       var item = this.create(data);
       if (item.parent) {
         item.parent(this);
-      } else {
-        console.log(this.config);
       }
       this.push(item);
     }
@@ -113,118 +111,96 @@
 
   // REST API
 
-  Collection.prototype.request = function (resource, data, options) {
-    var that = this;
-    // Build url
-    var url = [];
-    if (dime.apiUrl && resource.indexOf(dime.apiUrl) === -1) {
-      url.push(dime.apiUrl);
-    }
-    url.push(resource);
-
-    // Build request configuration
-    var configuration = { method: 'GET', initialValue: this };
-    configuration.config = function (xhr) {
-      xhr.withCredentials = true;
-      dime.events.emit('request-config', {
-        xhr: xhr,
-        options: options
-      });
-    };
-    configuration.extract = function (xhr, options) {
-      dime.events.emit('request-extract', {
-        xhr: xhr,
-        options: options
-      });
-
-      that.pager = new dime.Pager(that, xhr);
-
-      if (xhr.status !== 200) {
-        throw xhr.status;
-      }
-      return xhr.status !== 200 ? xhr.status : xhr.responseText;
-    };
-
-    // Extend configuration
-    // TODO wrap extract
-    if (_.isPlainObject(options)) {
-      _.extend(configuration, options);
-    }
-    configuration.url = url.join('/');
-    configuration.data = data;
-
-    // Do request
-    return m.request(configuration);
-  };
-
   Collection.prototype.fetch = function (options) {
-    options = options || {};
     var that = this;
-    var replaceCollection = true;
-    var url = this.config.url;
+    var reset = true;
+    var configuration = {
+      method: 'GET',
+      url: dime.helper.format.url('api', this.config.url),
+      initialValue: this,
+      config: function (xhr) {
+        dime.events.emit('authorize', xhr);
+      },
+      extract: function (xhr, xhrOptions) {
+        that.pager = new dime.Pager(that, xhr);
+        return xhr.responseText;
+      }
+    };
+    
     if (_.isPlainObject(options)) {
       if (!_.isUndefined(options.url)) {
-        url = options.url;
-        delete options.url;
+        configuration.url = urlFor(options.url);
       }
       if (!_.isUndefined(options.reset)) {
-        replaceCollection = options.reset;
+        reset = options.reset;
       }
     }
 
-    return this
-            .request(url, {}, _.extend({}, options))
-            .then(function (list) {
-              if (replaceCollection) {
-                that.reset();
-              }
+    return m
+      .request(configuration)
+      .then(function (list) {
+        if (reset) {
+          that.reset();
+        }
 
-              list.forEach(function (item) {
-                that.add(item);
-              });
-            });
+        list.forEach(function (item) {
+          that.add(item);
+        });
+      });
   };
 
   Collection.prototype.persist = function (data, options) {
-    var that = this,
-        url = this.config.url,
-        method = 'POST';
+    var that = this;
+    var configuration = {
+      method: 'POST',
+      url: dime.helper.format.url('api', this.config.url),
+      initialValue: data,
+      config: function (xhr) {
+        dime.events.emit('authorize', xhr);
+      }
+    };
 
     if (data[this.config.idAttribute]) {
-      url = this.config.url + '/' + data[this.config.idAttribute];
-      method = 'PUT';
+      configuration.url = dime.helper.format.url(configuration.url, data[this.config.idAttribute]);
+      configuration.method = 'PUT';
     }
 
-    return this
-            .request(url, data, _.extend({ method: method }, options))
-            .then(function (response) {
-              var result = response;
-              if (method === 'POST') { // create new
-                result = that.add(response);
-              }
-              return result;
-            });
+    return m
+      .request(configuration)
+      .then(function (response) {
+        var result = response;
+        if (configuration.method === 'POST') { // create new
+          result = that.add(response);
+        }
+        return result;
+      });
   };
 
   Collection.prototype.remove = function (data, options) {
-    var that = this,
-        url = this.config.url,
-        method = 'DELETE';
+    var that = this;
+    var configuration = {
+      method: 'DELETE',
+      url: dime.helper.format.url(this.config.url),
+      initialValue: data,
+      config: function (xhr) {
+        dime.events.emit('authorize', xhr);
+      }
+    };
 
     if (data[this.config.idAttribute]) {
-      url = this.config.url + '/' + data[this.config.idAttribute];
+      configuration.url = dime.helper.format.url(configuration.url, data[this.config.idAttribute]);
     }
 
-    return this
-        .request(url, {}, _.extend({ method: method }, options))
-        .then(function (response) {
-          var idx = that.indexOf(data),
-              item = data;
-          if (-1 < idx) {
-            item = that.splice(idx, 1);
-          }
-          return item;
-        });
+    return m
+      .request(configuration)
+      .then(function (response) {
+        var idx = that.indexOf(data),
+            item = data;
+        if (-1 < idx) {
+          item = that.splice(idx, 1);
+        }
+        return item;
+      });
   };
 
 })(dime, m, _);
