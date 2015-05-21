@@ -155,6 +155,7 @@
       method: 'POST',
       url: dime.helper.format.url('api', this.config.url),
       initialValue: data,
+      data: data,
       config: function (xhr) {
         dime.events.emit('authorize', xhr);
       }

@@ -57,7 +57,9 @@
       var contain = false;
 
       for (var i = 0; i < arguments.length; i++) {
-        if (dime.env.baseUrl && arguments[i].indexOf(dime.env.baseUrl) !== -1) {
+        if (dime.env.baseUrl 
+                && _.isString(arguments[i])
+                && arguments[i].indexOf(dime.env.baseUrl) !== -1) {
           contain = true;
         }
         uri.push(arguments[i]);
