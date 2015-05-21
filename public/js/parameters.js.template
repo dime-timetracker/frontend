@@ -1,1 +1,1 @@
-dime.apiUrl = 'api';
+dime.env.baseUrl = '';
