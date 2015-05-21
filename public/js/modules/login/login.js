@@ -1,8 +1,7 @@
-'use strict';
+;(function (dime, _, m, t) {
+  'use strict';
 
-(function (dime, _, m, t) {
-
-  dime.modules.login = {
+  var module = dime.modules.login = {
     controller: function () {
       var scope = {};
 
@@ -13,46 +12,58 @@
       return scope;
     },
     view: function (scope) {
-      return m('form', {
-        onsubmit: function(e) {
-          dime.username = scope.username;
-          dime.password = scope.password;
-          dime.authorized = true;
-          m.route('/');
-        }
-      }, [
-        m('input', {
-          onchange: function(e) {
-            scope.username = e.target.value;
+      return dime.core.views.card(
+        m('form.form', {
+          onsubmit: function(e) {
+            dime.username = scope.username;
+            dime.password = scope.password;
+            dime.authorized = true;
+            m.route('/');
           }
-        }),
-        m('input[type=password]', {
-          onchange: function(e) {
-            scope.password = e.target.value;
-          }
-        }),
-        m('input[type=submit]', {
-          value: t('Login')
-        }),
-      ])
+        }, [
+          dime.core.views.formGroup(
+            m('input#username.form-control', {
+              onchange: function(e) {
+                scope.username = e.target.value;
+              }
+            }),
+            t('Username')
+          ),
+
+          dime.core.views.formGroup(
+            m('input[type=password]#password.form-control', {
+              onchange: function(e) {
+                scope.password = e.target.value;
+              }
+            }),
+            t('Password')
+          ),
+          dime.core.views.formGroup(
+            m('input[type=submit].btn.btn-block.btn-blue', {
+              value: t('Login')
+            })
+          )
+        ]),
+        t('Login')
+      );
     }
   };
 
-  dime.modules.login.redirect = function (response) {
+  module.redirect = function (response) {
     if (_.isObject(response) && 401 === result.httpStatus) {
       dime.authorized = false;
       return m.route('/login');
     }
   };
 
-  dime.modules.login.success = function () {
+  module.success = function () {
     if (dime.user) {
       dime.resources.activity.config.user = dime.username;
     }
     if (dime.username) {
       dime.resources.activity.config.password = dime.password;
     }
-  }
+  };
 
   // register route
   dime.routes['/login'] = dime.modules.login;

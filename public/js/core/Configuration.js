@@ -2,6 +2,10 @@
   'use strict';
 
   var Configuration = function(configuration) {
+    if (!(this instanceof Configuration)) {
+      return new Configuration(configuration);
+    }
+
     _.extend(this, {}, configuration);
 
     this.local = {};

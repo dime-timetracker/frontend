@@ -79,53 +79,49 @@
         return dime.helper.format.mousetrapCommand(shortcuts[key], t);
       };
 
-      return m('.card',
-        m('.card-main',
-          m('.card-inner', [
-            m('.row', [
-              m('div.col-md-6', m('input#prompt.form-control.mousetrap.activity-icon', {
-                placeholder: t('Add an activity') + ' (' + humanReadableShortcut('focusPrompt') + ')',
-                onfocus: function (e) { dime.helper.prompt.init(e, scope, submit); },
-                onblur: function (e) { dime.helper.prompt.blur(e, scope); },
-                onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
-              })),
-              m('div.col-md-6', m('input#filter.form-control.mousetrap.text-right.filter-icon', {
-                placeholder: t('Filter activities') + ' (' + humanReadableShortcut('focusFilter') + ')',
-                onfocus: function (e) { dime.helper.prompt.init(e, scope, updateFilter); },
-                onblur: function (e) { dime.helper.prompt.blur(e, scope); },
-                onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
-              }))
-            ]),
-            m('div.row.suggestions' + showHelp, [
-              scope.suggestions.map(function (suggestion) {
-                return m('div.col-lg-2.col-md-3.col-sm-4',
-                  m('div.card.suggestion.' + (suggestion.selected ? '.card-blue-bg' : ''),
-                    m('div.card-main',
-                      m('div.card-inner', [
-                        m('p.card-heading.alias', suggestion.alias),
-                        m('p.name', suggestion.name || t('(Please edit details!)'))
-                      ])
-                    )
-                  )
-                );
-              })
-            ]),
-            m('div.form-help.form-help-msg' + showHelp, [
-              m('span.basics', t('Enter a description to start an activity.')),
-              m('ul', [
-                m('li.dates.duration', t('You may specify a duration by entering something like 1h 10m or 1:10.')),
-                m('li.dates.start', t('You may specify a start by entering something like 13:50-')),
-                m('li.dates.end', t('You may specify an end by entering something like -15:10')),
-                m('li.dates.start-and-end', t('You may specify start and end by entering something like 13:50-15:10')),
-                m('li.customer', t('Use "@" to specify a customer.')),
-                m('li.project', t('Use "/" to specify a project.')),
-                m('li.service', t('Use ":" to specify a service.')),
-                m('li.tags', t('Use "#" to add tags.'))
-              ])
-            ])
+      return dime.core.views.card([
+        dime.core.views.grid(
+          m('input#prompt.form-control.mousetrap.activity-icon', {
+            placeholder: t('Add an activity') + ' (' + humanReadableShortcut('focusPrompt') + ')',
+            onfocus: function (e) { dime.helper.prompt.init(e, scope, submit); },
+            onblur: function (e) { dime.helper.prompt.blur(e, scope); },
+            onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
+          }),
+          m('input#filter.form-control.mousetrap.text-right.filter-icon', {
+            placeholder: t('Filter activities') + ' (' + humanReadableShortcut('focusFilter') + ')',
+            onfocus: function (e) { dime.helper.prompt.init(e, scope, updateFilter); },
+            onblur: function (e) { dime.helper.prompt.blur(e, scope); },
+            onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
+          })
+        ),
+        m('div.row.suggestions' + showHelp, [
+          scope.suggestions.map(function (suggestion) {
+            return m('div.col-lg-2.col-md-3.col-sm-4',
+              m('div.card.suggestion.' + (suggestion.selected ? '.card-blue-bg' : ''),
+                m('div.card-main',
+                  m('div.card-inner', [
+                    m('p.card-heading.alias', suggestion.alias),
+                    m('p.name', suggestion.name || t('(Please edit details!)'))
+                  ])
+                )
+              )
+            );
+          })
+        ]),
+        m('div.form-help.form-help-msg' + showHelp, [
+          m('span.basics', t('Enter a description to start an activity.')),
+          m('ul', [
+            m('li.dates.duration', t('You may specify a duration by entering something like 1h 10m or 1:10.')),
+            m('li.dates.start', t('You may specify a start by entering something like 13:50-')),
+            m('li.dates.end', t('You may specify an end by entering something like -15:10')),
+            m('li.dates.start-and-end', t('You may specify start and end by entering something like 13:50-15:10')),
+            m('li.customer', t('Use "@" to specify a customer.')),
+            m('li.project', t('Use "/" to specify a project.')),
+            m('li.service', t('Use ":" to specify a service.')),
+            m('li.tags', t('Use "#" to add tags.'))
           ])
-        )
-      );
+        ])
+      ]);
     }
   };
 
