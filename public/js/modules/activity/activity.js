@@ -82,7 +82,7 @@
 
       var list = scope.activities.map(dime.modules.activity.views.item);
 
-      if (dime.resources.activity.pager.hasMore()) {
+      if (dime.resources.activity.pager && dime.resources.activity.pager.hasMore()) {
         list.push(m('div', m('a[href=#].btn.btn-block.margin-top', {
           onclick: function () {
             dime.resources.activity.pager.next();
@@ -102,7 +102,7 @@
         )
       );
 
-      return [ m(".tile-wrap", [ list, addButton ]), ];
+      return m(".tile-wrap", [ list, addButton ]);
     },
     views: {}
   };

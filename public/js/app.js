@@ -1,9 +1,10 @@
-'use strict';
+;(function (dime, document, m) {
+  'use strict';
 
-(function (dime, document, m) {
   //setup routes to start with or without the `#` symbol
   m.route.mode = "pathname";
   m.route.mode = "hash";
+
 
   m.route(document.getElementById("app"), "/", dime.routes);
   m.module(document.getElementById("app-header"), dime.modules.header);

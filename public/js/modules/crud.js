@@ -41,9 +41,7 @@
   // register project
   dime.resources.project = new dime.Collection({
     url: "project",
-    model: dime.model.Project,
-    fail: dime.modules.login.redirect,
-    success: dime.modules.login.success
+    model: dime.model.Project
   });
   dime.menu.push({
     id: "projects",

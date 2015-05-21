@@ -20,11 +20,14 @@
     this.collection = collection;
     this.total = parseInt(xhr.getResponseHeader('X-Dime-Total') || 0);
     this.pagination = {};
-    var uri = xhr.getResponseHeader('Link').split(', ');
-    uri.forEach(function (link) {
-      var m = link.match(/<(.*)>; rel="?(.*)"?/);
-      this.pagination[m[2]] = m[1];
-    }, this);
+
+    if (xhr.getResponseHeader('Link')) {
+      var uri = xhr.getResponseHeader('Link').split(', ');
+      uri.forEach(function (link) {
+        var m = link.match(/<(.*)>; rel="?(.*)"?/);
+        this.pagination[m[2]] = m[1];
+      }, this);
+    }
   };
 
   Pager.prototype = new Object();
