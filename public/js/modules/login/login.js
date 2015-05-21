@@ -5,7 +5,7 @@
     controller: function () {
       var scope = {};
 
-      if (_.isUndefined(dime.authorized)) {
+      if (dime.authorize.is()) {
         m.route('/');
       }
 
@@ -15,10 +15,12 @@
       return dime.core.views.card(
         m('form.form', {
           onsubmit: function(e) {
-            dime.username = scope.username;
-            dime.password = scope.password;
-            dime.authorized = true;
-            m.route('/');
+            dime.authorize.signin(scope.username, scope.password).then(function (response) {
+              m.route('/');
+            }, function (response) {
+              m.route('/login');
+            });
+            
           }
         }, [
           dime.core.views.formGroup(
@@ -49,23 +51,17 @@
     }
   };
 
-  module.redirect = function (response) {
-    if (_.isObject(response) && 401 === result.httpStatus) {
-      dime.authorized = false;
-      return m.route('/login');
-    }
-  };
-
-  module.success = function () {
-    if (dime.user) {
-      dime.resources.activity.config.user = dime.username;
-    }
-    if (dime.username) {
-      dime.resources.activity.config.password = dime.password;
-    }
-  };
-
   // register route
   dime.routes['/login'] = dime.modules.login;
+
+  dime.menu.push({
+    id: "logout",
+    name: "Logout",
+    icon: 'icon-exit-to-app',
+    weight: 2000,
+    onclick: function (e) {
+      dime.authorize.signout();
+    }
+  });
 
 })(dime, _, m, t)

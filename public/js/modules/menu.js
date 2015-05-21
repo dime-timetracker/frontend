@@ -10,12 +10,7 @@
  * {
  *   id: example,
  *   name: 'This is an example item',
- *   route: '/example',
- *   children: [
- *     {id: foo, name: foo},
- *     {id: bar, name: bar},
- *     {id: baz, name: baz, weight: 1},
- *   ]
+ *   route: '/example'
  * }
  *
  * Order of children will be: bar, foo, baz.
@@ -95,6 +90,8 @@
       }
       if (item.route) {
         menuItem.push(m('a[href="' + item.route + '"]', {config: m.route}, text));
+      } else if (_.isFunction(item.onclick)) {
+        menuItem.push(m('a[href=""]', {config: m.route, onclick: item.onclick}, text));
       }
 
       return m('li' + active, menuItem);
