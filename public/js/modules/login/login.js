@@ -20,7 +20,7 @@
             }, function (response) {
               m.route('/login');
             });
-            
+            return false;
           }
         }, [
           dime.core.views.formGroup(
