@@ -13,7 +13,7 @@
   }
 
   var formatCurrency = function (amount) {
-    return dime.helper.number.formatCurrency(amount, '{number} €');
+    return dime.helper.format.currency(amount, '{number} €');
   }
 
   var isDependencyMet = function (dependency) {

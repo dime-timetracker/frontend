@@ -17,7 +17,7 @@
     }, [
       m("span" + icon),
       " ",
-      dime.helper.duration.format(current.totalDuration(), 'seconds')
+      dime.helper.format.duration(current.totalDuration(), 'seconds')
     ]);
   }
 
