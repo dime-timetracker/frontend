@@ -6,8 +6,8 @@
   module.controller = function () {
     var scope = {};
 
-    scope.icon = dime.icon || 'icon-access-time';
-    scope.name = dime.name || 'Dime Timetracker';
+    scope.icon = dime.env.icon || 'icon-access-time';
+    scope.name = dime.env.name || 'Dime Timetracker';
     scope.views = [ dime.modules.header.views.logo ];
 
     dime.events.emit('header-before-view', scope);
@@ -24,7 +24,7 @@
       }
     }
     
-    var color = dime.configuration.get(dime.configuration.general.children.customize.children.headerColor);
+    var color = dime.configuration.get(dime.configuration.general.children.customize.children.color);
     if (color) {
       color = '.' + color.split(' ').join('.');
     }
@@ -41,15 +41,29 @@
   dime.configuration.general.children.customize = {
     title: "Pimp my dime",
     children: {
-      headerColor: {
+      name: {
+        title: 'Application name',
+        namespace: 'general',
+        name: 'customize/header/name',
+        type: 'text',
+        defaultValue: dime.env.name || 'Dime Timetracker'
+      },
+      icon: {
+        title: 'Application icon',
+        namespace: 'general',
+        name: 'customize/header/icon',
+        type: 'text',
+        defaultValue: dime.env.icon || 'icon-access-time'
+      },
+      color: {
         title: 'Header color',
         description: 'Change header color (red)',
         namespace: 'general',
         name: 'customize/header/color',
         type: 'text',
-        defaultValue: 'green',
+        defaultValue: 'green'
       }
     }
-  }
+  };
 
 })(dime);

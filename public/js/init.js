@@ -1,9 +1,11 @@
 'use strict';
 
 var dime = {
-  apiUrl: 'api',
-  icon: 'icon-access-time',
-  name: 'Dime Timetracker',
+  env: {
+    baseUrl: '',
+    icon: 'icon-access-time',
+    name: 'Dime Timetracker'
+  },
   
   helper: {},
   model: {},
