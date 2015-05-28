@@ -60,9 +60,13 @@
     if (data !== undefined && _.isObject(data)) {
       var item = this.create(data);
       if (item.parent) {
-        item.parent(this);
+        if (item.parent() !== this) {
+          item.parent(this);
+          this.push(item);
+        }
+      } else {
+        this.push(item);
       }
-      this.push(item);
     }
     return item;
   };
@@ -137,7 +141,7 @@
 
     return m
       .request(configuration)
-      .then(function (list) {
+      .then(function success (list) {
         if (reset) {
           that.reset();
         }
@@ -145,6 +149,12 @@
         list.forEach(function (item) {
           that.add(item);
         });
+      }, function error(response) {
+        if (_.isPlainObject(response) && response.error) {
+          if (console) {
+            console.log(response);
+          }
+        }
       });
   };
 
@@ -167,12 +177,18 @@
 
     return m
       .request(configuration)
-      .then(function (response) {
+      .then(function success(response) {
         var result = response;
         if (configuration.method === 'POST') { // create new
           result = that.add(response);
         }
         return result;
+      }, function error(response) {
+        if (_.isPlainObject(response) && response.error) {
+          if (console) {
+            console.log(response);
+          }
+        }
       });
   };
 
@@ -193,13 +209,19 @@
 
     return m
       .request(configuration)
-      .then(function (response) {
+      .then(function success (response) {
         var idx = that.indexOf(data),
             item = data;
         if (-1 < idx) {
           item = that.splice(idx, 1);
         }
         return item;
+      }, function error (response) {
+        if (_.isPlainObject(response) && response.error) {
+          if (console) {
+            console.log(response);
+          }
+        }
       });
   };
 

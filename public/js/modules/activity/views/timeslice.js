@@ -23,7 +23,7 @@
         m('th', t('Start')),
         m('th', t('End')),
         m('th', t('Duration')),
-        m('th.text-right', m('a.btn.btn-flat[href=#]', m('span.icon.icon-add')))
+        m('th.text-right', m('a.btn.btn-flat[href=#]', { onclick: function clickTimesliceAdd (e) { current.addTimeslice(); return false; } }, m('span.icon.icon-add')))
       ])
     );
     dime.events.emit('activity-timeslice-table-head-view-after', {view: tableHead, activity: current});

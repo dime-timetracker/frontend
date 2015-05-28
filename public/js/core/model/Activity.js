@@ -150,6 +150,14 @@
     dime.resources.activity.persist(this);
   };
 
+  Activity.prototype.addTimeslice = function (timeslice) {
+    timeslice = timeslice || this.timeslices.create({
+      activity: parseInt(this.id) // we could submit the whole activity, but this is not required here
+    });
+    this.timeslices.persist(timeslice);
+    return timeslice;
+  };
+
   Activity.prototype.removeTimeslice = function (timeslice) {
     this.timeslices.remove(timeslice);
     return timeslice;
