@@ -4,11 +4,7 @@
   var module = dime.modules.activity = {};
 
   module.controller = function () {
-    var scope = {
-      filter: {
-        suggestions: []
-      }
-    };
+    var scope = {};
 
     scope.activities = dime.resources.activity;
     scope.add = function (e) {

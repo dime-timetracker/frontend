@@ -1,133 +1,109 @@
 ;(function (dime, moment, m, Mousetrap) {
   'use strict';
+  
+  var module = dime.modules.prompt = {};
 
-  dime.modules.prompt = {
-    controller: function () {
-      var scope = {
-        help: false,
-        suggestions: []
-      };
+  module.controller = function () {
+    var scope = {
+      suggestions: []
+    };
 
-      return scope;
-    },
-    view: function (scope) {
-      var submit = function (e) {
-        var newActivity = new dime.resources.activity.create(dime.parser.parse(e.target.value));
+    scope.submit = function (e) {
+      var data = dime.helper.parser.parse(e.target.value);
+      var activity = dime.resources.activity.create(data);
 
-        var timeslice = newActivity.timeslices.add({
-          startedAt: _.isEmpty(newActivity.startedAt) ? moment().format('YYYY-MM-DD HH:mm:ss') : newActivity.startedAt
-        });
-
-        if (false === _.isEmpty(newActivity.stoppedAt)) {
-          timeslice.stoppedAt = newActivity.stoppedAt;
-        }
-
-        if (_.isArray(newActivity.tags)) {
-          newActivity.tags = newActivity.tags.map(function (tag) {
-            return {'name': tag};
-          });
-        }
-
-        dime.resources.activity.persist(newActivity);
-
-        dime.helper.prompt.blur(e, scope);
-      };
-
-      var updateFilter = function (e) {
-        dime.modules.activity.filters = {
-          'default': function (activity) { return true; }
-        };
-        var filter = dime.parser.parseFilter(e.target.value);
-        _.forIn(filter, function(value, key) {
-          if (_.isObject(value) && _.isString(value.alias)) {
-            dime.modules.activity.filters[key] = function(activity) {
-              return activity[key].alias === value.alias;
-            };
-          }
-        });
-        if (filter.description.length) {
-          dime.modules.activity.filters.description = function(activity) {
-            return _.contains(activity.description, filter.description);
-          };
-        }
-        if (filter.startedAt) {
-          dime.modules.activity.filters.startedAt = function (activity) {
-            return activity.timeslices.some(function (timeslice) {
-              return moment(timeslice.startedAt).isAfter(filter.startedAt);
-            });
-          };
-        }
-        if (filter.stoppedAt) {
-          dime.modules.activity.filters.stoppedAt = function (activity) {
-            return activity.timeslices.some(function (timeslice) {
-              return moment(timeslice.stoppedAt).isBefore(filter.stoppedAt);
-            });
-          };
-        }
-        dime.modules.activity.applyFilter();
-
-        dime.helper.prompt.blur(e, scope);
-      };
-
-      var humanReadableShortcut = function (key) {
-        var shortcuts = dime.helper.prompt.shortcuts();
-        return dime.helper.format.mousetrapCommand(shortcuts[key], t);
-      };
-
-      var cardContent = [
-        dime.core.views.grid(
-          m('input#prompt.form-control.mousetrap.activity-icon', {
-            placeholder: t('Add an activity') + ' (' + humanReadableShortcut('focusPrompt') + ')',
-            onfocus: function (e) { dime.helper.prompt.init(e, scope, submit); },
-            onblur: function (e) { dime.helper.prompt.blur(e, scope); },
-            onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
-          }),
-          m('input#filter.form-control.mousetrap.text-right.filter-icon', {
-            placeholder: t('Filter activities') + ' (' + humanReadableShortcut('focusFilter') + ')',
-            onfocus: function (e) { dime.helper.prompt.init(e, scope, updateFilter); },
-            onblur: function (e) { dime.helper.prompt.blur(e, scope); },
-            onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
-          })
-        )
-      ];
-
-      if (scope.help) {
-        cardContent.push(m('div.row.suggestions', [
-          scope.suggestions.map(function (suggestion) {
-            return m('div.col-lg-2.col-md-3.col-sm-4',
-              m('div.card.suggestion.' + (suggestion.selected ? '.card-blue-bg' : ''),
-                m('div.card-main',
-                  m('div.card-inner', [
-                    m('p.card-heading.alias', suggestion.alias),
-                    m('p.name', suggestion.name || t('(Please edit details!)'))
-                  ])
-                )
-              )
-            );
-          })
-        ]));
-        
-        cardContent.push(m('div.form-help.form-help-msg', [
-          m('span.basics', t('Enter a description to start an activity.')),
-          m('ul', [
-            m('li.dates.duration', t('You may specify a duration by entering something like 1h 10m or 1:10.')),
-            m('li.dates.start', t('You may specify a start by entering something like 13:50-')),
-            m('li.dates.end', t('You may specify an end by entering something like -15:10')),
-            m('li.dates.start-and-end', t('You may specify start and end by entering something like 13:50-15:10')),
-            m('li.customer', t('Use "@" to specify a customer.')),
-            m('li.project', t('Use "/" to specify a project.')),
-            m('li.service', t('Use ":" to specify a service.')),
-            m('li.tags', t('Use "#" to add tags.'))
-          ])
-        ]));
+      if (_.isUndefined(data.timeslices) || 0 === data.timeslices.length) {
+        activity.timeslices.add({});
       }
+      
+      dime.resources.activity.persist(activity);
+      dime.helper.prompt.blur(e, scope);
+    };
 
-      return dime.core.views.card(cardContent);
-    }
+    scope.filter = function (e) {
+      dime.modules.activity.filters = {
+        'default': function (activity) { return true; }
+      };
+      var filter = dime.parser.parseFilter(e.target.value);
+      _.forIn(filter, function(value, key) {
+        if (_.isObject(value) && _.isString(value.alias)) {
+          dime.modules.activity.filters[key] = function(activity) {
+            return activity[key].alias === value.alias;
+          };
+        }
+      });
+      if (filter.description.length) {
+        dime.modules.activity.filters.description = function(activity) {
+          return _.contains(activity.description, filter.description);
+        };
+      }
+      if (filter.startedAt) {
+        dime.modules.activity.filters.startedAt = function (activity) {
+          return activity.timeslices.some(function (timeslice) {
+            return moment(timeslice.startedAt).isAfter(filter.startedAt);
+          });
+        };
+      }
+      if (filter.stoppedAt) {
+        dime.modules.activity.filters.stoppedAt = function (activity) {
+          return activity.timeslices.some(function (timeslice) {
+            return moment(timeslice.stoppedAt).isBefore(filter.stoppedAt);
+          });
+        };
+      }
+      dime.modules.activity.applyFilter();
+
+      dime.helper.prompt.blur(e, scope);
+    };
+
+    return scope;
   };
 
-  dime.modules.prompt.autocompletion = {};
-  dime.modules.prompt.autocompletions = [];
+  var humanReadableShortcut = function (key) {
+    var shortcuts = dime.helper.prompt.shortcuts();
+    return dime.helper.format.mousetrapCommand(shortcuts[key], t);
+  };
+    
+  module.view = function (scope) {
+    var cardContent = [
+      dime.core.views.grid(
+        m('input#prompt.form-control.mousetrap.activity-icon', {
+          placeholder: t('Add an activity') + ' (' + humanReadableShortcut('focusPrompt') + ')',
+          onfocus: function (e) { dime.helper.prompt.init(e, scope, scope.submit); },
+          onblur: function (e) { dime.helper.prompt.blur(e, scope); },
+          onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
+        }),
+        m('input#filter.form-control.mousetrap.text-right.filter-icon', {
+          placeholder: t('Filter activities') + ' (' + humanReadableShortcut('focusFilter') + ')',
+          onfocus: function (e) { dime.helper.prompt.init(e, scope, scope.filter); },
+          onblur: function (e) { dime.helper.prompt.blur(e, scope); },
+          onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
+        })
+      )
+    ];
+
+    if (scope.suggestions.length > 0) {
+      cardContent.push(m('div.row.suggestions', [
+        scope.suggestions.map(function (suggestion) {
+          return m('div.col-lg-2.col-md-3.col-sm-4',
+            m('div.card.suggestion.' + (suggestion.selected ? '.card-blue-bg' : ''),
+              m('div.card-main',
+                m('div.card-inner', [
+                  m('p.card-heading.alias', suggestion.alias),
+                  m('p.name', suggestion.name || t('(Please edit details!)'))
+                ])
+              )
+            )
+          );
+        })
+      ]));
+    }
+
+    return dime.core.views.card(cardContent);
+  };
+
+  module.autocompletion = {};
+  module.autocompletions = [];
 
   dime.configuration.prompt = {
     title: t('Prompt'),

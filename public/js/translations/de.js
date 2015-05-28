@@ -61,5 +61,6 @@ window.translations['de'] = {
   'Use "@" to specify a customer.': 'Mit "@" kannst du die Aktivität einem Kunden zuordnen',
   'Use "/" to specify a project.': 'Mit "/" kannst du die Aktivität einem Projekt zuordnen',
   'Use ":" to specify a service.': 'Mit ":" kannst du die Aktivität einer Service zuordnen',
-  'Use "#" to add tags.': 'Mit "#" kannst du Tags hinzufügen'
+  'Use "#" to add tags.': 'Mit "#" kannst du Tags hinzufügen',
+  'Help': 'Hilfe'
 };
