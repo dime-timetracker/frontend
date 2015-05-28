@@ -16,17 +16,13 @@
     };
 
     dime.modules.activity.applyFilter = function () {
-        var activities = new dime.Collection({
-          model: dime.model.Activity
-        }, dime.resources.activity.findAll() || []);
         dime.events.emit('activity-view-collection-load', {
-          collection: activities,
+          collection: scope.activities,
           scope: scope
         });
         _.forEach(dime.modules.activity.filters, function(filter) {
-          activities.filter(filter);
+          scope.activities = scope.activities.filter(filter);
         });
-        scope.activities = activities.findAll();
       };
 
     return scope;
