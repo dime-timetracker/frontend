@@ -5,7 +5,10 @@
     if (!(this instanceof Activity)) {
       return new Activity(data);
     }
-    _.extend(this, data || {});
+    _.extend(this, {
+      description: t('(Click here to enter a description!)'),
+      updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
+    }, data);
 
     this.timeslices = new dime.Collection({
       url: "timeslice",

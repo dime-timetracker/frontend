@@ -171,7 +171,7 @@
     
     if (_.isPlainObject(options)) {
       if (!_.isUndefined(options.url)) {
-        configuration.url = urlFor(options.url);
+        configuration.url = dime.helper.format.url(options.url);
       }
       if (!_.isUndefined(options.reset)) {
         reset = options.reset;

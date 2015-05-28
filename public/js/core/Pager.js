@@ -24,7 +24,7 @@
     if (xhr.getResponseHeader('Link')) {
       var uri = xhr.getResponseHeader('Link').split(', ');
       uri.forEach(function (link) {
-        var m = link.match(/<(.*)>; rel="?(.*)"?/);
+        var m = link.match(/<(.*)>; rel="(.*)"/);
         this.pagination[m[2]] = m[1];
       }, this);
     }

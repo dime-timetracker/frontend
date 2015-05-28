@@ -11,7 +11,13 @@
     var type = m.route.param('name');
     if (module.allowed.indexOf(type) > -1) {
       scope.type = type;
-      scope.properties = dime.model[dime.helper.format.ucFirst(type)].properties;
+      scope.modelName = dime.helper.format.ucFirst(type);
+      scope.properties = dime.model[scope.modelName].properties;
+      scope.resource = dime.resources[type];
+      scope.add = function (e) {
+         scope.resource.persist(scope.resource.create());
+         return false;
+      };
     } else {
       m.route('/');
     }
@@ -20,7 +26,7 @@
   };
   
   module.view = function(scope) {
-    return dime.core.views.list(scope.type, scope.properties);
+    return [ dime.core.views.list(scope.type, scope.properties), dime.core.views.button('Add ' + scope.type, '/' + scope.type, scope.add)];
   };
 
   dime.routes["/:name"] = dime.modules.crud;

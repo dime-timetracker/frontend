@@ -9,6 +9,7 @@ var dime = {
 
   helper: {},
   model: {},
+  collection: {},
   modules: {},
   routes: {},
   core: { views: {} },

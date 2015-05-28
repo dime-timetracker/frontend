@@ -10,15 +10,7 @@
       return m('th', options, t(property.title));
     });
     headers.push(
-      m('th.text-right', m(
-        'a.btn.btn-flat', {
-          href: '#',
-          onclick: function() {
-            console.log('not yet implemented');
-            return false;
-          }
-        }, m('span.icon.icon-add')
-      ))
+      m('th.text-right')
     );
 
     var header = m('thead', m('tr', headers));

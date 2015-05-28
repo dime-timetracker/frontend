@@ -1,162 +1,116 @@
-'use strict';
+;(function (dime, m, moment, _, Mousetrap) {
+  'use strict';
 
-(function (dime, _, moment, m) {
+  var module = dime.modules.activity = {};
 
-  dime.modules.activity = {
-    controller: function () {
-      var scope = {
-        activities: [],
-        filter: {
-          help: false,
-          suggestions: []
-        }
-      };
+  module.controller = function () {
+    var scope = {};
 
-      dime.modules.activity.fetch = function (addUrl) {
-        dime.resources.activity.fetch({ url: addUrl }).then(function (result) {
-          dime.authorized = true;
-          dime.modules.activity.applyFilter();
-        });
-      };
+    scope.activities = dime.resources.activity;
+    scope.add = function (e) {
+      scope.activities.persist(scope.activities.create());
+    };
 
-      dime.modules.activity.applyFilter = function () {
-        scope.activities = dime.resources.activity;
+    return scope;
+  };
+  module.views = {};
+  module.view = function (scope) {
+    Mousetrap.bind(dime.configuration.get(
+      dime.configuration.activity.children.shortcuts.children.selectNext
+    ), function(e) {
+      if (_.isUndefined(dime.modules.activity.selectedIdx)) {
+        dime.modules.activity.selectedIdx = 0;
+      } else if (dime.modules.activity.selectedIdx === scope.activities.length-1) {
+        dime.modules.activity.selectedIdx = undefined;
+      } else {
+        dime.modules.activity.selectedIdx++;
+      }
+      m.redraw();
+    });
 
-        dime.events.emit('activity-view-collection-load', {
-          collection: dime.resources.activity,
-          scope: scope
-        });
-        _.forEach(dime.modules.activity.filters, function(filter) {
-          dime.resources.activity.filter(filter);
-        });
-      };
+    Mousetrap.bind(dime.configuration.get(
+      dime.configuration.activity.children.shortcuts.children.selectPrevious
+    ), function(e) {
+      if (_.isUndefined(dime.modules.activity.selectedIdx)) {
+        dime.modules.activity.selectedIdx = scope.activities.length-1;
+      } else if (0 === dime.modules.activity.selectedIdx) {
+        dime.modules.activity.selectedIdx = undefined;
+      } else {
+        dime.modules.activity.selectedIdx--;
+      }
+      m.redraw();
+    });
 
-      dime.modules.activity.fetch();
-
-      return scope;
-    },
-    view: function (scope) {
-
-      Mousetrap.bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.selectNext
-      ), function(e) {
-        if (_.isUndefined(dime.modules.activity.selectedIdx)) {
-          dime.modules.activity.selectedIdx = 0;
-        } else if (dime.modules.activity.selectedIdx === scope.activities.length-1) {
-          dime.modules.activity.selectedIdx = undefined;
-        } else {
-          dime.modules.activity.selectedIdx++;
-        }
+    Mousetrap.bind(dime.configuration.get(
+      dime.configuration.activity.children.shortcuts.children.startStop
+    ), function(e) {
+      if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
+        scope.activities[dime.modules.activity.selectedIdx].startStopTimeslice();
         m.redraw();
-      });
+        return false;
+      }
+    });
 
-      Mousetrap.bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.selectPrevious
-      ), function(e) {
-        if (_.isUndefined(dime.modules.activity.selectedIdx)) {
-          dime.modules.activity.selectedIdx = scope.activities.length-1;
-        } else if (0 === dime.modules.activity.selectedIdx) {
-          dime.modules.activity.selectedIdx = undefined;
-        } else {
-          dime.modules.activity.selectedIdx--;
-        }
+    Mousetrap.bind(dime.configuration.get(
+      dime.configuration.activity.children.shortcuts.children.editTags
+    ), function() {
+      if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
+        dime.configuration.set(
+          'activity/tags/editable',
+          scope.activities[dime.modules.activity.selectedIdx].id,
+          1
+        );
         m.redraw();
-      });
+      }
+      return false;
+    });
 
-      Mousetrap.bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.startStop
-      ), function(e) {
-        if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
-          scope.activities[dime.modules.activity.selectedIdx].startStopTimeslice();
-          m.redraw();
+    var list = scope.activities.map(dime.modules.activity.views.item);
+
+    if (dime.resources.activity.pager && dime.resources.activity.pager.hasMore()) {
+      list.push(m('div', m('a[href=#].btn.btn-block.margin-top', {
+        onclick: function () {
+          dime.resources.activity.pager.next();
           return false;
         }
-      });
-
-      Mousetrap.bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.editTags
-      ), function() {
-        if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
-          dime.configuration.set(
-            'activity/tags/editable',
-            scope.activities[dime.modules.activity.selectedIdx].id,
-            1
-          );
-          m.redraw();
-        }
-        return false;
-      });
-
-      var addActivity = function addActivity () {
-        dime.resources.activity.persist({
-          description: t('(Click here to enter a description!)'),
-          timeslices: []
-        });
-      };
-
-      var list = scope.activities.map(dime.modules.activity.views.item);
-
-      if (dime.resources.activity.pager && dime.resources.activity.pager.hasMore()) {
-        list.push(m('div', m('a[href=#].btn.btn-block.margin-top', {
-          onclick: function () {
-            dime.resources.activity.pager.next();
-            return false;
-          }
-        }, t('Show more'))));
-      }
-
-      var addButton = m('.fbtn-container',
-        m('.fbtn-inner',
-          m('a[href=#].fbtn.fbtn-red', {
-            onclick: addActivity
-          }, [
-            m('span.fbtn-text', t('Add Activity')),
-            m('span.icon.icon-add'),
-          ])
-        )
-      );
-
-      return m(".tile-wrap", [ list, addButton ]);
-    },
-    views: {}
-  };
-
-  dime.modules.activity.filters = {
-    'default': function (activity) { return true; }
-  };
-
-  var getLatestUpdate = function (activity) {
-    var latestUpdate = 0;
-    if (false === _.isEmpty(activity.timeslices)) {
-      return activity.timeslices.reduce(function (prevMax, item) {
-        return prevMax < item.updatedAt ? item.updatedAt : prevMax;
-      }, activity.updatedAt);
+      }, t('Show more'))));
     }
-    return activity.updatedAt;
-  };
 
+    return m(".tile-wrap", [ list, dime.core.views.button('Add Activity', '', scope.add) ]);
+
+  };
+  
   // register route
   dime.routes['/'] = dime.modules.activity;
+
+  var lastUpdate = function (activity) {
+    var result = parseInt(moment(activity.updatedAt || 'now').format('x'));
+    if (false === _.isEmpty(activity.timeslices)) {
+      result = activity.timeslices.reduce(function (prevMax, item) {
+        var timestamp = parseInt(moment(item.updatedAt).format('x'));
+        return prevMax < timestamp ? timestamp : prevMax;
+      }, result);
+    }
+    return result;
+  };
 
   // register resource
   dime.resources.activity = new dime.Collection({
     url: 'activity',
     model: dime.model.Activity,
-    fail: dime.modules.login.redirect,
-    success: dime.modules.login.success,
     sort: function (activityA, activityB) {
-      var a = getLatestUpdate(activityA);
-      var b = getLatestUpdate(activityB);
-
+      var a = lastUpdate(activityA);
+      var b = lastUpdate(activityB);
+      var result = 0;
       if (a > b) {
-        return -1;
+        result = -1;
+      } else if (a < b) {
+        result = 1;
       }
-      if (a < b) {
-        return 1;
-      }
-      return 0;
+      return result;
     }
   });
+  dime.resources.activity.fetch();
 
   // add settings section
   dime.configuration.activity = {
@@ -175,53 +129,53 @@
             namespace: 'activity',
             name: 'shortcuts/selectNext',
             type: 'text',
-            defaultValue: 'j',
+            defaultValue: 'j'
           },
           selectPrevious: {
             title: 'Select previous activity',
             namespace: 'activity',
             name: 'shortcuts/selectPrevious',
             type: 'text',
-            defaultValue: 'k',
+            defaultValue: 'k'
           },
           startStop: {
             title: 'Start/stop activity',
             namespace: 'activity',
             name: 'shortcuts/startStop',
             type: 'text',
-            defaultValue: 'space',
+            defaultValue: 'space'
           },
           editTags: {
             title: 'Edit tags of current activity',
             namespace: 'activity',
             name: 'shortcuts/editTags',
             type: 'text',
-            defaultValue: 't',
+            defaultValue: 't'
           },
           confirmTag: {
             title: 'Confirm tag',
             namespace: 'activity',
             name: 'shortcuts/confirmTag',
             type: 'text',
-            defaultValue: 'space',
+            defaultValue: 'space'
           },
           removeLatestTag: {
             title: 'Remove latest tag',
             namespace: 'activity',
             name: 'shortcuts/removeLatestTag',
             type: 'text',
-            defaultValue: 'backspace',
+            defaultValue: 'backspace'
           },
           confirmAllTags: {
             title: 'Confirm all tags',
             namespace: 'activity',
             name: 'shortcuts/confirmAllTags',
             type: 'text',
-            defaultValue: 'enter',
+            defaultValue: 'enter'
           }
         }
       }
     }
-  }
+  };
 
-})(dime, _, moment, m)
+})(dime, m, moment, _, Mousetrap);

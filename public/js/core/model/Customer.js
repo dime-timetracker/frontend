@@ -5,7 +5,10 @@
     if (!(this instanceof Customer)) {
       return new Customer(data);
     }
-    _.extend(this, data || {});
+    _.extend(this, {
+      name: undefined,
+      alias: undefined
+    }, data);
   };
   Customer.prototype = new dime.Model();
   Customer.prototype.constructor = dime.model.Customer;
