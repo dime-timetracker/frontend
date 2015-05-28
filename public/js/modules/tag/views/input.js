@@ -36,16 +36,45 @@
       );
     }
 
-    var input = m('input', {
-      onkeydown: function (e) {
-        var backspace = 8;
-        var space = 32;
-        switch (e.which) {
-          case space: addTag(e.target.value); break;
-          case backspace: removeLatestTag(); break;
+    var onFocusInput = function (focus) {
+      Mousetrap(focus.target).bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.confirmTag
+      ), function(e) {
+        addTag(e.target.value);
+        return false;
+      });
+
+      Mousetrap(focus.target).bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.removeLatestTag
+      ), function(e) {
+        if (!e.target.value) {
+          removeLatestTag();
+          return false;
         }
-      }
-    });
+      });
+
+      Mousetrap(focus.target).bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.confirmAllTags
+      ), function(e) {
+        if (e.target.value) {
+          addTag(e.target.value);
+        }
+        setEditable(0);
+        Mousetrap(e.target).reset();
+        return false;
+      });
+    }
+
+
+    var autofocus = function (el, init){
+      if( !init ) el.focus();
+    }
+
+    var inputProperties = {
+      config: autofocus,
+      onfocus: onFocusInput,
+      onblur: function (e) { Mousetrap(e.target).reset(); }
+    }
 
     var setEditable = function (value) {
       dime.configuration.set('activity/tags/editable', activity.id, value);
@@ -53,7 +82,11 @@
 
     var ok = m('a[href=#].close', {
       onclick: function () { setEditable(0); return false; },
-    }, '~');
+    }, '[' + dime.configuration.get(
+      dime.configuration.activity.children.shortcuts.children.confirmAllTags
+    ) + ']');
+
+    var input = m('li.badge.tag.input', ['#', m('input.mousetrap', inputProperties), ok]);
 
     var editTagsButton = m('li', m('a[href=#].tag-edit-button', {
       title: hasTags ? 'Click to edit tags' : 'Click to add tags',
@@ -62,7 +95,7 @@
 
     tagClass += editable ? '.editable' : '';
     return m('ul.nav.nav-list.badge-list.badge-list-small.pull-right.tag-badges' + tagClass,
-      (hasTags ? tags.map(badge) : []).concat(editable ? [input, ok] : editTagsButton)
+      (hasTags ? tags.map(badge) : []).concat(editable ? input : editTagsButton)
     );
   }
 

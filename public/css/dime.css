@@ -11133,14 +11133,6 @@ textarea.picker__select--year {
   position: absolute;
   right: 16px; }
 
-.activity .tag-badges a.tag-edit-button {
-  display: none; }
-
-.activity:hover .tag-badges a.tag-edit-button:hover,
-.activity:hover .tag-badges a.tag-edit-button {
-  display: inherit;
-  text-decoration: none; }
-
 .badge-list {
   margin: 0; }
   .badge-list > li {
@@ -11163,6 +11155,22 @@ textarea.picker__select--year {
       padding: 0px 3px; }
   .badge-list.badge-list-small > li {
     font-size: .7rem; }
+  .badge-list.badge-list-small > li.input {
+    background: inherit;
+    border: #26A69A 2px solid;
+    box-sizing: content-box;
+    color: #26A69A;
+    height: 20px;
+    margin-right: 0;
+    padding-left: 3px; }
+    .badge-list.badge-list-small > li.input a {
+      font-size: 0.8em; }
+    .badge-list.badge-list-small > li.input input, .badge-list.badge-list-small > li.input input:focus {
+      background: transparent;
+      border: none;
+      height: 20px;
+      outline-color: transparent;
+      vertical-align: top; }
 
 .form-inline {
   background: #F5F5F5;

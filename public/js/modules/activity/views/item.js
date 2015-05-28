@@ -67,13 +67,18 @@
     dime.events.emit('activity-item-timeslices-view-after', {view: timeslicesView, item: current});
 
 
-    var tileClass = (t('(Click here to enter a description!)') === current.description) ? 'text-red' : '';
-
-    if (dime.modules.activity.selectedIdx === idx) {
-      tileClass += ' green lighten-4';
+    var tileClasses = ['tile'];
+    var htmlId = '';
+    if (t('(Click here to enter a description!)') === current.description) {
+      tileClasses.push('text-red');
     }
 
-    var result = m('.tile.' + tileClass, [
+    if (dime.modules.activity.selectedIdx === idx) {
+      tileClasses.push('green', 'lighten-4');
+      htmlId = '#currentActivity';
+    }
+
+    var result = m(htmlId + '.' + tileClasses.join('.'), [
       m('.pull-left.tile-side', badgesView),
       m('.tile-action.tile-action-show', actionsView),
       m('.tile-inner', [descriptionsView, tagBadgesView]),

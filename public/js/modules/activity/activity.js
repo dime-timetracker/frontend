@@ -73,6 +73,20 @@
         }
       });
 
+      Mousetrap.bind(dime.configuration.get(
+        dime.configuration.activity.children.shortcuts.children.editTags
+      ), function() {
+        if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
+          dime.configuration.set(
+            'activity/tags/editable',
+            scope.activities[dime.modules.activity.selectedIdx].id,
+            1
+          );
+          m.redraw();
+        }
+        return false;
+      });
+
       var addActivity = function addActivity () {
         dime.resources.activity.persist({
           description: t('(Click here to enter a description!)'),
@@ -176,6 +190,34 @@
             name: 'shortcuts/startStop',
             type: 'text',
             defaultValue: 'space',
+          },
+          editTags: {
+            title: 'Edit tags of current activity',
+            namespace: 'activity',
+            name: 'shortcuts/editTags',
+            type: 'text',
+            defaultValue: 't',
+          },
+          confirmTag: {
+            title: 'Confirm tag',
+            namespace: 'activity',
+            name: 'shortcuts/confirmTag',
+            type: 'text',
+            defaultValue: 'space',
+          },
+          removeLatestTag: {
+            title: 'Remove latest tag',
+            namespace: 'activity',
+            name: 'shortcuts/removeLatestTag',
+            type: 'text',
+            defaultValue: 'backspace',
+          },
+          confirmAllTags: {
+            title: 'Confirm all tags',
+            namespace: 'activity',
+            name: 'shortcuts/confirmAllTags',
+            type: 'text',
+            defaultValue: 'enter',
           }
         }
       }
