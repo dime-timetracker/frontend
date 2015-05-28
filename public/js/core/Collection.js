@@ -110,7 +110,6 @@
   };
 
   // REST API
-
   Collection.prototype.fetch = function (options) {
     var that = this;
     var reset = true;
