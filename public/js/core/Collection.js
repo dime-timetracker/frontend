@@ -137,6 +137,14 @@
     return data;
   };
 
+  Collection.prototype.removeFromCollection = function (data) {
+    var idx = this.indexOf(data);
+      if (-1 < idx) {
+        this.splice(idx, 1);
+      }
+      return data;
+  };
+
   Collection.prototype.reset = function () {
     while (this.length) {
       delete this[0];
@@ -215,6 +223,7 @@
       .then(function success(response) {
         var result = response;
         if (configuration.method === 'POST') { // create new
+          that.removeFromCollection(data);
           result = that.add(response);
         }
         that.order();
@@ -246,12 +255,7 @@
     return m
       .request(configuration)
       .then(function success (response) {
-        var idx = that.indexOf(data),
-            item = data;
-        if (-1 < idx) {
-          that.splice(idx, 1);
-        }
-        return item;
+        return that.removeFromCollection(data);
       }, function error (response) {
         if (_.isPlainObject(response) && response.error) {
           if (console) {
