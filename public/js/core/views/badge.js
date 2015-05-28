@@ -3,10 +3,10 @@
 
   dime.core.views.badge = function (type, activity) {
     var item = activity[type],
-            model = dime.model[type.charAt(0).toUpperCase() + type.substr(1)],
-            cssClass = '.empty',
-            title = t('No ' + type + ' selected'),
-            visibility = dime.configuration.local['activity/' + type + '/visibility/' + activity.id] || 0;
+        model = dime.model[dime.helper.format.ucFirst(type)],
+        cssClass = '.empty',
+        title = t('No ' + type + ' selected'),
+        visibility = dime.configuration.local['activity/' + type + '/visibility/' + activity.id] || 0;
 
     if (item && item.alias && item.alias.length) {
       cssClass = '.incomplete';
@@ -18,18 +18,20 @@
       }
     }
 
-    if (visibility && 1 === visibility) {
-      cssClass += '.open';
-    }
-
-    return m('li.dropdown' + cssClass, [
+    var content = [
       m('a', {title: title, href: '#', onclick: function (e) {
           e.preventDefault();
           visibility = Math.abs(visibility - 1);
           dime.configuration.local['activity/' + type + '/visibility/' + activity.id] = visibility;
-        }}, model.shortcut + (item && item.alias ? item.alias : '')),
-      dime.core.views.select(type, activity)
-    ]);
+        }}, model.shortcut + (item && item.alias ? item.alias : ''))
+    ];
+
+    if (visibility && 1 === visibility) {
+      cssClass += '.open';
+      content.push(dime.core.views.select(type, activity));
+    }
+
+    return m('li.dropdown' + cssClass, content);
   };
 
 })(dime, m);

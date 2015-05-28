@@ -33,7 +33,7 @@
   });
 
   dime.events.on('project-form-rows-view-after', function(context) {
-    if (false === _.isString(context.project.alias)) {
+    if (_.isNull(context.project) || false === _.isString(context.project.alias)) {
       return;
     }
     var projectAlias = context.project.alias;
@@ -73,7 +73,7 @@
   });
 
   dime.events.on('activity-item-tag-badge-view-after', function(context) {
-    if (false === _.isString(context.activity.project.alias)) {
+    if (_.isNull(context.activity.project) || false === _.isString(context.activity.project.alias)) {
       return;
     }
     var projectAlias = context.activity.project.alias;

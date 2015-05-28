@@ -3,7 +3,7 @@
   'use strict';
 
   dime.core.views.select = function (type, activity) {    
-    var model = dime.model[type.charAt(0).toUpperCase() + type.substr(1)];
+    var model = dime.model[dime.helper.format.ucFirst(type)];
 
     var onSave = function (item) {
       setEditable(false);
@@ -49,16 +49,16 @@
 
     var items = _.sortBy(dime.resources[type], 'name') || [];
     var options = items.map(function (item) {
-//      var result = undefined;
-//
-//      if ((activity.hasCustomer() && activity.customer.alias === item.alias)
-//              || (false === activity.hasCustomer() && '' === item.alias))
-//      {
-//        result =
-//      }
-      var result = undefined;
+      var result = undefined,
+          generate = true;
+      if ('project' === type
+              && activity.hasCustomer()
+              && item.customer
+              && item.customer.id !== activity.customer.id) {
+        generate = false;
+      }
 
-      if (activity[type].alias !== item.alias) {
+      if (generate && activity[type].alias !== item.alias) {
         result = m('li', m('a[href=#]', {
           onclick: function () {
             activity.onSwitchRelation(type, item);
