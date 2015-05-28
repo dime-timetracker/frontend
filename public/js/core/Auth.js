@@ -99,9 +99,11 @@
     }).then(
       function success (response) {
         that.clear();
+        m.route('/login');
       },
       function error (response) {
         that.clear();
+        m.route('/login');
       }
     );
   };
