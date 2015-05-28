@@ -18,6 +18,10 @@
   module.view = function (scope) {
     var content = [], 
         i = 0;
+    
+    scope.icon = dime.configuration.get(dime.configuration.general.children.customize.children.icon);
+    scope.name = dime.configuration.get(dime.configuration.general.children.customize.children.name);
+
     for (; i < scope.views.length; i++) {
       if (_.isFunction(scope.views[i])) {
         content.push(scope.views[i](scope));
