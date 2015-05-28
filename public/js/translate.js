@@ -1,4 +1,4 @@
-window.tranlations = window.tranlations || {};
+window.translations = window.translations || {};
 window.translator = (function (translations, defaultLocale, _) {
   'use strict';
 
@@ -35,7 +35,7 @@ window.translator = (function (translations, defaultLocale, _) {
   };
 
   return new Translator(translations, defaultLocale, _);
-})(window.tranlations, navigator.language || navigator.userLanguage, _);
+})(window.translations, navigator.language || navigator.userLanguage, _);
 
 window.t = function (string) {
   return window.translator.translate(string);
