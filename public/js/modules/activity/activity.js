@@ -55,9 +55,8 @@
       dime.configuration.activity.children.shortcuts.children.editTags
     ), function() {
       if (false === _.isUndefined(dime.modules.activity.selectedIdx)) {
-        dime.configuration.set(
-          'activity/tags/editable',
-          scope.activities[dime.modules.activity.selectedIdx].id,
+        dime.configuration.setLocal(
+          'activity/' + scope.activities[dime.modules.activity.selectedIdx].id + '/tags/editable',
           1
         );
         m.redraw();
@@ -110,6 +109,19 @@
       return result;
     }
   });
+  dime.resources.timeslice = new dime.Collection({
+    url: 'timeslice',
+    model: dime.model.Timeslice,
+    fail: dime.modules.login.redirect,
+    success: dime.modules.login.success
+  });
+  dime.resources.tag = new dime.Collection({
+    url: 'tag',
+    model: dime.model.Tag,
+    fail: dime.modules.login.redirect,
+    success: dime.modules.login.success
+  });
+
   dime.resources.activity.fetch();
 
   // add settings section

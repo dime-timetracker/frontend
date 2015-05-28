@@ -59,7 +59,7 @@
     }, current.description);
     dime.events.emit('activity-item-actions-view-after', {view: descriptionsView, item: current});
 
-    var tagBadgesView = dime.modules.tag.views.input(current);
+    var tagBadgesView = dime.modules.activity.views.tagInput(current);
 
     var tileClasses = ['tile'];
     var htmlId = '';

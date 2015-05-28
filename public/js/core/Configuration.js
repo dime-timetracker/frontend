@@ -29,6 +29,10 @@
     return (_.isUndefined(defaultValue)) ? null : defaultValue;
   };
 
+  Configuration.prototype.getLocal = function (name, defaultValue) {
+    return this.local[name] || defaultValue;
+  };
+
   Configuration.prototype.set = function (namespace, name, value) {
     if (_.isPlainObject(namespace)) {
       value = name;
@@ -41,8 +45,9 @@
     dime.resources.setting.persist(setting);
   };
 
-//  // transient store for temporary settings
-//  Configuration.local = {};
+  Configuration.prototype.setLocal = function (name, value) {
+    this.local[name] = value;
+  };
 
   // Create setting collection
   dime.resources.setting = new dime.Collection({

@@ -1,14 +1,13 @@
-'use strict';
-
-(function (dime, m, _) {
+;(function (dime, m, _) {
+  'use strict';
   
-  dime.modules.tag.views.item = function (tag, activity, onclick, remove) {
+  dime.modules.activity.views.tagItem = function (tag, activity, onclick, remove) {
     var tagname = _.isString(tag) ? tag : tag.name;
 
     var parts = [
       m("span.hash", "#"),
       m("span.tagname", {
-        onclick: function () { _.isFunction(onclick) && onclick(tag); },
+        onclick: function () { _.isFunction(onclick) && onclick(tag); }
       }, tagname)
     ];
 
@@ -25,7 +24,7 @@
     var context = {view: m('a', {title: tag.name, target: 'self'}, parts), tag: tag, activity: activity};
     dime.events.emit('activity-item-tag-badge-view-after', context);
 
-    return m("li.dropdown.badge.tag", context.view);
+    return m("li.badge.tag", context.view);
   };
 
 })(dime, m, _);
