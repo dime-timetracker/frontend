@@ -180,7 +180,7 @@
     var that = this;
     var configuration = {
       method: 'DELETE',
-      url: dime.helper.format.url(this.config.url),
+      url: dime.helper.format.url('api', this.config.url),
       initialValue: data,
       config: function (xhr) {
         dime.events.emit('authorize', xhr);
