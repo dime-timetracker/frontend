@@ -11,11 +11,6 @@
       return scope;
     },
     view: function (scope) {
-      var showHelp = '.hide';
-      if (scope.help) {
-        showHelp = '';
-      }
-
       var submit = function (e) {
         var newActivity = new dime.resources.activity.create(dime.parser.parse(e.target.value));
 
@@ -79,7 +74,7 @@
         return dime.helper.format.mousetrapCommand(shortcuts[key], t);
       };
 
-      return dime.core.views.card([
+      var cardContent = [
         dime.core.views.grid(
           m('input#prompt.form-control.mousetrap.activity-icon', {
             placeholder: t('Add an activity') + ' (' + humanReadableShortcut('focusPrompt') + ')',
@@ -93,8 +88,11 @@
             onblur: function (e) { dime.helper.prompt.blur(e, scope); },
             onkeydown: function (e) { dime.helper.prompt.updateSuggestions(e, scope); }
           })
-        ),
-        m('div.row.suggestions' + showHelp, [
+        )
+      ];
+
+      if (scope.help) {
+        cardContent.push(m('div.row.suggestions', [
           scope.suggestions.map(function (suggestion) {
             return m('div.col-lg-2.col-md-3.col-sm-4',
               m('div.card.suggestion.' + (suggestion.selected ? '.card-blue-bg' : ''),
@@ -107,8 +105,9 @@
               )
             );
           })
-        ]),
-        m('div.form-help.form-help-msg' + showHelp, [
+        ]));
+        
+        cardContent.push(m('div.form-help.form-help-msg', [
           m('span.basics', t('Enter a description to start an activity.')),
           m('ul', [
             m('li.dates.duration', t('You may specify a duration by entering something like 1h 10m or 1:10.')),
@@ -120,8 +119,10 @@
             m('li.service', t('Use ":" to specify a service.')),
             m('li.tags', t('Use "#" to add tags.'))
           ])
-        ])
-      ]);
+        ]));
+      }
+
+      return dime.core.views.card(cardContent);
     }
   };
 
