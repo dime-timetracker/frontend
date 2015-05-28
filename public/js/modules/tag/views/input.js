@@ -5,8 +5,8 @@
   dime.modules.tag.views.input = function (activity) {
     var tags = activity.tags || [];
     var hasTags = 0 < tags.length;
-    var tagClass = hasTags ? "" : ".empty";
-    var editable = 1===dime.configuration.get("activity/tags/editable", activity.id, 0);
+    var tagClass = hasTags ? '' : '.empty';
+    var editable = 1===dime.configuration.get('activity/tags/editable', activity.id, 0);
 
     var addTag = function (name) {
       var filter = {name: name};
@@ -35,8 +35,8 @@
         editable ? removeTag : null
       );
     }
- 
-    var input = m("input", {
+
+    var input = m('input', {
       onkeydown: function (e) {
         var backspace = 8;
         var space = 32;
@@ -48,20 +48,20 @@
     });
 
     var setEditable = function (value) {
-      dime.configuration.set("activity/tags/editable", activity.id, value); 
+      dime.configuration.set('activity/tags/editable', activity.id, value);
     }
 
-    var ok = m("a[href=#].close", {
+    var ok = m('a[href=#].close', {
       onclick: function () { setEditable(0); return false; },
-    }, "~");
+    }, '~');
 
-    var editTagsButton = m('li', m("a[href=#].tag-edit-button", {
-      title: hasTags ? "Click to edit tags" : "Click to add tags",
+    var editTagsButton = m('li', m('a[href=#].tag-edit-button', {
+      title: hasTags ? 'Click to edit tags' : 'Click to add tags',
       onclick: function (e) { setEditable(1); }
     }, '+'));
 
     tagClass += editable ? '.editable' : '';
-    return m("ul.nav.nav-list.badge-list.badge-list-small.pull-right.tag-badges" + tagClass,
+    return m('ul.nav.nav-list.badge-list.badge-list-small.pull-right.tag-badges' + tagClass,
       (hasTags ? tags.map(badge) : []).concat(editable ? [input, ok] : editTagsButton)
     );
   }
