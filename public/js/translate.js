@@ -26,14 +26,11 @@ window.translator = (function (translations, defaultLocale, _) {
   };
 
   Translator.prototype.translate = function (string) {
-    _.detect(this.locale, function findTranslation(languageCode) {
-      if (_.isObject(this.translation[languageCode])
-              && _.isString(this.translation[languageCode][string])
-              ) {
-        string = this.translation[languageCode][string];
-        return true;
-      }
-    }, this);
+    if (_.isObject(this.translation[this.locale])
+      && _.isString(this.translation[this.locale][string])
+    ) {
+      string = this.translation[this.locale][string];
+    }
     return string;
   };
 
