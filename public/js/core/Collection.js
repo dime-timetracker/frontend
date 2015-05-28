@@ -39,13 +39,12 @@
 
   Collection.prototype = new Array();
   Collection.prototype.constructor = Collection;
-  Collection.prototype.parent = m.prop('parent');
 
   dime.Collection = Collection;
 
   Collection.prototype.configure = function (name, value) {
     if (!_.isUndefined(name)) {
-      if (_.isObject(name)) {
+      if (_.isPlainObject(name)) {
         this.config = _.extend(this.config, name);
       } else {
         this.config[name] = value;
@@ -57,16 +56,10 @@
   // Array
 
   Collection.prototype.add = function (data) {
+    var item = data;
     if (data !== undefined && _.isObject(data)) {
-      var item = this.create(data);
-      if (item.parent) {
-        if (item.parent() !== this) {
-          item.parent(this);
-          this.push(item);
-        }
-      } else {
-        this.push(item);
-      }
+      item = this.create(data);
+      this.push(item);
     }
     return item;
   };
@@ -84,11 +77,14 @@
   };
 
   Collection.prototype.find = function (data) {
-    if (_.isNumber(data)) {
-      data = {};
-      data[this.config.idAttribute] = data;
+    var filter;
+    if (_.isPlainObject(data)) {
+      filter = data;
+    } else {
+      filter = {};
+      filter[this.config.idAttribute] = data;
     }
-    return _.findWhere(this, data);
+    return _.findWhere(this, filter);
   };
 
   Collection.prototype.first = function () {
@@ -99,17 +95,52 @@
     return (this.length > 0) ? this[this.length - 1] : undefined;
   };
 
+  var qsort = function (array, left, right, compare) {
+    var i = left;
+    var j = right;
+    var tmp;
+    var pivotidx = (left + right) / 2;
+    var pivot = array[pivotidx.toFixed()];
+    /* partition */
+    while (i <= j) {
+      while (compare(array[i], pivot) === -1) {
+        i++;
+      }
+      while (compare(array[j], pivot) === 1) {
+        j--;
+      }
+      if (i <= j) {
+        tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+        i++;
+        j--;
+      }
+    }
+
+    /* recursion */
+    if (left < j) {
+      qsort(array, left, j, compare);
+    }
+    if (i < right) {
+      qsort(array, i, right, compare);
+    }
+  };
+
   Collection.prototype.order = function (func) {
     var data = this;
     if (_.isFunction(func)) {
       data = new Collection(this.config, this.sort(func));
     } else if (_.isFunction(this.config.sort)) {
-      data = new Collection(this.config, this.sort(this.config.sort));
+      qsort(this, 0, this.length-1, this.config.sort);
     }
     return data;
   };
 
   Collection.prototype.reset = function () {
+    while (this.length) {
+      delete this[0];
+    }
     this.length = 0;
   };
 
@@ -144,6 +175,10 @@
       .then(function success (list) {
         if (reset) {
           that.reset();
+        }
+
+        if (that.config.sort) {
+          list = list.sort(that.config.sort);
         }
 
         list.forEach(function (item) {
@@ -182,6 +217,7 @@
         if (configuration.method === 'POST') { // create new
           result = that.add(response);
         }
+        that.order();
         return result;
       }, function error(response) {
         if (_.isPlainObject(response) && response.error) {
@@ -213,7 +249,7 @@
         var idx = that.indexOf(data),
             item = data;
         if (-1 < idx) {
-          item = that.splice(idx, 1);
+          that.splice(idx, 1);
         }
         return item;
       }, function error (response) {
