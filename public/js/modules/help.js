@@ -11,47 +11,32 @@
     return scope;
   };
 
-  var closeHelp = function () {
-    dime.configuration.setLocal('showHelp', false);
-    m.redraw();
-    return false;
-  }
-
   module.view = function (scope) {
+    Mousetrap.bind('esc', module.close);
 
-    if (dime.configuration.getLocal('showHelp')) {
-      Mousetrap.bind('esc', closeHelp);
-      return m('.modal-open', m('.modal', {
-          style: 'display: block'
-        },
-        m('.modal-dialog.modal-xs', m('.modal-content', [
-          m('.modal-heading', [
-            m('a[href=#].modal-close', {
-              onclick: closeHelp
-            }),
-            m('h2.modal-title', t('Shortcuts'))
-          ]),
-          m('.modal-inner', [
-            m('div', 'Lorem Ipsum')
-          ]),
-          m('.modal-footer', [
-            m('p.text-right', [
-              m('button.btn.btn-flat.btn-alt[type=button]', {
-                onclick: closeHelp
-              }, t('Close'))
-            ])
-          ])
-        ]))
-      ));
-    } else {
-      return m('.empty');
-    };
+    return dime.core.views.dialog(
+      m('div', 'Lorem Ipsum'),
+      m('p.text-right', [
+        m('button.btn.btn-flat.btn-alt[type=button]', {
+          onclick: module.close
+        }, t('Close'))
+      ]),
+      t('Shortcuts')
+    );
+  };
+
+  module.show = function () {
+    m.mount(document.getElementById('modal'), module);
+    return false;
+  };
+
+  module.close = function () {
+    m.mount(document.getElementById('modal'), null);
+    return false;
   };
 
   Mousetrap.bind('?', function(e) {
-    dime.configuration.setLocal(showHelp, true);
-    m.redraw();
-    return false;
+    return module.show();
   });
 
 })(dime, m, Mousetrap, t);

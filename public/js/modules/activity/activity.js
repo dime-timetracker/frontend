@@ -4,12 +4,30 @@
   var module = dime.modules.activity = {};
 
   module.controller = function () {
-    var scope = {};
+    var scope = {
+      filter: {
+        suggestions: []
+      }
+    };
 
     scope.activities = dime.resources.activity;
     scope.add = function (e) {
       scope.activities.persist(scope.activities.create());
     };
+
+    dime.modules.activity.applyFilter = function () {
+        var activities = new dime.Collection({
+          model: dime.model.Activity
+        }, dime.resources.activity.findAll() || []);
+        dime.events.emit('activity-view-collection-load', {
+          collection: activities,
+          scope: scope
+        });
+        _.forEach(dime.modules.activity.filters, function(filter) {
+          activities.filter(filter);
+        });
+        scope.activities = activities.findAll();
+      };
 
     return scope;
   };
@@ -77,6 +95,10 @@
 
     return m(".tile-wrap", [ list, dime.core.views.button('Add Activity', '', scope.add) ]);
 
+  };
+
+  module.filters = {
+    'default': function (activity) { return true; }
   };
   
   // register route
