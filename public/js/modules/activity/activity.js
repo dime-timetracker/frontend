@@ -16,14 +16,16 @@
     };
 
     dime.modules.activity.applyFilter = function () {
-        dime.events.emit('activity-view-collection-load', {
-          collection: scope.activities,
-          scope: scope
-        });
-        _.forEach(dime.modules.activity.filters, function(filter) {
-          scope.activities = scope.activities.filter(filter);
-        });
-      };
+      var activities = dime.resources.activity;
+      dime.events.emit('activity-view-collection-load', {
+        collection: activities,
+        scope: scope
+      });
+      _.forEach(dime.modules.activity.filters, function(filter) {
+        activities = activities.filter(filter);
+      });
+      scope.activities = activities;
+    };
 
     return scope;
   };

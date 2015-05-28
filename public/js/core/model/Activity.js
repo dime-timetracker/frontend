@@ -80,7 +80,7 @@
         if (item.customer && item.customer.alias) {
           this.customer = item.customer;
         }
-        if (!item.customer || "" == item.customer.alias) {
+        if (!_.isNull(this.project) && (!item.customer || "" == item.customer.alias)) {
           this.project.customer = this.customer;
         }
         dime.resources.activity.persist(this);
