@@ -1,5 +1,5 @@
 window.translations = window.translations || {};
-window.translations['de-DE'] = {
+window.translations['de'] = {
   'Activity': 'Aktivität',
   'Activities': 'Aktivitäten',
   'Do you really want to delete "[activity]"?': 'Soll "[activity]" wirklich gelöscht werden?',

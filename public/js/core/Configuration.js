@@ -55,21 +55,7 @@
     general: {
       title: 'General',
       description: 'General Settings',
-      children: {
-        translation: {
-          title: "Translation",
-          children: {
-            preferredLanguages: {
-              title: 'Preferred languages',
-              description: 'Enter locale codes like "en_US" and separate them by comma. If there is no translation for the first one, the next one will be used.',
-              namespace: 'general',
-              name: 'translation/preferredLanguages',
-              type: 'text',
-              defaultValue: 'de_DE'
-            }
-          }
-        }
-      }
+      children: { }
     }
   });
 

@@ -6,7 +6,7 @@ window.translator = (function (translations, defaultLocale, _) {
     if (!(this instanceof Translator)) {
         return new Translator();
     }
-    this.locale = locale;
+    this.locale = locale.substr(0, 2);
     this.translation = translations || {};
   };
   Translator.prototype = new Object();
