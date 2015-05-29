@@ -37,6 +37,13 @@
             return activity[key] && activity[key].alias === value.alias;
           };
         }
+        if (_.isArray(value)) {
+          var filterTags = _.pluck(value, 'name');
+          dime.modules.activity.filters[key] = function(activity) {
+            var activityTags = _.pluck(activity.tags, 'name');
+            return filterTags.length == _.intersection(filterTags, activityTags).length;
+          };
+        }
       });
       if (filter.description.length) {
         dime.modules.activity.filters.description = function(activity) {
