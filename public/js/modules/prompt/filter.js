@@ -34,7 +34,7 @@
       _.forIn(filter, function(value, key) {
         if (_.isPlainObject(value) && _.isString(value.alias)) {
           dime.modules.activity.filters[key] = function(activity) {
-            return activity[key].alias === value.alias;
+            return activity[key] && activity[key].alias === value.alias;
           };
         }
       });
