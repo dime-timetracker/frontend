@@ -10,6 +10,11 @@
       updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
     }, data);
 
+    this.tags = new dime.Collection({
+      url: 'tag',
+      model: dime.model.Tag
+    }, this.tags || []);
+
     this.timeslices = new dime.Collection({
       url: "timeslice",
       model: dime.model.Timeslice

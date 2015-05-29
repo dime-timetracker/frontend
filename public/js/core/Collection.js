@@ -95,6 +95,14 @@
     return (this.length > 0) ? this[this.length - 1] : undefined;
   };
 
+  Collection.prototype.toArray = function () {
+    var array = [];
+    this.forEach(function (item) {
+      array.push(item);
+    });
+    return array;
+  }
+
   var qsort = function (array, left, right, compare) {
     var i = left;
     var j = right;
@@ -203,6 +211,11 @@
 
   Collection.prototype.persist = function (data, options) {
     var that = this;
+    _.forOwn(data, function (item, key) {
+      if (item instanceof Collection) {
+        data[key] = item.toArray();
+      }
+    })
     var configuration = {
       method: 'POST',
       url: dime.helper.format.url('api', this.config.url),
