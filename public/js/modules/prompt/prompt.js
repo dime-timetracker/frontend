@@ -1,63 +1,18 @@
-;
-(function (dime, moment, m, Mousetrap) {
+;(function (dime, moment, m, Mousetrap) {
   'use strict';
 
   var module = dime.modules.prompt = {};
 
-  module.controller = function () {
-    var scope = {
-      suggestions: []
-    };
-
-    scope.focus = function (e) {
-      Mousetrap.pause();
-      module.clearSuggestions(e, scope);
-      module.installShortcuts(e, scope);
-    };
-
-    scope.blur = function (e) {
-      Mousetrap.unpause();
-      module.resetShortcuts(e, scope);
-      module.clearSuggestions(e, scope);
-    };
-
-    scope.keydown = function (e) {
-      module.updateSuggestions(e, scope);
-    };
-
-    scope.submit = function (e) {
-      var data = dime.helper.parser.parse(e.target.value, ['customer', 'project', 'service', 'tags', 'times', 'description']);
-
-      var activity = dime.resources.activity.create(data);
-
-      if (_.isUndefined(data.timeslices) || 0 === data.timeslices.length) {
-        activity.timeslices.add({});
-      }
-
-      if (_.isEmpty(data.description)) {
-        activity.description = t('(Click here to enter a description!)');
-      }
-
-      dime.resources.activity.persist(activity);
-      module.blur(e, scope);
-    };
-
-    return scope;
-  };
+  module.components = {};
 
   module.view = function (scope) {
-    var input = m('input#prompt.form-control.mousetrap', {
-      placeholder: t('Add an activity') + ' (' + dime.helper.format.mousetrapCommand(module.shortcuts()['focusPrompt'], t) + ')',
-      onfocus: scope.focus,
-      onblur: scope.blur,
-      onkeydown: scope.keydown
-    });
-    var inner = [
-      m('.media', [m('.media-object.pull-left', m('label.form-icon-label', {for : 'prompt'}, m('span.icon.icon-access-time'))), m('.media-inner', input)])
-    ];
+    var inner = [dime.core.views.grid(
+      m.component(module.components.activity, module),
+      m.component(module.components.filter, module)
+    )];
 
-    if (scope.suggestions.length) {
-      inner.push(module.views.suggestionList(scope.suggestions));
+    if (module.suggestions.length) {
+      inner.push(module.views.suggestionList(module.suggestions));
     }
 
     return dime.core.views.card(inner);
@@ -85,25 +40,27 @@
 
   module.installShortcuts = function (e, scope) {
     var shortcuts = module.shortcuts();
+    Mousetrap.pause();
+
     Mousetrap(e.target).bind(shortcuts.blurPrompt, function () {
       e.target.value = '';
       scope.blur(e, scope);
     });
 
     Mousetrap(e.target).bind(shortcuts.triggerAutocompletion, function (triggerEvent) {
-      module.autocomplete(triggerEvent, scope);
+      scope.module.autocomplete(triggerEvent, scope);
       return false;
     });
     Mousetrap(e.target).bind(shortcuts.cycleSuggestionsLeft, function () {
-      module.cycleSuggestions('left', e, scope);
+      scope.module.cycleSuggestions('left', e, scope);
       return false;
     });
     Mousetrap(e.target).bind(shortcuts.cycleSuggestionsRight, function () {
-      module.cycleSuggestions('right', e, scope);
+      scope.module.cycleSuggestions('right', e, scope);
       return false;
     });
     Mousetrap(e.target).bind('space', function () {
-      module.clearSuggestions(e, scope);
+      scope.module.clearSuggestions(e, scope);
     });
     Mousetrap(e.target).bind(shortcuts.submitPrompt, function () {
       scope.submit(e);
@@ -112,28 +69,22 @@
 
   module.resetShortcuts = function (e, scope) {
     Mousetrap(e.target).reset();
+    Mousetrap.unpause();
     e.target.blur();
   };
 
-  // Globale key bindings
-
-  Mousetrap.bind(module.shortcuts().focusPrompt, function(e) {
-    document.getElementById('prompt').focus();
-    return false;
-  });
-
   // Autocomplete and Suggesstions
-
+  module.suggestions = [];
   module.autocompletions = [];
 
   module.autocomplete = function (e, scope) {
-    _.forEach(module.autocompletions, function (autocomplete) {
+    _.forEach(scope.module.autocompletions, function (autocomplete) {
       autocomplete(e, scope);
-      if (scope.suggestions.length) {
-        module.applySuggestion(e, scope.suggestions[0]);
+      if (scope.module.suggestions.length) {
+        scope.module.applySuggestion(e, scope.module.suggestions[0]);
       }
-      if (1 === scope.suggestions.length) {
-        module.clearSuggestions(e, scope);
+      if (1 === scope.module.suggestions.length) {
+        scope.module.clearSuggestions(e, scope);
       }
     });
     return false;
@@ -154,38 +105,38 @@
     var reloop = ('left' === direction) ? _.last : _.first;
     var prevKey = undefined;
     var cycled = false;
-    if (scope.suggestions.length) {
-      loop(scope.suggestions, function (suggestion, key) {
+    if (scope.module.suggestions.length) {
+      loop(scope.module.suggestions, function (suggestion, key) {
         if (_.isUndefined(prevKey)) {
           if (_.isBoolean(suggestion.selected) && suggestion.selected) {
             prevKey = key;
             suggestion.selected = false;
           }
         } else if (false === cycled) {
-          module.applySuggestion(e, suggestion);
+          scope.module.applySuggestion(e, suggestion);
           cycled = true;
           return;
         }
       });
       if (false === cycled) {
-        module.applySuggestion(e, reloop(scope.suggestions));
+        scope.module.applySuggestion(e, reloop(scope.module.suggestions));
       }
     }
   };
 
   module.clearSuggestions = function (e, scope) {
-    scope.suggestions = [];
+    scope.module.suggestions = [];
     m.redraw();
   };
 
   module.updateSuggestions = function (e, scope) {
     // some char added
     if ((e.keyCode && 1 === e.keyCode.length) || (e.which && 1 === e.which.length)) {
-      if (scope.suggestions.length) {
-        module.autocomplete(e, scope);
+      if (scope.module.suggestions.length) {
+        scope.module.autocomplete(e, scope);
       }
     }
   };
 
 
-})(dime, moment, m, Mousetrap)
+})(dime, moment, m, Mousetrap);
