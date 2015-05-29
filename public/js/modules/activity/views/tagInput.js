@@ -1,6 +1,6 @@
 ;(function (dime, m, _) {
   'use strict';
-  
+
   dime.modules.activity.views.tagInput = function (activity) {
     var tags = activity.tags || [];
     var hasTags = 0 < tags.length;
@@ -35,33 +35,39 @@
       );
     };
 
+    var config = dime.configuration;
+    var shortcuts = {
+      confirmTag: config.get(config.activity.children.shortcuts.children.confirmTag),
+      removeLatest: config.get(config.activity.children.shortcuts.children.removeLatestTag),
+      confirmAllTags: config.get(config.activity.children.shortcuts.children.confirmAllTags)
+    };
+
     var onFocusInput = function (focus) {
-      Mousetrap(focus.target).bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.confirmTag
-      ), function(e) {
+      Mousetrap.pause();
+
+      Mousetrap(focus.target).bind(shortcuts.confirmTag, function(e) {
         addTag(e.target.value);
         return false;
       });
+      Mousetrap.unpauseCombo(shortcuts.confirmTag);
 
-      Mousetrap(focus.target).bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.removeLatestTag
-      ), function(e) {
+      Mousetrap(focus.target).bind(shortcuts.removeLatest, function(e) {
         if (!e.target.value) {
           removeLatestTag();
           return false;
         }
       });
+      Mousetrap.unpauseCombo(shortcuts.removeLatest);
 
-      Mousetrap(focus.target).bind(dime.configuration.get(
-        dime.configuration.activity.children.shortcuts.children.confirmAllTags
-      ), function(e) {
+      Mousetrap(focus.target).bind(shortcuts.confirmAllTags, function(e) {
         if (e.target.value) {
           addTag(e.target.value);
         }
         setEditable(0);
-        Mousetrap(e.target).reset();
+        e.target.blur();
         return false;
       });
+      Mousetrap.unpauseCombo(shortcuts.confirmAllTags);
     };
 
 
@@ -72,7 +78,10 @@
     var inputProperties = {
       config: autofocus,
       onfocus: onFocusInput,
-      onblur: function (e) { Mousetrap(e.target).reset(); }
+      onblur: function (e) {
+        Mousetrap(e.target).reset();
+        Mousetrap.unpause();
+      }
     };
 
     var setEditable = function (value) {
@@ -85,7 +94,7 @@
       dime.configuration.activity.children.shortcuts.children.confirmAllTags
     ) + ']');
 
-    var input = m('li.badge.tag.input', ['#', m('input.mousetrap', inputProperties), ok]);
+    var input = m('li.badge.tag.input', ['#', m('input.tag', inputProperties), ok]);
 
     var editTagsButton = m('li.badge.tag', m('a[href=#].tag-edit-button', {
       title: hasTags ? 'Click to edit tags' : 'Click to add tags',
