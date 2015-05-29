@@ -1,30 +1,36 @@
 ;(function (dime, m) {
   'use strict';
 
-  var Parser = function (data) {
+  var Parser = function (options) {
     if (!(this instanceof Parser)) {
       return new Parser();
     }
+    _.extend(this, {}, options);
+    this._order = [];
+  };
 
-    if (_.isArray(data)) {
-      data.forEach(function (item) {
-        this.push(item);
-      }, this);
+  Parser.prototype = new Object();
+  Parser.prototype.constructor = Parser;
+  
+  dime.Parser = Parser;
+
+  Parser.prototype.register = function(name, func) {
+    this[name] = func;
+    if (-1 === this._order.indexOf(name)) {
+      this._order.push(name);
     }
   };
 
-  Parser.prototype = new Array();
-  Parser.prototype.constructor = Parser;
-
-  dime.Parser = Parser;
-
-  Parser.prototype.parse = function (text) {
+  Parser.prototype.parse = function (text, order) {
+    order = order || this._order;
     var result = { _text: text };
-    this.forEach(function (value) {
-      if (_.isFunction(value)) {
-        value(result);
+
+    for (var i = 0; i < order.length; i++) {
+      if (_.isFunction(this[order[i]])) {
+        this[order[i]](result);
       }
-    });
+    }
+    
     delete result._text;
     return result;
   };
