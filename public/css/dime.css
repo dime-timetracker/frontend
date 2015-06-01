@@ -11112,6 +11112,9 @@ textarea.picker__select--year {
 #prompt-container .suggestions .suggestion {
   font-size: 0.8em; }
 
+.prompt-container .save-bookmark {
+  position: absolute; }
+
 .collection .list-item {
   position: relative; }
 

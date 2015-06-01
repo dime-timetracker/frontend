@@ -21,10 +21,12 @@
     };
 
     scope.keydown = function (e) {
+      scope.query = undefined;
       module.updateSuggestions(e, scope);
     };
 
     scope.submit = function (e) {
+      scope.query = e.target.value;
       var data = dime.helper.parser.parse(e.target.value, ['customer', 'project', 'service', 'tags', 'times', 'filterTimes', 'description']);
 
       dime.modules.activity.filters = {
@@ -78,14 +80,91 @@
   };
 
   component.view = function (scope) {
-    var input = m('input#filter.form-control.mousetrap', {
-      placeholder: t('Filter activities') + ' (' + dime.helper.format.mousetrapCommand(scope.shortcut, t) + ')',
+    var shortcut = dime.helper.format.mousetrapCommand(scope.shortcut, t);
+    var filterProperties = {
+      placeholder: t('Filter activities') + ' (' + shortcut + ')',
       onfocus: scope.focus,
       onblur: scope.blur,
-      onkeydown: scope.keydown
-    });
+      onkeydown: scope.keydown,
+      onkeyup: function(e) {
+        scope.isBookmarked = isSavedFilter(e.target.value);
+      }
+    }
+    if (_.isString(scope.query)) {
+      filterProperties.value = scope.query;
+    }
 
-    return m('.media', [m('.media-object.pull-left', m('label.form-icon-label', {for : 'filter'}, m('span.icon.icon-filter-list'))), m('.media-inner', input)]);
+    var input = m('input#filter.form-control.mousetrap', filterProperties);
+
+    var getSavedFilters = function () {
+      var filters = JSON.parse(dime.modules.setting.get('activity', 'filters'));
+      return _.isArray(filters) ? filters : [];
+    };
+
+    var isSavedFilter = function (query) {
+      var filters = getSavedFilters();
+      return 1 == filters.filter(function(filter) {
+        return filter.query == query
+      }).length;
+    }
+
+    var savedFilters = function () {
+      var filters = getSavedFilters();
+      var options = filters.map(function renderFilterOption (filter) {
+        return m('option', { value: filter.query }, filter.name);
+      });
+      options.unshift(m('option'));
+      return options;
+    }
+
+    var selector = m('.media-object.pull-right',
+      m('select.savedFilters.form-control.form-control-inline', {
+        style: 'width: 20px',
+        onchange: function (e) {
+          scope.query = e.target.options[e.target.selectedIndex].value;
+          scope.submit(e);
+          return false;
+        }
+      }, savedFilters())
+    );
+
+    var saveFilterButton = m('.media-object.pull-right',
+      m('span.form-icon-label', {
+        onclick: function () {
+          scope.showBookmarkForm = scope.showBookmarkForm ? false : true;
+        }
+      }, m('span.icon.icon-bookmark' + (scope.isBookmarked ? '' : '-outline'))
+      )
+    );
+
+    var saveFilter = function(e) {
+      var bookmarks = getSavedFilters();
+      bookmarks.push({ name: e.target.value, query: scope.query });
+      dime.modules.setting.set('activity', 'filters', JSON.stringify(bookmarks));
+      scope.isBookmarked = true;
+      scope.showBookmarkForm = false;
+    };
+
+    var bookmarkForm = m('.save-bookmark.card.col-lg-10', {
+      style: 'position: absolute'
+    }, m('.card-main', [
+      m('.card-inner', m('p', m('input.form-control', {
+        autofocus: 'autofocus',
+        placeholder: t('Name your bookmarked filter'),
+        onchange: saveFilter
+      })))
+    ]));
+
+    return m('div', [
+      m('.media', [
+        m('.pull-left',
+          m('label.form-icon-label', {for : 'filter'}, m('span.icon.icon-filter-list'))
+        ),
+        m('.media-inner.pull-left.col-lg-10', input),
+        selector,
+        saveFilterButton
+      ]),
+      scope.showBookmarkForm ? bookmarkForm : null
+    ]);
   };
-
 })(dime, moment, m, Mousetrap);
