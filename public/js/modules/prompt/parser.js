@@ -28,7 +28,7 @@
   dime.helper.parser.register('service', function parseService(obj) {
     var service = obj._text.match(/\B:([a-z0-9\-\/\_+]+)\b/i);
     if (null !== service) {
-      obj.project = {
+      obj.service = {
         alias: service[1]
       };
       obj._text = obj._text.replace(':' + service[1], '', 'g');
