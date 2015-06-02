@@ -2,7 +2,7 @@
 (function (dime, m, _) {
   'use strict';
 
-  dime.core.views.select = function (type, activity) {    
+  dime.core.views.dropdown = function (type, activity) {
     var model = dime.model[dime.helper.format.ucFirst(type)];
 
     var onSave = function (item) {

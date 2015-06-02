@@ -58,7 +58,7 @@
     });
 
     return m('tr', columns.concat(
-      m("td.text-right", [
+      m("td.empty", [
         m("a.btn.btn-flat[href=#]", {
           onclick: function(e) {
             var question = t('Do you really want to delete "[name]"?').replace('[name]', item.name);
