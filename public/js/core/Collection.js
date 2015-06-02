@@ -166,7 +166,7 @@
     var reset = true;
     var configuration = {
       method: 'GET',
-      url: dime.helper.format.url('api', this.config.url),
+      url: dime.helper.format.url('api', this.config.resourceUrl),
       initialValue: this,
       config: function (xhr) {
         dime.events.emit('authorize', xhr);
@@ -176,10 +176,10 @@
         return xhr.responseText;
       }
     };
-    
+
     if (_.isPlainObject(options)) {
-      if (!_.isUndefined(options.url)) {
-        configuration.url = dime.helper.format.url(options.url);
+      if (!_.isUndefined(options.resourceUrl)) {
+        configuration.url = dime.helper.format.url(options.resourceUrl);
       }
       if (!_.isUndefined(options.reset)) {
         reset = options.reset;
@@ -218,7 +218,7 @@
     })
     var configuration = {
       method: 'POST',
-      url: dime.helper.format.url('api', this.config.url),
+      url: dime.helper.format.url('api', this.config.resourceUrl),
       initialValue: data,
       data: data,
       config: function (xhr) {
@@ -254,7 +254,7 @@
     var that = this;
     var configuration = {
       method: 'DELETE',
-      url: dime.helper.format.url('api', this.config.url),
+      url: dime.helper.format.url('api', this.config.resourceUrl),
       initialValue: data,
       config: function (xhr) {
         dime.events.emit('authorize', xhr);

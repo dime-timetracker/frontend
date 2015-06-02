@@ -52,6 +52,10 @@
     ucFirst: function(text) {
       return text.charAt(0).toUpperCase() + text.slice(1);
     },
+
+    /**
+     * concatenates arguments to base url, divided by slash
+     */
     url: function () {
       var uri = [];
       var contain = false;

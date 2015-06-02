@@ -111,7 +111,7 @@
 
   // register resource
   dime.resources.activity = new dime.Collection({
-    url: 'activity',
+    resourceUrl: 'activity',
     model: dime.model.Activity,
     sort: function (activityA, activityB) {
       var a = lastUpdate(activityA);
@@ -126,13 +126,13 @@
     }
   });
   dime.resources.timeslice = new dime.Collection({
-    url: 'timeslice',
+    resourceUrl: 'timeslice',
     model: dime.model.Timeslice,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success
   });
   dime.resources.tag = new dime.Collection({
-    url: 'tag',
+    resourceUrl: 'tag',
     model: dime.model.Tag,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success

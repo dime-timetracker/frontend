@@ -51,7 +51,7 @@
 
   // Create setting collection
   dime.resources.setting = new dime.Collection({
-    url: 'setting',
+    resourceUrl: 'setting',
     model: dime.model.Setting
   });
   dime.resources.setting.fetch();

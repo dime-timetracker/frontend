@@ -33,7 +33,7 @@
 
   // register customer
   dime.resources.customer = new dime.Collection({
-    url: "customer",
+    resourceUrl: "customer",
     model: dime.model.Customer
   });
   dime.menu.push({
@@ -46,7 +46,7 @@
 
   // register project
   dime.resources.project = new dime.Collection({
-    url: "project",
+    resourceUrl: "project",
     model: dime.model.Project
   });
   dime.menu.push({
@@ -59,7 +59,7 @@
 
   // register service
   dime.resources.service = new dime.Collection({
-    url: "service",
+    resourceUrl: "service",
     model: dime.model.Service
   });
   dime.menu.push({

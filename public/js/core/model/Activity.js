@@ -11,12 +11,12 @@
     }, data);
 
     this.tags = new dime.Collection({
-      url: 'tag',
+      resourceUrl: 'tag',
       model: dime.model.Tag
     }, this.tags || []);
 
     this.timeslices = new dime.Collection({
-      url: "timeslice",
+      resourceUrl: "timeslice",
       model: dime.model.Timeslice
     }, this.timeslices || []);
   };

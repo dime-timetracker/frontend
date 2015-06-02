@@ -140,7 +140,7 @@
 
   // register schema
   dime.resources.setting = new dime.Collection({
-    url: 'setting',
+    resourceUrl: 'setting',
     model: dime.model.Setting,
     fail: dime.modules.login.redirect,
     success: dime.modules.login.success
