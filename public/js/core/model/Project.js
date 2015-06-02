@@ -29,6 +29,12 @@
           type: 'text'
         },
         {
+          key: 'customer',
+          title: 'customer',
+          type: 'relation',
+          resource: 'customer'
+        },
+        {
           key: 'rate',
           title: 'rate',
           type: 'number'
