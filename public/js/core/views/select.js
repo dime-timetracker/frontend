@@ -2,13 +2,16 @@
 (function (dime, m, _) {
   'use strict';
 
-  dime.core.views.select = function (type, activity) {    
+  dime.core.views.select = function (type, activity, onchange) {
     var model = dime.model[dime.helper.format.ucFirst(type)];
 
     var onSave = function (item) {
       setEditable(false);
       activity[type] = item;
       dime.resources.activity.persist(activity);
+      if (_.isFunction(onchange)) {
+        onchange();
+      }
     };
 
     var onCancel = function (item) {
@@ -62,6 +65,9 @@
         result = m('li', m('a[href=#]', {
           onclick: function () {
             activity.onSwitchRelation(type, item);
+            if (_.isFunction(onchange)) {
+              onchange();
+            }
           }
         }, item.name ? item.name : '(' + model.shortcut + item.alias + ')'));
       }
