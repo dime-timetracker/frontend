@@ -10,7 +10,7 @@
       return m('th', options, t(property.title));
     });
     headers.push(
-      m('th.text-right')
+      m('th.empty')
     );
 
     var header = m('thead', m('tr', headers));
@@ -26,7 +26,7 @@
 
     var list = [
       m('h2', t(type + 's')),
-      m('table.table.table-responsive', [header, rows])
+      m('table.table.table-stripe.table-hover', [header, rows])
     ];
     dime.events.emit('core-' + type + '-list-view-after', {
       properties: properties(),
@@ -37,4 +37,4 @@
     return m('div.list-' + type, list);
   }
 
-})(dime, m)
+})(dime, m);

@@ -1,10 +1,10 @@
 .table {
-	background-color: $white;
 	margin-top: $line-height;
 	margin-bottom: $line-height;
 	width: 100%;
 	td,
 	th {
+	  background-color: $white;
 		border: 1px solid $black-bg;
 		line-height: $line-height;
 		padding: (($cell-height - $line-height) / 2) $grid-gutter (($cell-height - $line-height) / 2 - 1);
@@ -13,6 +13,10 @@
 			white-space: nowrap;
 			width: 1%;
 		}
+    &.empty {
+      background: transparent !important;
+      border: none;
+    }
 	}
 	> thead {
 		td,
@@ -24,11 +28,11 @@
 	}
 }
 
-.table-stripe > tbody > tr:nth-child(odd) {
+.table-stripe > tbody > tr:nth-child(odd) > td {
 	background-color: $white-bg-light;
 }
 
-.table-hover > tbody > tr:hover {
+.table-hover > tbody > tr:hover > td {
 	background-color: $white-bg-dark;
 }
 

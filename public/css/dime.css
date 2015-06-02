@@ -10010,12 +10010,12 @@ textarea.picker__select--year {
     visibility: visible; }
 
 .table {
-  background-color: #ffffff;
   margin-top: 24px;
   margin-bottom: 24px;
   width: 100%; }
   .table td,
   .table th {
+    background-color: #ffffff;
     border: 1px solid #e0e0e0;
     line-height: 24px;
     padding: 12px 16px 11px;
@@ -10024,16 +10024,20 @@ textarea.picker__select--year {
     .table th.nowrap {
       white-space: nowrap;
       width: 1%; }
+    .table td.empty,
+    .table th.empty {
+      background: transparent !important;
+      border: none; }
   .table > thead td,
   .table > thead th {
     background-color: #f5f5f5;
     color: #616161;
     vertical-align: bottom; }
 
-.table-stripe > tbody > tr:nth-child(odd) {
+.table-stripe > tbody > tr:nth-child(odd) > td {
   background-color: #fafafa; }
 
-.table-hover > tbody > tr:hover {
+.table-hover > tbody > tr:hover > td {
   background-color: #eeeeee; }
 
 .table-responsive {
@@ -11111,9 +11115,6 @@ textarea.picker__select--year {
 .filter .suggestions .suggestion,
 #prompt-container .suggestions .suggestion {
   font-size: 0.8em; }
-
-.prompt-container .save-bookmark {
-  position: absolute; }
 
 .collection .list-item {
   position: relative; }

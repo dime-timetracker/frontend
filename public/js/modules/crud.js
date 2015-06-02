@@ -31,10 +31,30 @@
 
   dime.routes["/:name"] = dime.modules.crud;
 
+  var naturalSort = function (a, b) {
+    var a = a.name || a.alias || a.id;
+    var b = b.name || b.alias || b.id;
+
+    for (var x = 0, aa, bb; (aa = a[x]) && (bb = b[x]); x++) {
+        aa = aa.toLowerCase();
+        bb = bb.toLowerCase();
+        if (aa !== bb) {
+          var c = Number(aa), d = Number(bb);
+          if (c == aa && d == bb) {
+            return c - d;
+          } else {
+            return (aa > bb) ? 1 : -1;
+          }
+      }
+    }
+    return a.length - b.length;
+  };
+
   // register customer
   dime.resources.customer = new dime.Collection({
     resourceUrl: "customer",
-    model: dime.model.Customer
+    model: dime.model.Customer,
+    sort: naturalSort
   });
   dime.menu.push({
     id: "customers",
@@ -47,7 +67,8 @@
   // register project
   dime.resources.project = new dime.Collection({
     resourceUrl: "project",
-    model: dime.model.Project
+    model: dime.model.Project,
+    sort: naturalSort
   });
   dime.menu.push({
     id: "projects",
@@ -60,7 +81,8 @@
   // register service
   dime.resources.service = new dime.Collection({
     resourceUrl: "service",
-    model: dime.model.Service
+    model: dime.model.Service,
+    sort: naturalSort
   });
   dime.menu.push({
     id: "services",
