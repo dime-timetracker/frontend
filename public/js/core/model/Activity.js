@@ -81,6 +81,7 @@
           }
         }
         dime.resources.activity.persist(this);
+        break;
       case 'project':
         if (item.customer && item.customer.alias) {
           this.customer = item.customer;
@@ -89,6 +90,7 @@
           this.project.customer = this.customer;
         }
         dime.resources.activity.persist(this);
+        break;
     }
   };
 
