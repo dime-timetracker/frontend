@@ -18,7 +18,7 @@
 
 ;(function (dime, m, _) {
   'use strict';
-  
+
   dime.menu = [{
     id: 'home',
     route: '/',
@@ -46,7 +46,7 @@
 
   var toggleMenuVisibility = function() {
     dime.configuration.setLocal('menu/visibility', !dime.configuration.getLocal('menu/visibility', false));
-  }
+  };
 
   module.controller = function () {
     var scope = {};
@@ -85,7 +85,7 @@
       var menuItem = [];
       var text = [];
       var active = (m.route() === item.route) ? '.active' : '';
-      
+
       if (item.icon) {
         text.push(m('span.icon.' + item.icon));
       }

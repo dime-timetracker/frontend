@@ -21,10 +21,10 @@
     } else {
       m.route('/');
     }
-    
+
     return scope;
   };
-  
+
   module.view = function(scope) {
     return [ dime.core.views.list(scope.type, scope.properties), dime.core.views.button('Add ' + scope.type, '/' + scope.type, scope.add)];
   };
