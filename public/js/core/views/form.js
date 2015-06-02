@@ -70,6 +70,12 @@
         case 'boolean':
           input = dime.inputs.boolean(item, value, setValue);
           break;
+        case 'relation':
+          input = dime.inputs.select(property.resource, item, item[property.key], function update(related) {
+            item[property.key] = related;
+            dime.resources[type].persist(item);
+          });
+          break;
         default:
           input = dime.inputs.input(property.type, value, setValue);
       }
