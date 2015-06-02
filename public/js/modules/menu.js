@@ -43,10 +43,14 @@
     }
     return 0;
   };
-  
+
+  var toggleMenuVisibility = function() {
+    dime.configuration.setLocal('menu/visibility', !dime.configuration.getLocal('menu/visibility', false));
+  }
+
   module.controller = function () {
     var scope = {};
-    
+
     scope.items = dime.menu.sort(sort);
     dime.configuration.getLocal('menu/visibility', false);
 
@@ -67,7 +71,7 @@
     menuBtn: function (scope) {
       return m('ul.nav.nav-list.pull-left', m('li', m('a[href=#].menu-toggle', { onclick: function (e) {
           e.preventDefault();
-          dime.configuration.setLocal('menu/visibility', !dime.configuration.getLocal('menu/visibility', false));
+          toggleMenuVisibility();
      }}, [
         m('span.access-hide', 'Menu'),
         m('span.icon.icon-menu'),
@@ -89,9 +93,15 @@
         text.push(t(item.name));
       }
       if (item.route) {
-        menuItem.push(m('a[href="' + item.route + '"]', {config: m.route}, text));
+        menuItem.push(m('a[href="' + item.route + '"]', {
+          onclick: toggleMenuVisibility,
+          config: m.route
+        }, text));
       } else if (_.isFunction(item.onclick)) {
-        menuItem.push(m('a[href=""]', {config: m.route, onclick: item.onclick}, text));
+        menuItem.push(m('a[href=""]', {
+          config: m.route,
+          onclick: function (e) { toggleMenuVisibility(); return item.onclick(e); }
+        }, text));
       }
 
       return m('li' + active, menuItem);
