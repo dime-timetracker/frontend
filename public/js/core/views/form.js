@@ -68,7 +68,7 @@
       var input = undefined;
       switch (property.type) {
         case 'boolean':
-          input = dime.inputs.boolean(item, value, setValue);
+          input = dime.core.views.inputs.boolean(item, value, setValue);
           break;
         case 'relation':
           input = dime.inputs.select(property.resource, item, item[property.key], function update(related) {
@@ -77,7 +77,7 @@
           });
           break;
         default:
-          input = dime.inputs.input(property.type, value, setValue);
+          input = dime.core.views.inputs.input(property.type, value, setValue);
       }
       return m('.form-group', [ m('label', t(property.title)), input ] );
     });

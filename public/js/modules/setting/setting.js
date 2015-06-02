@@ -82,8 +82,8 @@
           value: value,
           onchange: function (e) { onchange(e.target.value); }
         });
-        if (dime.inputs[type]) {
-          input = dime.inputs[type](current, value, onchange);
+        if (dime.core.views.inputs[type]) {
+          input = dime.core.views.inputs[type](current, value, onchange);
         }
 
         return m('p.row.form-group#setting-' + current.namespace + '/' + current.name, [

@@ -29,21 +29,21 @@
       switch (property.type) {
         case 'boolean':
           return m('td.' + property.key,
-            dime.inputs.boolean(item, value, function update (value) {
+            dime.core.views.inputs.boolean(item, value, function update (value) {
               item[property.key] = value;
               dime.resources[type].persist(item);
             })
           );
         case 'relation':
           return m('td.' + property.key,
-            dime.inputs.select(property.resource, item, item[property.key], function update(related) {
+            dime.core.views.inputs.select(property.resource, item, item[property.key], function update(related) {
               item[property.key] = related;
               dime.resources[type].persist(item);
             })
           );
         default:
           return m('td.' + property.key,
-            dime.inputs.text(item, value, function update (value) {
+            dime.core.views.inputs.text(item, value, function update (value) {
               item[property.key] = value;
               dime.resources[type].persist(item);
             })
