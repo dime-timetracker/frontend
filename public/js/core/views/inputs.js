@@ -3,24 +3,13 @@
 
   var inputs = dime.core.views.inputs = {};
 
-  inputs.boolean = function (current, value, update) {
+  inputs.boolean = function (value, update) {
     var options = [
-      {
-        value: 1,
-        label: t('yes'),
-        selected: value == true
-      },
-      {
-        value: 0,
-        label: t('no'),
-        selected: value == false
-      }
+      m('option', { selected: (value == true),  value: 1 }, t('yes')),
+      m('option', { selected: (value == false),  value: 0 }, t('no'))
     ];
-    return m("select.form-control", {
-        onchange: function (e) { update(e.target.value); }
-    }, options.map(function (option) {
-      return m("option", { value: option.value, selected: option.selected }, option.label);
-    }));
+    
+    return m("select.form-control", { onchange: function (e) { update(e.target.value); } }, options);
   };
 
   inputs.input = function (type, value, update) {
@@ -37,7 +26,9 @@
     }
 
     if (_.isFunction(update)) {
-      attr.oninput = update;
+      attr.oninput = function(e) {
+        update(e.target.value);
+      };
     }
 
     return m('input.form-control', attr);
@@ -71,7 +62,5 @@
       }
     }, value);
   };
-
-
 
 })(dime, m, _);
