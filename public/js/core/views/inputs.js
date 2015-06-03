@@ -24,13 +24,23 @@
   };
 
   inputs.input = function (type, value, update) {
-    return m('input.form-control', {
-      type: type,
-      value: value,
-      oninput: function(e) {
-        update(e.target.value);
-      }
-    });
+    var attr = {
+      type: 'text'
+    };
+
+    if (!_.isUndefined(type)) {
+      attr.type = type;
+    }
+
+    if (!_.isUndefined(value)) {
+      attr.value = value;
+    }
+
+    if (_.isFunction(update)) {
+      attr.oninput = update;
+    }
+
+    return m('input.form-control', attr);
   };
 
   inputs.select = function (type, related, relationType, onchange) {

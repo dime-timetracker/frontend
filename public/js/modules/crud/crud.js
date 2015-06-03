@@ -9,25 +9,58 @@
     var scope = {};
 
     var type = m.route.param('name');
-    if (module.allowed.indexOf(type) > -1) {
-      scope.type = type;
-      scope.modelName = dime.helper.format.ucFirst(type);
-      scope.properties = dime.model[scope.modelName].properties;
-      scope.resource = dime.resources[type];
-      scope.add = function (e) {
-         scope.resource.persist(scope.resource.create());
-         return false;
-      };
-    } else {
+    if (-1 === module.allowed.indexOf(type)) {
       m.route('/');
     }
 
+    scope.type = type;
+    scope.modelName = dime.helper.format.ucFirst(type);
+    scope.properties = dime.model[scope.modelName].properties;
+    scope.resource = dime.resources[type];
+    scope.add = function (e) {
+       scope.resource.add({});
+       return false;
+    };
+
     return scope;
   };
-
+  
   module.view = function(scope) {
-    return [ dime.core.views.list(scope.type, scope.properties), dime.core.views.button('Add ' + scope.type, '/' + scope.type, scope.add)];
+    var items = dime.resources[scope.type] || [];
+
+    var headers = scope.properties().map(function(property) {
+      var options = property.options || {};
+      return m('th', options, t(property.title));
+    });
+    headers.push(
+      m('th.empty')
+    );
+
+    var header = m('thead', m('tr', headers));
+    dime.events.emit('core-' + scope.type + '-list-header-view-after', {
+      properties: scope.properties(),
+      type: scope.type,
+      view: header
+    });
+
+    var rows = m('tbody', items.map(function (item) {
+      return module.views.tableItem(item, scope.type, scope.properties(item));
+    }));
+
+    var list = [
+      m('h2', t(scope.type + 's')),
+      m('table.table.table-stripe.table-hover', [header, rows])
+    ];
+    dime.events.emit('core-' + scope.type + '-list-view-after', {
+      properties: scope.properties(),
+      type: scope.type,
+      view: list
+    });
+
+    return m('div.list-' + scope.type, [list, dime.core.views.button('Add ' + scope.type, '/' + scope.type, scope.add)]);
   };
+
+  module.views = {};
 
   dime.routes["/:name"] = dime.modules.crud;
 

@@ -31,6 +31,11 @@
           type: 'text'
         },
         {
+          key: 'rate',
+          title: 'rate',
+          type: 'number'
+        },
+        {
           key: 'enabled',
           title: 'enabled',
           type: 'boolean'
