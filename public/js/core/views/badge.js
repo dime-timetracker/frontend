@@ -40,7 +40,7 @@
 
     if (isDropdownVisible(type, activity)) {
       cssClass += '.open';
-      content.push(dime.core.views.select(type, activity, function () {
+      content.push(dime.core.views.dropdown(type, activity, function () {
         toggleVisibility(type, activity);
       }));
     }
