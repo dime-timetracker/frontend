@@ -11,17 +11,19 @@
     };
 
     scope.focus = function (e) {
+      module.currentTargetEvent = e;
       module.clearSuggestions(e, scope);
+      component.addBookmarks(e, scope);
       module.installShortcuts(e, scope);
     };
 
     scope.blur = function (e) {
       module.resetShortcuts(e, scope);
       module.clearSuggestions(e, scope);
+      module.currentTargetEvent = undefined;
     };
 
     scope.keydown = function (e) {
-      scope.query = undefined;
       module.updateSuggestions(e, scope);
     };
 
@@ -87,84 +89,41 @@
       onblur: scope.blur,
       onkeydown: scope.keydown,
       onkeyup: function(e) {
-        scope.isBookmarked = isSavedFilter(e.target.value);
+        scope.isBookmarked = scope.module.components.bookmark.contains(e.target.value);
+        scope.module.components.bookmark.value = e.target.value;
       }
-    }
-    if (_.isString(scope.query)) {
-      filterProperties.value = scope.query;
-    }
+    };
 
     var input = m('input#filter.form-control.mousetrap', filterProperties);
 
-    var getSavedFilters = function () {
-      var filters = JSON.parse(dime.modules.setting.get('activity', 'filters'));
-      return _.isArray(filters) ? filters : [];
-    };
-
-    var isSavedFilter = function (query) {
-      var filters = getSavedFilters();
-      return 1 == filters.filter(function(filter) {
-        return filter.query == query
-      }).length;
-    }
-
-    var savedFilters = function () {
-      var filters = getSavedFilters();
-      var options = filters.map(function renderFilterOption (filter) {
-        return m('option', { value: filter.query }, filter.name);
-      });
-      options.unshift(m('option'));
-      return options;
-    }
-
-    var selector = m('.media-object.pull-right',
-      m('select.savedFilters.form-control.form-control-inline', {
-        style: 'width: 20px',
-        onchange: function (e) {
-          scope.query = e.target.options[e.target.selectedIndex].value;
-          scope.submit(e);
-          return false;
-        }
-      }, savedFilters())
-    );
-
-    var saveFilterButton = m('.media-object.pull-right',
+    var btnBookmark = m('.media-object.pull-right',
       m('span.form-icon-label', {
-        onclick: function () {
-          scope.showBookmarkForm = scope.showBookmarkForm ? false : true;
-        }
+        onclick: scope.module.components.bookmark.show
       }, m('span.icon.icon-bookmark' + (scope.isBookmarked ? '' : '-outline'))
       )
     );
 
-    var saveFilter = function(e) {
-      var bookmarks = getSavedFilters();
-      bookmarks.push({ name: e.target.value, query: scope.query });
-      dime.modules.setting.set('activity', 'filters', JSON.stringify(bookmarks));
-      scope.isBookmarked = true;
-      scope.showBookmarkForm = false;
-    };
-
-    var bookmarkForm = m('.save-bookmark.card.col-lg-10', {
-      style: 'position: absolute'
-    }, m('.card-main', [
-      m('.card-inner', m('p', m('input.form-control', {
-        autofocus: 'autofocus',
-        placeholder: t('Name your bookmarked filter'),
-        onchange: saveFilter
-      })))
-    ]));
-
-    return m('div', [
-      m('.media', [
-        m('.pull-left',
+    return m('.media', [
+        m('.media-object.pull-left',
           m('label.form-icon-label', {for : 'filter'}, m('span.icon.icon-filter-list'))
         ),
-        m('.media-inner.pull-left.col-lg-10', input),
-        selector,
-        saveFilterButton
-      ]),
-      scope.showBookmarkForm ? bookmarkForm : null
+        btnBookmark,
+        m('.media-inner', input)
     ]);
   };
+
+  component.addBookmarks = function(e, scope) {
+    scope.module.suggestions = scope.module.components.bookmark.list();
+  };
+
+  // Add default filter to activity setting
+
+  dime.configuration.activity.children.display.children.defaultFilter = {
+    title: "Default filter",
+    namespace: "activity",
+    name: "display/defaultFilter",
+    type: "text",
+    defaultValue: ""
+  };
+
 })(dime, moment, m, Mousetrap);

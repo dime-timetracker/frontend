@@ -10,6 +10,7 @@
     };
 
     scope.focus = function (e) {
+      module.currentTargetEvent = e;
       module.clearSuggestions(e, scope);
       module.installShortcuts(e, scope);
     };
@@ -17,6 +18,7 @@
     scope.blur = function (e) {
       module.resetShortcuts(e, scope);
       module.clearSuggestions(e, scope);
+      module.currentTargetEvent = undefined;
     };
 
     scope.keydown = function (e) {

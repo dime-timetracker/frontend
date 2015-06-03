@@ -24,9 +24,16 @@
     },
     suggestionItem: function (suggestion) {
       var bg = suggestion.selected ? '.blue.white-text' : '';
-      return m('li', m('a[href=#].tile' + bg, suggestion.name || suggestion.alias ));
+      return m('li', m('a[href=#].tile' + bg, { 
+        onclick: function (e) {
+          module.applySuggestion(module.currentTargetEvent, suggestion);
+          return false;
+        }
+      }, suggestion.name || suggestion.alias ));
     }
   };
+
+  module.currentTargetEvent = undefined;
 
   // Shortcuts
 
@@ -93,9 +100,14 @@
   module.applySuggestion = function (e, suggestion) {
     var words = e.target.value.split(' ');
     if (words.length) {
-      words[words.length - 1] = words[words.length - 1].substr(0, 1) + suggestion.alias;
-      e.target.value = words.join(' ');
-      suggestion.selected = true;
+      if (suggestion.value) {
+        e.target.value = suggestion.value;
+        suggestion.selected = true;
+      } else {
+        words[words.length - 1] = words[words.length - 1].substr(0, 1) + suggestion.alias;
+        e.target.value = words.join(' ');
+        suggestion.selected = true;
+      }
       m.redraw();
     }
   };

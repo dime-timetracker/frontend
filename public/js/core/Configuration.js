@@ -21,12 +21,18 @@
       name = namespace.name;
       var namespace = namespace.namespace;
     }
+    
     var filter = { namespace: namespace, name: name };
     var setting = dime.resources.setting.find(filter) || filter ;
     if (false === _.isUndefined(setting.value)) {
       return setting.value;
     }
     return (_.isUndefined(defaultValue)) ? null : defaultValue;
+  };
+
+  Configuration.prototype.namespace = function (namespace) {
+    var filter = { namespace: namespace };
+    return dime.resources.setting.filter(filter);
   };
 
   Configuration.prototype.getLocal = function (name, defaultValue) {

@@ -63,5 +63,11 @@ window.translations['de'] = {
   'Use "/" to specify a project.': 'Mit "/" kannst du die Aktivität einem Projekt zuordnen',
   'Use ":" to specify a service.': 'Mit ":" kannst du die Aktivität einer Service zuordnen',
   'Use "#" to add tags.': 'Mit "#" kannst du Tags hinzufügen',
-  'Help': 'Hilfe'
+  'Help': 'Hilfe',
+  'Default filter': 'Standardfilter',
+  'Bookmark filter': 'Filter speichern',
+  'Name your bookmark': 'Gib dem Filter einen Namen',
+  'Save': 'Speichern',
+  'Remove': 'Löschen',
+  'Close': 'Schließen'
 };
