@@ -145,6 +145,7 @@
   Activity.prototype.startStopTimeslice = function () {
     var activity = this;
     if (this.running()) {
+      dime.states.activity.change('normal');
       this.timeslices.forEach(function (timeslice, idx) {
         if (timeslice.isRunning()) {
           timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -153,6 +154,7 @@
         }
       });
     } else {
+      dime.states.activity.change('running');
       var timeslice = this.timeslices.create({
         activity: parseInt(activity.id) // we could submit the whole activity, but this is not required here
       });

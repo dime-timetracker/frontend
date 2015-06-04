@@ -15,5 +15,6 @@ var dime = {
   core: { views: {} },
 
   events: new Evemit(),
+  states: {},
   resources: {}
 };

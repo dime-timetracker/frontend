@@ -97,6 +97,14 @@
   
   // register route
   dime.routes['/'] = dime.modules.activity;
+  
+  dime.states.activity = new dime.StateMachine('activities');
+  dime.states.activity.on('normal', function () {
+    dime.helper.favicon(dime.env.icon, '#000');
+  });
+  dime.states.activity.on('running', function () {
+    dime.helper.favicon(dime.env.icon, '#FF9800');
+  });
 
   var lastUpdate = function (activity) {
     var result = parseInt(moment(activity.updatedAt || 'now').format('x'));
