@@ -108,6 +108,26 @@
   };
 
   /**
+   * Return next state.
+   * @returns {String} next state
+   */
+  StateMachine.prototype.next = function() {
+    var idx = this.states.indexOf(this.current) + 1;
+    if (idx <= -1 || idx >= this.states.length) {
+      idx = 0;
+    }
+    return this.states[idx];
+  };
+
+  /**
+   * Cycle to next state
+   * @returns {StateMachine} this
+   */
+  StateMachine.prototype.cycle = function() {
+    return this.change(this.next());
+  };
+
+  /**
    * Change state and emit event to 'statemachine.NAME.STATE'
    * @param {String} state
    * @returns {StateMachine} this

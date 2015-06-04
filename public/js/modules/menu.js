@@ -19,40 +19,44 @@
 ;(function (dime, m, _) {
   'use strict';
 
+  var element = document.getElementById("app-menu");
+
   dime.menu = [{
     id: 'home',
     route: '/',
     name: 'Activities',
     icon: 'icon-access-time',
-    weight: 0
+    weight: -10
   }];
 
+  // Menu states
+  dime.states.menu = new dime.StateMachine('menu', ['open', 'close']);
+  dime.states.menu.on('open', function() {
+    dime.configuration.setLocal('menu/visibility', true);
+  });
+  dime.states.menu.on('close', function() {
+    dime.configuration.setLocal('menu/visibility', false);
+  });
+
   var module = dime.modules.menu = {};
-  var sort = function (a, b) {
-    var weightA = _.isNumber(a.weight) ? a.weight : 0;
-    var weightB = _.isNumber(b.weight) ? b.weight : 0;
-    if (weightA === weightB) {
-      weightA = a.name;
-      weightB = b.name;
-    }
-    if (weightA > weightB) {
-      return 1;
-    }
-    if (weightA < weightB) {
-      return -1;
-    }
-    return 0;
-  };
-
-  var toggleMenuVisibility = function() {
-    dime.configuration.setLocal('menu/visibility', !dime.configuration.getLocal('menu/visibility', false));
-  };
-
   module.controller = function () {
     var scope = {};
 
-    scope.items = dime.menu.sort(sort);
-    dime.configuration.getLocal('menu/visibility', false);
+    scope.items = dime.menu.sort(function sortMenu (a, b) {
+      var weightA = _.isNumber(a.weight) ? a.weight : 0;
+      var weightB = _.isNumber(b.weight) ? b.weight : 0;
+      if (weightA === weightB) {
+        weightA = a.name;
+        weightB = b.name;
+      }
+      if (weightA > weightB) {
+        return 1;
+      }
+      if (weightA < weightB) {
+        return -1;
+      }
+      return 0;
+    });
 
     dime.events.emit('menu-before-view', scope);
 
@@ -61,21 +65,25 @@
 
   module.view = function (scope) {
     var open = '';
-    if (dime.configuration.getLocal('menu/visibility')) {
+    if (dime.configuration.getLocal('menu/visibility', false)) {
       open = '.open';
     }
     return m('nav.menu' + open, m('.menu-scroll', m('.menu-wrap', m('.menu-content', module.views.list(scope.items)))));
   };
 
   module.views = {
-    menuBtn: function (scope) {
-      return m('ul.nav.nav-list.pull-left', m('li', m('a[href=#].menu-toggle', { onclick: function (e) {
-          e.preventDefault();
-          toggleMenuVisibility();
+    menuBtn: function () {
+      var active = '';
+      if (dime.configuration.getLocal('menu/visibility', false)) {
+        active = '.active';
+      }
+      return m('ul.nav.nav-list.pull-left', m('li'+active, m('a[href=#].menu-toggle', { onclick: function (e) {
+          dime.states.menu.cycle();
+          return false;
      }}, [
         m('span.access-hide', 'Menu'),
-        m('span.icon.icon-menu'),
-        m('span.icon.icon-close.header-close')
+        m('span.icon.icon-lg.icon-menu'),
+        m('span.header-close.icon.icon-lg.icon-close')
       ])));
     },
     list: function (items) {
@@ -94,13 +102,13 @@
       }
       if (item.route) {
         menuItem.push(m('a[href="' + item.route + '"]', {
-          onclick: toggleMenuVisibility,
+          onclick: function (e) { dime.states.menu.cycle(); return item.onclick(e); },
           config: m.route
         }, text));
       } else if (_.isFunction(item.onclick)) {
         menuItem.push(m('a[href=""]', {
           config: m.route,
-          onclick: function (e) { toggleMenuVisibility(); return item.onclick(e); }
+          onclick: function (e) { dime.states.menu.cycle(); return item.onclick(e); }
         }, text));
       }
 
@@ -108,6 +116,7 @@
     }
   };
 
+  // Add menu button to header
   dime.events.on('header-before-view', function (scope) {
     scope.views.unshift(module.views.menuBtn);
   });

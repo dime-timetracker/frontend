@@ -33,7 +33,7 @@
       color = '.' + color.split(' ').join('.');
     }
 
-    return m('header.header' + color, content);
+    return m('header.header.fixed' + color, content);
   };
 
   module.views = {

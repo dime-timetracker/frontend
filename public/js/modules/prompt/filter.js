@@ -96,6 +96,11 @@
 
     var input = m('input#filter.form-control.mousetrap', filterProperties);
 
+
+    var btnReport = m('.media-object.pull-right',
+      m('a[href="/report"].form-icon-label', { config: m.route }, m('span.icon.icon-print'))
+    );
+
     var btnBookmark = m('.media-object.pull-right',
       m('span.form-icon-label', {
         onclick: scope.module.components.bookmark.show
@@ -107,6 +112,7 @@
         m('.media-object.pull-left',
           m('label.form-icon-label', {for : 'filter'}, m('span.icon.icon-filter-list'))
         ),
+        btnReport,
         btnBookmark,
         m('.media-inner', input)
     ]);

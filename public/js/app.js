@@ -7,8 +7,8 @@
 
 
   m.route(document.getElementById("app"), "/", dime.routes);
-  m.module(document.getElementById("app-header"), dime.modules.header);
-  m.module(document.getElementById("app-menu"), dime.modules.menu);
-  m.module(document.getElementById("prompt-container"), dime.modules.prompt);
+  m.mount(document.getElementById("app-header"), dime.modules.header);
+  m.mount(document.getElementById("app-menu"), dime.modules.menu);
+  m.mount(document.getElementById("prompt-container"), dime.modules.prompt);
 
 })(dime, document, m)
