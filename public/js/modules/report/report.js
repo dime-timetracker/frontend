@@ -11,7 +11,9 @@
 
   module.view = function (scope) {
 
-    return m('div.list-' + scope.type, [ dime.core.views.button('Add ' + scope.type, '/' + scope.type, scope.add)]);
+    return m('div', [
+      m('h2', t('Reports'))
+    ]);
   };
 
   module.views = {};

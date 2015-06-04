@@ -15,8 +15,8 @@
     }
     var precision = dime.configuration.get('activity', 'display/incomePrecisionSeconds', 15*60);
     var income = context.activity.rate * Math.ceil(context.item.totalDuration(precision)) / 60 / 60;
-    context.view.children[4] = context.view.children[3];
-    context.view.children[3] = m('td.text-right', dime.helper.format.currency(income, '{number} €'));
+    context.view.children[6] = context.view.children[5];
+    context.view.children[5] = m('td.text-right', dime.helper.format.currency(income, '{number} €'));
   });
 
 })(dime, m, _, t);
