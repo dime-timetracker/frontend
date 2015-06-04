@@ -1,19 +1,82 @@
 ;(function (dime, m, _) {
   'use strict';
 
+  var qsort = function (compare, key, array, left, right) {
+    left = left || 0;
+    right = right || array.length - 1;
+    var i = left;
+    var j = right;
+    var tmp;
+    var pivotidx = (left + right) / 2;
+    var pivot = key(array[pivotidx.toFixed()]);
+    /* partition */
+    while (i <= j) {
+      while (compare(key(array[i]), pivot) === -1) {
+        i++;
+      }
+      while (compare(key(array[j]), pivot) === 1) {
+        j--;
+      }
+      if (i <= j) {
+        tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+        i++;
+        j--;
+      }
+    }
+
+    /* recursion */
+    if (left < j) {
+      qsort(compare, key, array, left, j);
+    }
+    if (i < right) {
+      qsort(compare, key, array, i, right);
+    }
+  };
+
+  var naturalCompare = function (left, right) {
+    for (var x = 0, aa, bb; (aa = left[x]) && (bb = right[x]); x++) {
+        aa = aa.toLowerCase();
+        bb = bb.toLowerCase();
+        if (aa !== bb) {
+          var c = Number(aa), d = Number(bb);
+          if (c == aa && d == bb) {
+            return c - d;
+          } else {
+            return (aa > bb) ? 1 : -1;
+          }
+      }
+    }
+    return left.length - right.length;
+  };
+
   /**
   * Collection is a array of objects.
   *
   * - can find objects by identifier
-  * - can find objects by parameter
+  * - can find objects by property
   * - can filter into new Collection
+  * - can be ordered
   * - can have a model definition
   * - can fetch, persist and remove via m.request
+  *
+  * Options:
+  *
+  * {
+  *   resourceUrl: 'RESOURCE-NAME',
+  *   idAttribure: 'id',
+  *   model: Constructor.function,
+  *   compare: compareFunction,         // default: naturalCompare
+  *   compareKey: comparekeyFunction    // default: compareKey (obj.name || obj.alias || obj.id)
+  * }
+  *
   *
   * Example:
   *
   * var c = new Collection({
-  *  model: dime.mode.Activity
+  *  model: dime.mode.Activity,
+  *
   * });
   *
   * @param {Object} options
@@ -26,7 +89,15 @@
     }
 
     this.config = _.extend({
-      idAttribute: 'id'
+      idAttribute: 'id',
+      compare: naturalCompare,
+      compareKey: function (obj) {
+        var result = undefined;
+        if (!_.isUndefined(obj)) {
+          result = obj.name || obj.alias || obj.id;
+        }
+        return result;
+      }
     }, options || {});
 
     // Convert data to models
@@ -34,6 +105,8 @@
       data.forEach(function (item) {
         this.add(item);
       }, this);
+
+      this.order();
     }
   };
 
@@ -101,63 +174,56 @@
       array.push(item);
     });
     return array;
-  }
-
-  var qsort = function (array, left, right, compare) {
-    var i = left;
-    var j = right;
-    var tmp;
-    var pivotidx = (left + right) / 2;
-    var pivot = array[pivotidx.toFixed()];
-    /* partition */
-    while (i <= j) {
-      while (compare(array[i], pivot) === -1) {
-        i++;
-      }
-      while (compare(array[j], pivot) === 1) {
-        j--;
-      }
-      if (i <= j) {
-        tmp = array[i];
-        array[i] = array[j];
-        array[j] = tmp;
-        i++;
-        j--;
-      }
-    }
-
-    /* recursion */
-    if (left < j) {
-      qsort(array, left, j, compare);
-    }
-    if (i < right) {
-      qsort(array, i, right, compare);
-    }
   };
 
-  Collection.prototype.order = function (func) {
-    var data = this;
-    if (_.isFunction(func)) {
-      data = new Collection(this.config, this.sort(func));
-    } else if (_.isFunction(this.config.sort)) {
-      qsort(this, 0, this.length-1, this.config.sort);
+  /**
+   * Sort collection by key and compare functions. Without parameter the
+   * config.compare and config.compareKey will be used.
+   * 
+   * @param {function} key = function (obj) { return obj.key };
+   * @param {function} compare = function (a, b) { return 1 || 0 || -1; };
+   * @returns {Collection} this
+   */
+  Collection.prototype.order = function (key, compare) {
+    if (!_.isFunction(key)) {
+      key = this.config.compareKey;
+    }
+    
+    if (!_.isFunction(compare)) {
+      compare = this.config.compare;
+    }
+
+    if (this.length > 0 && _.isFunction(key) && _.isFunction(compare)) {
+      qsort(compare, key, this);
+    }
+
+    return this;
+  };
+
+  /**
+   * Search for data object and remove it from Collection.
+   * 
+   * @param {object} data
+   * @returns {object}
+   */
+  Collection.prototype.removeFromCollection = function (data) {
+    var idx = this.indexOf(data);
+    if (-1 < idx) {
+      this.splice(idx, 1);
     }
     return data;
   };
 
-  Collection.prototype.removeFromCollection = function (data) {
-    var idx = this.indexOf(data);
-      if (-1 < idx) {
-        this.splice(idx, 1);
-      }
-      return data;
-  };
-
+  /**
+   * Remove everything from collection.
+   * @returns {Collection} this
+   */
   Collection.prototype.reset = function () {
     while (this.length) {
       delete this[0];
     }
     this.length = 0;
+    return this;
   };
 
   // REST API
@@ -193,13 +259,11 @@
           that.reset();
         }
 
-        if (that.config.sort) {
-          list = list.sort(that.config.sort);
-        }
-
         list.forEach(function (item) {
           that.add(item);
         });
+
+        that.order();
       }, function error(response) {
         if (_.isPlainObject(response) && response.error) {
           if (console) {

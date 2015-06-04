@@ -138,16 +138,6 @@
   // register route
   dime.routes['/setting'] = dime.modules.setting;
 
-  // register schema
-  dime.resources.setting = new dime.Collection({
-    resourceUrl: 'setting',
-    model: dime.model.Setting,
-    fail: dime.modules.login.redirect,
-    success: dime.modules.login.success
-  });
-
-  dime.resources.setting.fetch();
-
   // add menu item
   dime.menu.push({
     id: 'settings',

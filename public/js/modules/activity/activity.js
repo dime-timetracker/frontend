@@ -113,9 +113,7 @@
   dime.resources.activity = new dime.Collection({
     resourceUrl: 'activity',
     model: dime.model.Activity,
-    sort: function (activityA, activityB) {
-      var a = lastUpdate(activityA);
-      var b = lastUpdate(activityB);
+    compare: function (a, b) {
       var result = 0;
       if (a > b) {
         result = -1;
@@ -123,19 +121,28 @@
         result = 1;
       }
       return result;
-    }
+    },
+    compareKey: lastUpdate
   });
   dime.resources.timeslice = new dime.Collection({
     resourceUrl: 'timeslice',
     model: dime.model.Timeslice,
-    fail: dime.modules.login.redirect,
-    success: dime.modules.login.success
+    compare: function (a,b) {
+      var result = 0;
+      if (a > b) {
+        result = -1;
+      } else if (a < b) {
+        result = 1;
+      }
+      return result;
+    },
+    compareKey: function (obj) {
+      return parseInt(moment(obj.stoppedAt || obj.startedAt || obj.updatedAt || obj.createdAt).format('x'));
+    }
   });
   dime.resources.tag = new dime.Collection({
     resourceUrl: 'tag',
-    model: dime.model.Tag,
-    fail: dime.modules.login.redirect,
-    success: dime.modules.login.success
+    model: dime.model.Tag
   });
 
   dime.resources.activity.fetch();

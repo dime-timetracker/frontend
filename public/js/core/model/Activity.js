@@ -17,7 +17,19 @@
 
     this.timeslices = new dime.Collection({
       resourceUrl: "timeslice",
-      model: dime.model.Timeslice
+      model: dime.model.Timeslice,
+      compare: function (a,b) {
+        var result = 0;
+        if (a > b) {
+          result = -1;
+        } else if (a < b) {
+          result = 1;
+        }
+        return result;
+      },
+      compareKey: function (obj) {
+        return parseInt(moment(obj.stoppedAt || obj.startedAt || obj.updatedAt || obj.createdAt).format('x'));
+      }
     }, this.timeslices || []);
   };
   Activity.prototype = new dime.Model();
