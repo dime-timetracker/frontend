@@ -67,7 +67,7 @@
           return null;
         }
         var type = current.type ? current.type : 'text';
-        var onchange = function(value) {
+        var update = function(value) {
           if (_.isFunction(current.onWrite)) {
             value = current.onWrite(value);
           }
@@ -77,13 +77,11 @@
         if (_.isFunction(current.onRead)) {
           value = current.onRead(value);
         }
-        var input = m('input', {
-          type: type,
-          value: value,
-          onchange: function (e) { onchange(e.target.value); }
-        });
+        var input;
         if (dime.core.views.inputs[type]) {
-          input = dime.core.views.inputs[type](current, value, onchange);
+          input = dime.core.views.inputs[type](value, update, type);
+        } else {
+          input = dime.core.views.inputs.input(value, update, type);
         }
 
         return m('p.row.form-group#setting-' + current.namespace + '/' + current.name, [

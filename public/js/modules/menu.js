@@ -102,7 +102,7 @@
       }
       if (item.route) {
         menuItem.push(m('a[href="' + item.route + '"]', {
-          onclick: function (e) { dime.states.menu.cycle(); return item.onclick(e); },
+          onclick: function (e) { dime.states.menu.cycle(); },
           config: m.route
         }, text));
       } else if (_.isFunction(item.onclick)) {

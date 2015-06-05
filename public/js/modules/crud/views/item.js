@@ -14,7 +14,7 @@
       var input;
       switch (property.type) {
         case 'boolean':
-          input = dime.core.views.inputs.boolean(item, value, function update(value) {
+          input = dime.core.views.inputs.boolean(value, function update(value) {
             item[property.key] = value;
             dime.resources[type].persist(item);
           });
@@ -26,10 +26,10 @@
           });
           break;
         default:
-          input = dime.core.views.inputs.input(property.type, value, function update(value) {
+          input = dime.core.views.inputs.input(value, function update(value) {
             item[property.key] = value;
             dime.resources[type].persist(item);
-          });
+          }, property.type);
       }
 
       return m('td.' + property.key, input);

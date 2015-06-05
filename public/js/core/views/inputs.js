@@ -8,19 +8,21 @@
       m('option', { selected: (value == true),  value: 1 }, t('yes')),
       m('option', { selected: (value == false),  value: 0 }, t('no'))
     ];
+
+    var attr = {};
+    if (_.isFunction(update)) {
+      attr.onchange = function(e) {
+        update(e.target.value);
+      };
+    }
     
-    return m("select.form-control", { onchange: function (e) { update(e.target.value); } }, options);
+    return m("select.form-control", attr, options);
   };
 
-  inputs.input = function (type, value, update) {
+  inputs.input = function (value, update, type) {
     var attr = {
       type: 'text'
     };
-
-    if (!_.isUndefined(type)) {
-      attr.type = type;
-    }
-
     if (!_.isUndefined(value)) {
       attr.value = value;
     }
@@ -31,7 +33,24 @@
       };
     }
 
+    if (!_.isUndefined(type)) {
+      attr.type = type;
+    }
+
     return m('input.form-control', attr);
+  };
+
+  inputs.text = function (value, update) {
+    var attr = {
+      contenteditable: true
+    };
+
+    if (_.isFunction(update)) {
+      attr.onchange = function(e) {
+        update(e.target.textContent);
+      };
+    }
+    return m('span.form-control', attr, value);
   };
 
   inputs.select = function (type, related, relationType, onchange) {
@@ -52,15 +71,6 @@
         onchange(items[e.target.options[e.target.selectedIndex].value]);
       }
     }, options);
-  };
-
-  inputs.text = function (current, value, update) {
-    return m('span.form-control', {
-      contenteditable: true,
-      oninput: function(e) {
-        update(e.target.textContent);
-      }
-    }, value);
   };
 
 })(dime, m, _);

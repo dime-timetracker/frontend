@@ -6,12 +6,12 @@
     var start = moment(item.startedAt);
     var tr = [];
 
-    tr.push(m('td.start', dime.core.views.inputs.input('date', start.format('YYYY-MM-DD'))));
-    tr.push(m('td.start', dime.core.views.inputs.input('time', start.format('HH:mm:ss'))));
+    tr.push(m('td.start', dime.core.views.inputs.input(start.format('YYYY-MM-DD'), undefined, 'date')));
+    tr.push(m('td.start', dime.core.views.inputs.input(start.format('HH:mm:ss'), undefined, 'time')));
     if (item.stoppedAt) {
       var stop = moment(item.stoppedAt);
-      tr.push(m('td.stop', dime.core.views.inputs.input('time', stop.format('HH:mm:ss'))));
-      tr.push(m('td.stop', dime.core.views.inputs.input('date', stop.format('YYYY-MM-DD'))));
+      tr.push(m('td.stop', dime.core.views.inputs.input(stop.format('HH:mm:ss'), undefined, 'time')));
+      tr.push(m('td.stop', dime.core.views.inputs.input(stop.format('YYYY-MM-DD'), undefined, 'date')));
     } else {
       tr.push(m('td.stop', ''));
       tr.push(m('td.stop', ''));
