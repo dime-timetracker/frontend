@@ -38,6 +38,17 @@
         activity.description = t('(Click here to enter a description!)');
       }
 
+      if (activity.customer) {
+        activity.customer = dime.resources.customer.find(activity.customer);
+      }
+
+      if (activity.project) {
+        activity.project = dime.resources.project.find(activity.project);
+        activity.customer = activity.project.customer;
+      }
+
+      activity.rate = activity.project.rate || activity.customer.rate;
+
       dime.resources.activity.persist(activity);
       scope.blur(e);
     };

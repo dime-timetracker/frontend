@@ -47,6 +47,11 @@
           type: 'text'
         },
         {
+          key: 'rate',
+          title: 'rate',
+          type: 'number'
+        },
+        {
           key: 'customer',
           title: 'customer',
           type: 'relation'
@@ -103,6 +108,12 @@
         }
         dime.resources.activity.persist(this);
         break;
+    }
+    if (this.customer) {
+      this.rate = this.customer.rate;
+    }
+    if (this.project) {
+      this.rate = this.project.rate;
     }
   };
 
