@@ -1,0 +1,74 @@
+.tabs a {
+  background: #eee;
+  border: #ccc solid 1px;
+  padding: 1px 5px;
+}
+
+.tabs a.active {
+  background: #fff;
+  border: #ccc solid 1px;
+  border-bottom: 0;
+  padding: 1px 5px;
+}
+
+#config-tab-content .description {
+  color: #4CAF50;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 20px 1px;
+}
+
+#config-tab-content .sections .description {
+  background: inherit;
+  border-width: 1px 0;
+  color: #4CAF50;
+  margin: 0;
+}
+
+#config-tab-content .sections .section-title {
+  background: #4CAF50;
+  color: #fff;
+  padding-left: 10px;
+}
+
+#config-tab-content .sections .items .title {
+  padding-left: inherit;
+}
+
+#config-tab-content .sections .items .setting {
+  border: dashed #ccc;
+  border-width: 0;
+  border-bottom-width: 1px;
+  padding: 10px 0;
+}
+
+#config-tab-content .sections .items .setting .title {
+  display: inline-block;
+  width: 300px;
+}
+
+#config-tab-content .sections .items .setting .description {
+  color: #aaa;
+  display: inline-block;
+  font-size: 0.8em;
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+#config-tab-content .sections .items .setting .value,
+#config-tab-content .sections .items .setting .value input {
+  display: inline-block;
+  width: 300px;
+}
+
+#config-tab.active .title {
+  border-width: 1px 1px 0 1px;
+}
+
+#config-tab .description {
+  display: none;
+}
+
+#config-tab .items {
+  display: none;
+}
