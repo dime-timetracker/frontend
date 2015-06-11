@@ -1160,6 +1160,137 @@ if (typeof module != "undefined" && module !== null && module.exports) module.ex
 else if (typeof define === "function" && define.amd) define(function() {return m});
 
 },{}],2:[function(require,module,exports){
+/**
+ * Microlib for translations with support for placeholders and multiple plural forms.
+ *
+ * v0.0.2
+ *
+ * Usage:
+ * var messages = {
+ *  translationKey: 'translationValue',
+ *  moduleA: {
+ *    translationKey: 'value123'
+ *  }
+ * }
+ * 
+ * var options = {
+ *   debug: true, //[Boolean]: Logs missing translations to console. Defaults to false.
+ *   namespaceSplitter: '::' //[String|RegExp]: You can customize the part which splits namespace and translationKeys. Defaults to '::'.
+ * }
+ * 
+ * var t = libTranslate.getTranslationFunction(messages, [options])
+ * 
+ * t('translationKey')
+ * t('translationKey', count)
+ * t('translationKey', {replaceKey: 'replacevalue'})
+ * t('translationKey', count, {replaceKey: 'replacevalue'})
+ * t('translationKey', {replaceKey: 'replacevalue'}, count)
+ * t('moduleA::translationKey')
+ *
+ *
+ * @author Jonas Girnatis <dermusterknabe@gmail.com>
+ * @licence May be freely distributed under the MIT license.
+ */
+
+'use strict';
+
+var isNumeric = function(obj) {
+  return !isNaN(parseFloat(obj)) && isFinite(obj);
+};
+
+var isObject = function(obj) {
+  return typeof obj === 'object' && obj !== null;
+};
+
+var isString = function(obj) {
+  return Object.prototype.toString.call(obj) === '[object String]';
+};
+
+module.exports = function(messageObject, options) {
+  options = isObject(options) ? options : {};
+
+  var debug = options.debug;
+  var namespaceSplitter = options.namespaceSplitter || '::';
+
+  function getTranslationValue(translationKey) {
+    if(messageObject[translationKey]) {
+      return messageObject[translationKey];
+    }
+
+    //@todo make this more robust. maybe support more levels?
+    var components = translationKey.split(namespaceSplitter); 
+    var namespace = components[0];
+    var key = components[1];
+
+    if(messageObject[namespace] && messageObject[namespace][key]) {
+      return messageObject[namespace][key];
+    }
+
+    return null;
+  }
+
+  function getPluralValue(translation, count) {
+    if (isObject(translation)) {
+      if(Object.keys(translation).length === 0) {
+        debug && console.log('[Translation] No plural forms found.');
+        return null;
+      }
+
+      if(translation[count]){
+        translation = translation[count];
+      } else if(translation.n) {
+        translation = translation.n;
+      } else {
+        debug && console.log('[Translation] No plural forms found for count:"' + count + '" in', translation);
+        translation = translation[Object.keys(translation).reverse()[0]];
+      }
+    }
+
+    return translation;
+  }
+
+  function replacePlaceholders(translation, replacements) {
+    if (isString(translation)) {
+      return translation.replace(/\{(\w*)\}/g, function (match, key) {
+        if(!replacements.hasOwnProperty(key)) {
+          debug && console.log('Could not find replacement "' + key + '" in provided replacements object:', replacements);
+
+          return '{' + key + '}';
+        }
+
+        return replacements.hasOwnProperty(key) ? replacements[key] : key;
+      });
+    }
+
+    return translation;
+  }
+
+  return function (translationKey) {
+    var replacements = isObject(arguments[1]) ? arguments[1] : (isObject(arguments[2]) ? arguments[2] : {});
+    var count = isNumeric(arguments[1]) ? arguments[1] : (isNumeric(arguments[2]) ? arguments[2] : null);
+
+    var translation = getTranslationValue(translationKey);
+
+    if (count !== null) {
+      replacements.n = replacements.n ? replacements.n : count;
+
+      //get appropriate plural translation string
+      translation = getPluralValue(translation, count);
+    }
+
+    //replace {placeholders}
+    translation = replacePlaceholders(translation, replacements);
+
+    if (translation === null) {
+      debug && console.log('Translation for "' + translationKey + '" not found.');
+      return '@@' + translationKey + '@@';
+    }
+
+    return translation;
+  };
+};
+
+},{}],3:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -1170,7 +1301,7 @@ var routes = {
 m.route.mode = 'hash';
 m.route(document.body, '/', routes);
 
-},{"./modules/activity":4,"mithril":1}],3:[function(require,module,exports){
+},{"./modules/activity":5,"mithril":1}],4:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -1192,7 +1323,7 @@ module.exports = function (content, scope) {
   ]);
 }
 
-},{"./modules/header":5,"./modules/menu":6,"mithril":1}],4:[function(require,module,exports){
+},{"./modules/header":6,"./modules/menu":7,"mithril":1}],5:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -1208,7 +1339,7 @@ module.exports = {
   }
 }
 
-},{"../body":3,"mithril":1}],5:[function(require,module,exports){
+},{"../body":4,"mithril":1}],6:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -1249,10 +1380,11 @@ module.exports = {
   }
 };
 
-},{"./menu/headerButton":7,"mithril":1}],6:[function(require,module,exports){
+},{"./menu/headerButton":8,"mithril":1}],7:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
+var t = require('../translation');
 
 var items = [
   {
@@ -1309,7 +1441,7 @@ module.exports = {
   }
 }
 
-},{"mithril":1}],7:[function(require,module,exports){
+},{"../translation":9,"mithril":1}],8:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -1340,4 +1472,176 @@ module.exports = {
   }
 };
 
-},{"mithril":1}]},{},[2]);
+},{"mithril":1}],9:[function(require,module,exports){
+'use strict';
+
+var translator = require('translate.js');
+
+var translations = {
+  de: require('./translations/de').translation,
+  en: require('./translations/en').translation
+};
+
+module.exports = function() {
+  var language = (navigator.language || navigator.userLanguage).substr(0, 2);
+  var t = translator(translations[language] || translations['en']);
+  return t.apply(undefined, arguments);
+};
+
+},{"./translations/de":10,"./translations/en":11,"translate.js":2}],10:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  translation: {
+    'Activity': 'Aktivität',
+    'Activities': 'Aktivitäten',
+    'Do you really want to delete "[activity]"?': 'Soll "[activity]" wirklich gelöscht werden?',
+    'Activity settings': 'Aktivitäten-Einstellungen',
+    'Display settings': 'Anzeigeeinstellungen',
+    'yes': 'ja',
+    'no': 'nein',
+    'Income': 'Einkommen',
+    'Start': 'Start',
+    'End': 'Ende',
+    'Duration': 'Dauer',
+    'Show timeslices': 'Zeitabschnitte anzeigen',
+    'Delete': 'Löschen',
+    'Shortcuts': 'Tastenkürzel',
+    'Select next activity': 'Nächste Aktivität auswählen',
+    'Select previous activity': 'Vorherige Aktivität auswählen',
+    'Start/stop activity': 'Starte/stoppe Aktivität',
+    'stop activity': 'Aktivität stoppen',
+    'start activity': 'Aktivität starten',
+    'No customer selected': 'Kein Kunde ausgewählt',
+    'No project selected': 'Kein Projekt ausgewählt',
+    'No service selected': 'Kein Service ausgewählt',
+    'Please edit customer details': 'Bitte Kundendetails bearbeiten',
+    'Please edit project details': 'Bitte Projektdetails bearbeiten',
+    'Please edit service details': 'Bitte Servicedetails bearbeiten',
+    'Please select a customer before creating a new project!': 'Bitte erst einen Kunden wählen, bevor ein neues Projekt angelegt wird!',
+    '(Please edit details!)': '(Bitte Details bearbeiten!)',
+    '(Click here to enter a description!)': '(Hier klicken um eine Beschreibung einzugeben!)',
+    'ctrl': 'Strg',
+    'shift': 'Umschalt',
+    'alt': 'Alt',
+    'Show more': 'Weitere anzeigen',
+    'Add an activity': 'Eine Aktivität hinzufügen',
+    'Filter activities': 'Aktivitäten filtern',
+    'customer': 'Kunde',
+    'customers': 'Kunden',
+    'Customers': 'Kunden',
+    'name': 'Name',
+    'alias': 'Alias',
+    'enabled': 'aktiviert',
+    'Do you really want to delete "[name]"?': 'Soll "[name]" wirklich gelöscht werden?',
+    'Projects': 'Projekte',
+    'projects': 'Projekte',
+    'Services': 'Dienstleistung',
+    'services': 'Dienstleistung',
+    'rate': 'Stundensatz',
+    'Settings': 'Einstellungen',
+    'Namespace': 'Namensraum',
+    'Value': 'Wert',
+    'General': 'Allgemein',
+    'Translation': 'Übersetzung',
+    'Preferred languages': 'Bevorzugte Sprachen',
+    'Enter locale codes like "en_US" and separate them by comma. If there is no translation for the first one, the next one will be used.': 'Geben Sie Sprachcodes wie "en_US" kommasepariert ein. Gibt es für die erste Sprache keine Übersetzung, so wird die nächste verwendet.',
+    'General Settings': 'Allgemeine Einstellungen',
+    'Enter a description to start an activity.': 'Gib eine Beschreibung ein um eine Aktivität zu starten.',
+    'You may specify a duration by entering something like 1h 10m or 1:10.': 'Verwende z.B. "1h 10m" oder "1:10" um eine Dauer festzulegen',
+    'You may specify a start by entering something like 13:50-': 'Verwende z.B. "13:50-" um einen Startzeitpunkt festzulegen',
+    'You may specify an end by entering something like -15:10': 'Verwende z.B. "-15:10-" um einen Endzeitpunkt festzulegen',
+    'You may specify start and end by entering something like 13:50-15:10': 'Verwende z.B. "13:50-15:10-" um Beginn- und Endzeitpunkt festzulegen',
+    'Use "@" to specify a customer.': 'Mit "@" kannst du die Aktivität einem Kunden zuordnen',
+    'Use "/" to specify a project.': 'Mit "/" kannst du die Aktivität einem Projekt zuordnen',
+    'Use ":" to specify a service.': 'Mit ":" kannst du die Aktivität einer Service zuordnen',
+    'Use "#" to add tags.': 'Mit "#" kannst du Tags hinzufügen',
+    'Help': 'Hilfe',
+    'Default filter': 'Standardfilter',
+    'Bookmark filter': 'Filter speichern',
+    'Name your bookmark': 'Gib dem Filter einen Namen',
+    'Save': 'Speichern',
+    'Remove': 'Löschen',
+    'Close': 'Schließen'
+  }
+}
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+module.exports = {
+  translation: {
+    'Activity': 'Activity',
+    'Activities': 'Activities',
+    'Do you really want to delete "[activity]"?': 'Do you really want to delete "[activity]"?',
+    'Activity settings': 'Activity settings',
+    'Display settings': 'Display settings',
+    'yes': 'yes',
+    'no': 'no',
+    'Income': 'Income',
+    'Start': 'Start',
+    'End': 'End',
+    'Duration': 'Duration',
+    'Show timeslices': 'Show timeslices',
+    'Delete': 'Delete',
+    'Shortcuts': 'Shortcuts',
+    'Select next activity': 'Select next activity',
+    'Select previous activity': 'Select previous activity',
+    'Start/stop activity': 'Start/stop activity',
+    'stop activity': 'stop activity',
+    'start activity': 'start activity',
+    'No customer selected': 'No customer selected',
+    'No project selected': 'No project selected',
+    'No service selected': 'No service selected',
+    'Please edit customer details': 'Please edit customer details',
+    'Please edit project details': 'Please edit project details',
+    'Please edit service details': 'Please edit service details',
+    'Please select a customer before creating a new project!': 'Please select a customer before creating a new project!',
+    '(Please edit details!)': '(Please edit details!)',
+    '(Click here to enter a description!)': '(Click here to enter a description!)',
+    'ctrl': 'ctrl',
+    'shift': 'shift',
+    'alt': 'alt',
+    'Show more': 'Show more',
+    'Add an activity': 'Add an activity',
+    'Filter activities': 'Filter activities',
+    'customer': 'customer',
+    'customers': 'customers',
+    'Customers': 'Customers',
+    'name': 'name',
+    'alias': 'alias',
+    'enabled': 'enabled',
+    'Do you really want to delete "[name]"?': 'Do you really want to delete "[name]"?',
+    'Projects': 'Projects',
+    'projects': 'projects',
+    'Services': 'Services',
+    'services': 'services',
+    'rate': 'rate',
+    'Settings': 'Settings',
+    'Namespace': 'Namespace',
+    'Value': 'Value',
+    'General': 'General',
+    'Translation': 'Translation',
+    'Preferred languages': 'Preferred languages',
+    'Enter locale codes like "en_US" and separate them by comma. If there is no translation for the first one, the next one will be used.': 'Enter locale codes like "en_US" and separate them by comma. If there is no translation for the first one, the next one will be used.',
+    'General Settings': 'General Settings',
+    'Enter a description to start an activity.': 'Enter a description to start an activity.',
+    'You may specify a duration by entering something like 1h 10m or 1:10.': 'You may specify a duration by entering something like 1h 10m or 1:10.',
+    'You may specify a start by entering something like 13:50-': 'You may specify a start by entering something like 13:50-',
+    'You may specify an end by entering something like -15:10': 'You may specify an end by entering something like -15:10',
+    'You may specify start and end by entering something like 13:50-15:10': 'You may specify start and end by entering something like 13:50-15:10',
+    'Use "@" to specify a customer.': 'Use "@" to specify a customer.',
+    'Use "/" to specify a project.': 'Use "/" to specify a project.',
+    'Use ":" to specify a service.': 'Use ":" to specify a service.',
+    'Use "#" to add tags.': 'Use "#" to add tags.',
+    'Help': 'Help',
+    'Default filter': 'Default filter',
+    'Bookmark filter': 'Bookmark filter',
+    'Name your bookmark': 'Name your bookmark',
+    'Save': 'Save',
+    'Remove': 'Remove',
+    'Close': 'Close',
+  }
+}
+
+},{}]},{},[3]);
