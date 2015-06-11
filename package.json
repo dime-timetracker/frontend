@@ -16,6 +16,6 @@
     "translate.js": "0.0.2"
   },
   "scripts": {
-    "build": "node_modules/browserify-middleware/node_modules/browserify/bin/cmd.js src/js/app.js -o public/js/app.js -t stylify"
+    "build": "node_modules/browserify-middleware/node_modules/browserify/bin/cmd.js src/js/app.js -o public/js/app.js"
   }
 }
