@@ -2,13 +2,13 @@
 
 var m = require('mithril');
 var routes = {
-  '/': require('./modules/activity'),
-  '/login': require('./modules/login'),
-  '/settings': require('./modules/setting'),
-  '/:name': require('./modules/crud/crud')
+  '/': require('./components/activity'),
+  '/login': require('./components/login'),
+  '/settings': require('./components/setting'),
+  '/:name': require('./components/crud/crud')
  };
 
 m.route.mode = 'hash';
 m.route(document.getElementById("app"), '/', routes);
-m.mount(document.getElementById("app-header"), require('./modules/header'));
-m.mount(document.getElementById("app-menu"), require('./modules/menu'));
+m.mount(document.getElementById("app-header"), require('./components/header'));
+m.mount(document.getElementById("app-menu"), require('./components/menu'));
