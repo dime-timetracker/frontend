@@ -4,7 +4,8 @@ var m = require('mithril');
 var routes = {
   '/': require('./modules/activity'),
   '/login': require('./modules/login'),
-  '/settings': require('./modules/setting')
+  '/settings': require('./modules/setting'),
+  '/:name': require('./modules/crud/crud')
  };
 
 m.route.mode = 'hash';
