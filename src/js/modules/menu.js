@@ -2,6 +2,7 @@
 
 var m = require('mithril');
 var t = require('../translation');
+var authorize = require('../core/authorize');
 
 var configuration = require('../core/Configuration');
 
@@ -14,6 +15,15 @@ var items = [
     route: '/',
     name: 'Activities',
     icon: 'icon-access-time'
+  },
+  {
+    id: "logout",
+    name: "Logout",
+    icon: 'icon-exit-to-app',
+    weight: 2000,
+    onclick: function (e) {
+      authorize.signout();
+    }
   }
 ];
 
