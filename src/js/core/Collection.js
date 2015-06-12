@@ -5,6 +5,7 @@
 var m = require('mithril');
 var _ = require('lodash');
 var helper = require('helper');
+var Pager = require('Pager');
 
 var qsort = function (compare, key, array, left, right) {
   left = left || 0;
@@ -241,7 +242,7 @@ Collection.prototype.fetch = function (options) {
 //      dime.events.emit('authorize', xhr);
     },
     extract: function (xhr, xhrOptions) {
-//      that.pager = new dime.Pager(that, xhr);
+      that.pager = new Pager(that, xhr);
       return xhr.responseText;
     }
   };
