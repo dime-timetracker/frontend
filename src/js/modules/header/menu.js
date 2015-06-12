@@ -1,7 +1,7 @@
 'use strict';
 
 var m = require('mithril');
-var t = require('../translation');
+var t = require('../../translation');
 
 var items = [
   {
@@ -12,7 +12,7 @@ var items = [
   }
 ];
 
-var renderItem = function (item) {
+function itemView (item) {
   var menuItem = [];
   var text = [];
   var active = (m.route() === item.route) ? '.active' : '';
@@ -28,7 +28,7 @@ var renderItem = function (item) {
       onclick: function (e) { dime.states.menu.cycle(); },
       config: m.route
     }, text));
-  } else if (_.isFunction(item.onclick)) {
+  } else if ('function' === typeof(item.onclick)) {
     menuItem.push(m('a[href=""]', {
       config: m.route,
       onclick: function (e) { dime.states.menu.cycle(); return item.onclick(e); }
@@ -36,24 +36,24 @@ var renderItem = function (item) {
   }
 
   return m('li' + active, menuItem);
-};
+}
 
 module.exports = {
-  controller: function (appScope) {
-    var scope = {};
-    scope.state = appScope.menuState || 'closed';
-    scope.toggleState = function () {
-      scope.state = 'open' === scope.state ? 'closed' : 'open';
-    }
+  controller: function (scope) {
+    console.log('RENDER MENU');
     return scope;
   },
   view: function (scope) {
     return m('nav.menu.' + scope.state, {
-      onclick: scope.toggleState,
-      onmouseleave: function(e) { scope.state = 'closed' },
-      onmouseenter: function(e) { scope.state = 'open' }
+      onclick: scope.toggle
     }, m('.menu-scroll', m('.menu-wrap', m('.menu-content',
-      m('ul.nav', items.map(renderItem))
+      m('ul.nav', items.map(itemView))
     ))));
+  },
+  toggle: function (menu) {
+    return function () {
+      menu.state = ('open' === menu.state) ? 'closed' : 'open';
+      console.log('MENU:', menu);
+    };
   }
-}
+};

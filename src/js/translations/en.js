@@ -73,4 +73,4 @@ module.exports = {
     'Remove': 'Remove',
     'Close': 'Close',
   }
-}
+};
