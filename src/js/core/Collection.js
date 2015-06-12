@@ -1,61 +1,11 @@
-/* global module */
-
 'use strict';
 
 var m = require('mithril');
 var _ = require('lodash');
 var helper = require('./helper');
 var Pager = require('./Pager');
-
-var qsort = function (compare, key, array, left, right) {
-  left = left || 0;
-  right = right || array.length - 1;
-  var i = left;
-  var j = right;
-  var tmp;
-  var pivotidx = (left + right) / 2;
-  var pivot = key(array[pivotidx.toFixed()]);
-  /* partition */
-  while (i <= j) {
-    while (compare(key(array[i]), pivot) === -1) {
-      i++;
-    }
-    while (compare(key(array[j]), pivot) === 1) {
-      j--;
-    }
-    if (i <= j) {
-      tmp = array[i];
-      array[i] = array[j];
-      array[j] = tmp;
-      i++;
-      j--;
-    }
-  }
-
-  /* recursion */
-  if (left < j) {
-    qsort(compare, key, array, left, j);
-  }
-  if (i < right) {
-    qsort(compare, key, array, i, right);
-  }
-};
-
-var naturalCompare = function (left, right) {
-  for (var x = 0, aa, bb; (aa = left[x]) && (bb = right[x]); x++) {
-      aa = aa.toLowerCase();
-      bb = bb.toLowerCase();
-      if (aa !== bb) {
-        var c = Number(aa), d = Number(bb);
-        if (c == aa && d == bb) {
-          return c - d;
-        } else {
-          return (aa > bb) ? 1 : -1;
-        }
-    }
-  }
-  return left.length - right.length;
-};
+var qsort = require('./helper/qsort');
+var naturalCompare = require('./helper/compare/natural');
 
 /**
 * Collection is a array of objects.
