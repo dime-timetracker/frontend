@@ -3,6 +3,10 @@
 var m = require('mithril');
 var t = require('../translation');
 
+var configuration = require('../core/Configuration');
+
+console.log(configuration.getLocal('test'));
+
 var state = 'close';
 var items = [
   {
