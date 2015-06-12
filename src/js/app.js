@@ -6,4 +6,6 @@ var routes = {
 };
 
 m.route.mode = 'hash';
-m.route(document.body, '/', routes);
+m.route(document.getElementById("app"), '/', routes);
+m.mount(document.getElementById("app-header"), require('./modules/header'));
+m.mount(document.getElementById("app-menu"), require('./modules/menu'));

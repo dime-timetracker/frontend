@@ -1,8 +1,7 @@
 'use strict';
 
 var m = require('mithril');
-var menu = require('./header/menu');
-var menuButton = require('./header/menuButton');
+var menu = require('./menu');
 
 function logoView (scope) {
   return m('a[href="#/"].header-logo', [
@@ -10,37 +9,39 @@ function logoView (scope) {
   );
 }
 
-module.exports = {
-  controller: function (appScope) {
-    var scope = {
-      menu: {
-        state: 'closed',
-      },
-      config: appScope.config,
-      icon: 'icon-access-time',
-      name: 'Dime Timetracker'
-    };
-    scope.menu.toggle = menu.toggle(scope.menu);
-    // TODO
-    //scope.icon = scope.config.get(scope.config.general.children.customize.children.icon);
-    //scope.name = scope.config.get(scope.config.general.children.customize.children.name);
-    return scope;
-  },
-  view: function (scope) {
-    var content = [
-      m.component(menuButton, scope.menu),
-      logoView(scope)
-    ];
-    var color = 'green';
-    // TODO
-    //var color = scope.config.get(scope.config.general.children.customize.children.color);
-    if (color) {
-      color = '.' + color.split(' ').join('.');
-    }
+var component = {};
 
-    return m('div', [
-      m('header.header.fixed' + color, content),
-      m('#app-menu', m.component(menu, scope.menu))
-    ]);
-  }
+component.controller = function () {
+  var scope = {
+    icon: 'icon-access-time',
+    name: 'Dime Timetracker'
+  };
+  // TODO
+  //scope.icon = scope.config.get(scope.config.general.children.customize.children.icon);
+  //scope.name = scope.config.get(scope.config.general.children.customize.children.name);
+  return scope;
 };
+
+component.view = function (scope) {
+  var content = [
+    m('ul.nav.nav-list.pull-left',
+      m('li', m('a[href=#]', {
+        onclick: menu.toggle
+      }, [
+        m('span.access-hide', 'Menu'),
+        m('span.icon.icon-menu.icon-lg')
+      ]))
+    ),
+    logoView(scope)
+  ];
+  var color = 'green';
+  // TODO
+  //var color = scope.config.get(scope.config.general.children.customize.children.color);
+  if (color) {
+    color = '.' + color.split(' ').join('.');
+  }
+
+  return m('header.header.fixed' + color, content);
+};
+
+module.exports = component;

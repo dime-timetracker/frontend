@@ -1,7 +1,6 @@
 'use strict';
 
 var m = require('mithril');
-var body = require('../body');
 
 module.exports = {
   controller: function () {
@@ -9,6 +8,6 @@ module.exports = {
     return scope;
   },
   view: function (scope) {
-    return body(m('.foo', 'bar'), scope);
+    return m('.foo', 'bar');
   }
 }
