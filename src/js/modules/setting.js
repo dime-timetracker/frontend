@@ -1,6 +1,6 @@
 'use strict';
 
-var configuration = require('../core/Configuration');
+var configuration = require('../core/configuration');
 
 var component = {};
 
