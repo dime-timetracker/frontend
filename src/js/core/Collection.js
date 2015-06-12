@@ -4,8 +4,8 @@
 
 var m = require('mithril');
 var _ = require('lodash');
-var helper = require('helper');
-var Pager = require('Pager');
+var helper = require('./helper');
+var Pager = require('./Pager');
 
 var qsort = function (compare, key, array, left, right) {
   left = left || 0;
