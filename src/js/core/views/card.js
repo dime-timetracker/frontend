@@ -3,6 +3,12 @@
 var m = require('mithril');
 var _ = require('lodash');
 
+/**
+ * Card is mithril virtual element that generate a card design.
+ * @param {mixed} content String or VirtualElement
+ * @param {string} title Card title.
+ * @returns {VirtualElement}
+ */
 module.exports = function(content, title) {
   content = content || [];
 
@@ -12,7 +18,6 @@ module.exports = function(content, title) {
   }
 
   inner.push(m('.card-inner', content));
-
 
   return m('.card', m('.card-main', inner));
 };

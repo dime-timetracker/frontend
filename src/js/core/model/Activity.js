@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var t = require('../../translation');
 var moment = require('moment');
 var Collection = require('../Collection');
 var Model = require('../Model');
@@ -209,5 +210,5 @@ Activity.prototype.removeTimeslice = function (timeslice) {
   return timeslice;
 };
 
-module.exports = Activity();
+module.exports = Activity;
 

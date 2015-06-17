@@ -1,8 +1,9 @@
 'use strict';
 
 var m = require('mithril');
+
 var routes = {
-  '/': require('./components/activity'),
+  '/': require('./components/activity/activity'),
   '/login': require('./components/login'),
   '/settings': require('./components/setting'),
   '/:name': require('./components/crud/crud')

@@ -18,6 +18,6 @@
   },
   "scripts": {
     "build": "node_modules/browserify-middleware/node_modules/browserify/bin/cmd.js src/js/app.js -o public/js/app.js",
-    "watch": "node_modules/watchify/bin/cmd.js src/js/app.js -o public/js/app.js -v"
+    "watch": "node_modules/watchify/bin/cmd.js src/js/app.js -o public/js/app.js --debug --verbose"
   }
 }
