@@ -2,6 +2,7 @@
 
 var m = require('mithril');
 var _ = require('lodash');
+var authorize = require('./authorize');
 var helper = require('./helper');
 var Pager = require('./Pager');
 var qsort = require('./helper/qsort');
@@ -189,7 +190,7 @@ Collection.prototype.fetch = function (options) {
     url: helper.url('api', this.config.resourceUrl),
     initialValue: this,
     config: function (xhr) {
-//      dime.events.emit('authorize', xhr);
+      authorize.setup(xhr);
     },
     extract: function (xhr, xhrOptions) {
       that.pager = new Pager(that, xhr);
@@ -240,7 +241,7 @@ Collection.prototype.persist = function (data, options) {
     initialValue: data,
     data: data,
     config: function (xhr) {
-//      dime.events.emit('authorize', xhr);
+      authorize.setup(xhr);
     }
   };
 
@@ -275,7 +276,7 @@ Collection.prototype.remove = function (data, options) {
     url: helper.url('api', this.config.resourceUrl),
     initialValue: data,
     config: function (xhr) {
-//      dime.events.emit('authorize', xhr);
+      authorize.setup(xhr);
     }
   };
 
