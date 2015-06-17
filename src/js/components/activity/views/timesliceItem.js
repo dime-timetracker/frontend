@@ -1,10 +1,11 @@
 'use strict';
 
 var m = require('mithril');
+var moment = require('moment');
 var helper = require('../../../core/helper');
 var input = require('../../../core/views/inputs/input');
 
-module.export = function (timeslice) {
+module.exports = function (timeslice) {
   var activity = this;
   var start = moment(timeslice.startedAt);
   var tr = [];

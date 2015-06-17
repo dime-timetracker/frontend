@@ -1,6 +1,7 @@
 'use strict';
 
 var m = require('mithril');
+var _ = require('lodash');
 
 module.exports = function (value, update, type) {
   var attr = {

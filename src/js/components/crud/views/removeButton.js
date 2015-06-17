@@ -8,7 +8,7 @@ module.exports = function (scope, item) {
       onclick: function (e) {
         var question = t('Do you really want to delete "[name]"?').replace('[name]', item.name);
         if (confirm(question)) {
-          scope.resource.remove(item);
+          scope.collection.remove(item);
         }
         return false;
       }

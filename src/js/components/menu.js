@@ -83,8 +83,9 @@ component.view = function (scope) {
   }, m('.menu-scroll', m('.menu-wrap', m('.menu-content', m('ul.nav', items.map(itemView))))));
 };
 
-component.toggle = function () {
+component.toggle = function (e) {
   state = ('open' === state) ? 'close' : 'open';
+  return false;
 };
 
 module.exports = component;

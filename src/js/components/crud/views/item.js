@@ -23,19 +23,19 @@ module.exports = function (scope, item) {
       case 'boolean':
         input = inputs.boolean(value, function update(value) {
           item[property.key] = value;
-          scope.resource.persist(item);
+          scope.collection.persist(item);
         });
         break;
       case 'relation':
-        input = inputs.select(property.resource, item, item[property.key], function update(related) {
+        input = inputs.select(property.collection, item, item[property.key], function update(related) {
           item[property.key] = related;
-          scope.resource.persist(item);
+          scope.collection.persist(item);
         });
         break;
       default:
         input = inputs.input(value, function update(value) {
           item[property.key] = value;
-          scope.resource.persist(item);
+          scope.collection.persist(item);
         }, property.type);
     }
 

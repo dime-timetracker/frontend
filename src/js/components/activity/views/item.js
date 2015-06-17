@@ -10,6 +10,8 @@ var views = {
 var view = function (activity, idx) {
   var content = [];
 
+  // TODO Badges Customer, Project, Service, Tags
+
   content.push(m('.tile-action.tile-action-show', views.actions(activity)));
   content.push(m('.tile-inner', views.description(activity)));
 

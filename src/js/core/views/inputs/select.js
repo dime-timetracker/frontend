@@ -1,6 +1,7 @@
 'use strict';
 
 var m = require('mithril');
+var _ = require('lodash');
 var helper = require('../../helper');
 
 // TODO Resource as parameter

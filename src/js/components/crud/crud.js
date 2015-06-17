@@ -1,7 +1,18 @@
 'use strict';
 
 var m = require('mithril');
+var t = require('../../translation');
 var helper = require('../../core/helper');
+var models = {
+  customer: require('../../core/model/Customer'),
+  project: require('../../core/model/Project'),
+  service: require('../../core/model/Service')
+};
+var collections = {
+  customer: require('../../core/collection/customers'),
+  project: require('../../core/collection/projects'),
+  service: require('../../core/collection/services')
+};
 var views = {
   button: require('../../core/views/button'),
   item: require('./views/item')
@@ -20,11 +31,11 @@ component.controller = function () {
   }
 
   scope.type = type;
-  scope.modelName = helper.ucFirst(type);
-  scope.properties = dime.model[scope.modelName].properties;
-  scope.resource = dime.resources[type];
+  scope.properties = models[type].properties;
+  scope.collection = collections[type];
+//  scope.collection.fetch();
   scope.add = function (e) {
-     scope.resource.add({});
+     scope.collection.add({});
      return false;
   };
 
@@ -32,8 +43,6 @@ component.controller = function () {
 };
 
 component.view = function(scope) {
-  var items = scope.resource || [];
-
   var headers = scope.properties().map(function(property) {
     var options = property.options || {};
     return m('th', options, t(property.title));
@@ -44,7 +53,7 @@ component.view = function(scope) {
 
   var header = m('thead', m('tr', headers));
   
-  var rows = m('tbody', items.map(function (item) {
+  var rows = m('tbody', scope.collection.map(function (item) {
     return views.item(item, scope.type, scope.properties(item));
   }));
 
@@ -55,29 +64,5 @@ component.view = function(scope) {
   
   return m('div.list-' + scope.type, [list, views.button('Add ' + scope.type, '/' + scope.type, scope.add)]);
 };
-//
-//
-//// register customer
-//dime.resources.customer = new dime.Collection({
-//  resourceUrl: "customer",
-//  model: dime.model.Customer
-//});
-//
-//// register project
-//dime.resources.project = new dime.Collection({
-//  resourceUrl: "project",
-//  model: dime.model.Project
-//});
-//
-//// register service
-//dime.resources.service = new dime.Collection({
-//  resourceUrl: "service",
-//  model: dime.model.Service
-//});
-//
-//// resource fetch
-//dime.resources.customer.fetch();
-//dime.resources.project.fetch();
-//dime.resources.service.fetch();
 
 module.exports = component;
