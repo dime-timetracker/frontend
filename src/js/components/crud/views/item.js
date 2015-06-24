@@ -48,8 +48,13 @@ module.exports = function (scope, item) {
         });
       });
 
-      input = inputs.select(values, function update(related) {
-        item[property.key] = related;
+      input = inputs.select(values, function update(e) {
+        var idx = e.target.selectedIndex;
+        var key = e.target.options[idx].value;
+
+        item[property.key] = collection.find({
+          'alias': key
+        });
         scope.collection.persist(item);
       }, value.alias);
       break;
