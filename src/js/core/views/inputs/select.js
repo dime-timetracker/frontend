@@ -4,25 +4,35 @@ var m = require('mithril');
 var _ = require('lodash');
 var helper = require('../../helper');
 
-// TODO Resource as parameter
-
-module.exports = function (type, related, relationType, onchange) {
-  relationType = relationType || 'activity';
+/**
+ * select - generate a select VirtualElement.
+ * @param   {array} values must be an array with values or a key-value-object {key: '', value: ''}
+ * @param   {function} onchange what should happen when option is changed
+ * @param   {string} selected define the selected option
+ * @returns {VirtualElement} select element
+ */
+module.exports = function (values, onchange, selected) {
   var options = [];
-//  var model = dime.model[helper.ucFirst(type)];
-//
-//  related[type] = related[type] || dime.resources[type].create({});
-//  var items = _.sortBy(dime.resources[type], 'name') || [];
-//  var options = items.map(function (item, key) {
-//    return m('option', {
-//      value: key,
-//      selected: (related[type].alias === item.alias)
-//    }, (item.name || '(' + model.shortcut + item.alias + ')'));
-//  });
+  var attr = {};
 
-  return m('select.form-control', {
-    onchange: function (e) {
-      onchange(items[e.target.options[e.target.selectedIndex].value]);
-    }
-  }, options);
+  if (_.isFunction(onchange)) {
+    attr.onchange = onchange;
+  }
+
+  if (_.isArray(values)) {
+    options = values.map(function buildOptions(item) {
+      var key = item;
+      var value = item;
+      if (_.isPlainObject(item)) {
+        key = item.key;
+        value = item.value;
+      }
+      return m('option', {
+        'value': key,
+        'selected': (selected === key)
+      }, value);
+    });
+  }
+
+  return m('select.form-control', attr, options);
 };

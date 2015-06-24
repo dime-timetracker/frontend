@@ -1,6 +1,7 @@
 'use strict';
 
 var m = require('mithril');
+var _ = require('lodash');
 var t = require('../../translation');
 var helper = require('../../core/helper');
 var models = {
@@ -22,6 +23,11 @@ var component = {};
 
 component.allowed = ['customer', 'project', 'service'];
 
+// FIXME
+_.forOwn(collections, function (value, key) {
+  value.fetch();
+});
+
 component.controller = function () {
   var scope = {};
 
@@ -33,17 +39,17 @@ component.controller = function () {
   scope.type = type;
   scope.properties = models[type].properties;
   scope.collection = collections[type];
-  scope.collection.fetch();
+  //scope.collection.fetch();
   scope.add = function (e) {
-     scope.collection.add({});
-     return false;
+    scope.collection.add({});
+    return false;
   };
 
   return scope;
 };
 
-component.view = function(scope) {
-  var headers = scope.properties.map(function(property) {
+component.view = function (scope) {
+  var headers = scope.properties.map(function (property) {
     var options = property.options || {};
     return m('th', options, t(property.title));
   });
@@ -52,7 +58,7 @@ component.view = function(scope) {
   );
 
   var header = m('thead', m('tr', headers));
-  
+
   var rows = m('tbody', scope.collection.map(function (item) {
     return views.item(scope, item);
   }));
@@ -61,7 +67,7 @@ component.view = function(scope) {
     m('h2', t(scope.type + 's')),
     m('table.table.table-stripe.table-hover', [header, rows])
   ];
-  
+
   return m('div.list-' + scope.type, [list, views.button('Add ' + scope.type, '/' + scope.type, scope.add)]);
 };
 
