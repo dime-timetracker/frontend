@@ -1,7 +1,8 @@
 'use strict';
 
 var m = require('mithril');
-var _ = require('lodash');
+var isFunction = require('lodash/lang/isFunction');
+var isString = require('lodash/lang/isString');
 
 /**
  * Button is mithril virtual element that will generate a float button
@@ -18,11 +19,11 @@ module.exports = function (text, action, onclick) {
     title: text
   };
 
-  if (_.isFunction(onclick)) {
+  if (isFunction(onclick)) {
     attr.onclick = onclick;
   }
 
-  if (_.isString(action)) {
+  if (isString(action)) {
     attr.href = action;
   }
 

@@ -34,7 +34,7 @@ module.exports = {
     'shift': 'Umschalt',
     'alt': 'Alt',
     'Show more': 'Weitere anzeigen',
-    'Add an activity': 'Eine Aktivität hinzufügen',
+    'Add an activity ({shortcut})': 'Eine Aktivität hinzufügen ({shortcut})',
     'Filter activities': 'Aktivitäten filtern',
     'customer': 'Kunde',
     'customers': 'Kunden',
@@ -73,7 +73,12 @@ module.exports = {
     'Remove': 'Löschen',
     'Close': 'Schließen',
     'Login': 'Anmelden',
+    'Logout': 'Abmelden',
     'Username': 'Benutzername',
     'Password': 'Passwort',
+    'Add Activity': 'Aktivität hinzufügen',
+
+    'prompt.activity.placeholder': 'Eine Aktivität hinzufügen ({shortcut})',
+    'prompt.filter.placeholder': 'Liste filtern ({shortcut})',
   }
 };

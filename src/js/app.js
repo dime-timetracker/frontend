@@ -4,7 +4,7 @@ var m = require('mithril');
 var parameters = require('./parameter');
 
 var routes = {
-  '/': require('./components/activity/activity'),
+  '/': require('./components/activity'),
   '/login': require('./components/login'),
   '/settings': require('./components/setting'),
   '/:name': require('./components/crud/crud')

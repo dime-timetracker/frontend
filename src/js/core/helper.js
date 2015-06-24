@@ -4,6 +4,7 @@ var m = require('mithril');
 var _ = require('lodash');
 var moment = require('moment');
 var env = require('./env');
+var t = require('../translation');
 
 module.exports = {
     currency: function(amount, pattern) {
@@ -43,8 +44,8 @@ module.exports = {
       }
       return '';
     },
-    mousetrapCommand: function(command, t) {
-      if (navigator.appVersion.indexOf("Mac") !== -1) {
+    mousetrapCommand: function(command) {
+      if (global.navigator.appVersion.indexOf("Mac") !== -1) {
         command = command.replace('mod', t('command'));
       } else {
         command = command.replace('mod', t('ctrl'));
