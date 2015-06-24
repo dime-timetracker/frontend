@@ -1,26 +1,30 @@
-  'use strict';
+'use strict';
 
-  /**
-   * Create a form-group.
-   *
-   * Call:
-   *   dime.core.views.formGroup(m('input#test'), 'label');
-   *
-   * Output:
-   *   <div class="form-group">
-   *     <label class="form-label" for="test">label</label>
-   *     <input type="text" id="test">
-   *   </div>
-   *
-   * @param {m-Object} input
-   * @param {mixed} label
-   * @returns {m-Object}
-   */
+var isUndefined = require('lodash/lang/isUndefined');
+var isString    = require('lodash/lang/isString');
+var m           = require('mithril');
+
+/**
+ * Create a form-group.
+ *
+ * Call:
+ *   dime.core.views.formGroup(m('input#test'), 'label');
+ *
+ * Output:
+ *   <div class="form-group">
+ *     <label class="form-label" for="test">label</label>
+ *     <input type="text" id="test">
+ *   </div>
+ *
+ * @param {m-Object} input
+ * @param {mixed} label
+ * @returns {m-Object}
+ */
 module.exports = function (input, label) {
   var content = [];
 
-  if (!_.isUndefined(label)) {
-    if (_.isString(label)) {
+  if (!isUndefined(label)) {
+    if (isString(label)) {
       var attr = {};
       if (input && input.attrs && input.attrs.id) {
         attr['for'] = input.attrs.id;
@@ -31,7 +35,7 @@ module.exports = function (input, label) {
     }
   }
 
-  if (!_.isUndefined(input)) {
+  if (!isUndefined(input)) {
     content.push(input);
   }
 
