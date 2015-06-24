@@ -71,6 +71,9 @@ module.exports = {
     'Name your bookmark': 'Gib dem Filter einen Namen',
     'Save': 'Speichern',
     'Remove': 'Löschen',
-    'Close': 'Schließen'
+    'Close': 'Schließen',
+    'Login': 'Anmelden',
+    'Username': 'Benutzername',
+    'Password': 'Passwort',
   }
 };
