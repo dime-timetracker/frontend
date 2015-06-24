@@ -2,6 +2,7 @@
 
 var m = require('mithril');
 var _ = require('lodash');
+var t = require('../../../translation');
 
 module.exports = function (value, update) {
   var options = [

@@ -33,7 +33,7 @@ component.controller = function () {
   scope.type = type;
   scope.properties = models[type].properties;
   scope.collection = collections[type];
-//  scope.collection.fetch();
+  scope.collection.fetch();
   scope.add = function (e) {
      scope.collection.add({});
      return false;
@@ -43,7 +43,7 @@ component.controller = function () {
 };
 
 component.view = function(scope) {
-  var headers = scope.properties().map(function(property) {
+  var headers = scope.properties.map(function(property) {
     var options = property.options || {};
     return m('th', options, t(property.title));
   });
@@ -54,7 +54,7 @@ component.view = function(scope) {
   var header = m('thead', m('tr', headers));
   
   var rows = m('tbody', scope.collection.map(function (item) {
-    return views.item(item, scope.type, scope.properties(item));
+    return views.item(scope, item);
   }));
 
   var list = [

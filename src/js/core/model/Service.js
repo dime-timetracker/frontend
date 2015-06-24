@@ -15,33 +15,27 @@ Service.prototype.constructor = Service;
 
 Service.shortcut = ':';
 
-Service.properties = function (model) {
-  var context = {
-    model: model,
-    properties: [
-      {
-        key: 'name',
-        title: 'name',
-        type: 'text'
-      },
-      {
-        key: 'alias',
-        title: 'alias',
-        type: 'text'
-      },
-      {
-        key: 'rate',
-        title: 'rate',
-        type: 'number'
-      },
-      {
-        key: 'enabled',
-        title: 'enabled',
-        type: 'boolean'
-      }
-    ]
-  };
-  return context.properties;
-};
+Service.properties = [
+  {
+    key: 'name',
+    title: 'name',
+    type: 'text'
+  },
+  {
+    key: 'alias',
+    title: 'alias',
+    type: 'text'
+  },
+  {
+    key: 'rate',
+    title: 'rate',
+    type: 'number'
+  },
+  {
+    key: 'enabled',
+    title: 'enabled',
+    type: 'boolean'
+  }
+];
 
 module.exports = Service;

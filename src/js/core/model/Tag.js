@@ -15,28 +15,22 @@ Tag.prototype.constructor = Tag;
 
 Tag.shortcut = '#';
 
-Tag.properties = function (model) {
-  var context = {
-    model: model,
-    properties: [
-      {
-        key: 'name',
-        title: 'name',
-        type: 'text'
-      },
-      {
-        key: 'alias',
-        title: 'alias',
-        type: 'text'
-      },
-      {
-        key: 'enabled',
-        title: 'enabled',
-        type: 'boolean'
-      }
-    ]
-  };
-  return context.properties;
-};
+Tag.properties = [
+  {
+    key: 'name',
+    title: 'name',
+    type: 'text'
+  },
+  {
+    key: 'alias',
+    title: 'alias',
+    type: 'text'
+  },
+  {
+    key: 'enabled',
+    title: 'enabled',
+    type: 'boolean'
+  }
+];
 
 module.exports = Tag;

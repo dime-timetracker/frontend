@@ -1,6 +1,7 @@
 'use strict';
 
 var m = require('mithril');
+var _ = require('lodash');
 var removeButton = require('./removeButton');
 var inputs = {
   boolean: require('../../../core/views/inputs/boolean'),

@@ -21,39 +21,33 @@ Project.prototype.constructor = Project;
 
 Project.shortcut = '/';
 
-Project.properties = function (model) {
-  var context = {
-    model: model,
-    properties: [
-      {
-        key: 'name',
-        title: 'name',
-        type: 'text'
-      },
-      {
-        key: 'alias',
-        title: 'alias',
-        type: 'text'
-      },
-      {
-        key: 'customer',
-        title: 'customer',
-        type: 'relation',
-        resource: 'customer'
-      },
-      {
-        key: 'rate',
-        title: 'rate',
-        type: 'number'
-      },
-      {
-        key: 'enabled',
-        title: 'enabled',
-        type: 'boolean'
-      }
-    ]
-  };
-  return context.properties;
-};
+Project.properties = [
+  {
+    key: 'name',
+    title: 'name',
+    type: 'text'
+  },
+  {
+    key: 'alias',
+    title: 'alias',
+    type: 'text'
+  },
+  {
+    key: 'customer',
+    title: 'customer',
+    type: 'relation',
+    resource: 'customer'
+  },
+  {
+    key: 'rate',
+    title: 'rate',
+    type: 'number'
+  },
+  {
+    key: 'enabled',
+    title: 'enabled',
+    type: 'boolean'
+  }
+];
 
 module.exports = Project;

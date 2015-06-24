@@ -16,33 +16,27 @@ Customer.prototype = new Model();
 Customer.prototype.constructor = Customer;
 
 Customer.shortcut = '@';
-Customer.properties = function (model) {
-  var context = {
-    model: model,
-    properties: [
-      {
-        key: 'name',
-        title: 'name',
-        type: 'text'
-      },
-      {
-        key: 'alias',
-        title: 'alias',
-        type: 'text'
-      },
-      {
-        key: 'rate',
-        title: 'rate',
-        type: 'number'
-      },
-      {
-        key: 'enabled',
-        title: 'enabled',
-        type: 'boolean'
-      }
-    ]
-  };
-  return context.properties;
-};
+Customer.properties = [
+  {
+    key: 'name',
+    title: 'name',
+    type: 'text'
+  },
+  {
+    key: 'alias',
+    title: 'alias',
+    type: 'text'
+  },
+  {
+    key: 'rate',
+    title: 'rate',
+    type: 'number'
+  },
+  {
+    key: 'enabled',
+    title: 'enabled',
+    type: 'boolean'
+  }
+];
 
 module.exports = Customer;
