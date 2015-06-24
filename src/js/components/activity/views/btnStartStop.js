@@ -23,4 +23,4 @@ module.exports = function (activity) {
     " ",
     helper.duration(activity.totalDuration(), 'seconds')
   ]);
-}
+};

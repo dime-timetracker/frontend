@@ -13,6 +13,8 @@ var component = {};
 component.controller = function () {
   var scope = {};
 
+  // FIXME Pager settings ...
+  activities.fetch();
   scope.collection = activities;
 
   return scope;
@@ -23,7 +25,5 @@ component.view = function (scope) {
   
   return m(".tile-wrap", [ list, views.button(t('Add Activity'), '', scope.add) ]);
 };
-
-activities.fetch();
 
 module.exports = component;
