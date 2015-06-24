@@ -3,51 +3,43 @@
 var m = require('mithril');
 var helper = require('./helper');
 var uuid = require('simple-uuid');
+var store = require('store');
 
 var Auth = function () {
   if (!(this instanceof Auth)) {
     return new Auth();
   }
-
-  var that = this;
-//  dime.events.on('authorize', function(xhr) {
-//    that.setup.call(that, xhr);
-//  });
 };
 
-Auth.prototype = new Object();
+Auth.prototype = Object.create(null);
 Auth.prototype.constructor = Auth;
 
 Auth.prototype.username = function (username) {
   if (username !== undefined) {
-    localStorage.username = username;
+    store.set('username', username);
   }
-  return localStorage.username;
+  return store.get('username');
 };
 
 Auth.prototype.client = function () {
-  var id = localStorage.client;
+  var id = store.get('client');
   if (!id) {
     id = uuid();
-    localStorage.client = id;
+    store.set('client', id);
   }
   return id;
 };
 
 Auth.prototype.token = function (token) {
   if (token !== undefined) {
-    localStorage['token'] = token;
+    store.set('token', token);
   }
-  return localStorage['token'];
+  return store.get('token');
 };
 
 Auth.prototype.clear = function () {
-  if (localStorage.username) {
-    delete localStorage.username;
-  }
-  if (localStorage.token) {
-    delete localStorage.token;
-  }
+  store.remove('username');
+  store.remove('token');
 };
 
 Auth.prototype.is = function () {
@@ -56,7 +48,7 @@ Auth.prototype.is = function () {
 
 /**
  * Check if api is accessable.
- * 
+ *
  * @returns {boolean}
  */
 Auth.prototype.needed = function () {
