@@ -24,4 +24,6 @@ component.view = function (scope) {
   return m(".tile-wrap", [ list, views.button(t('Add Activity'), '', scope.add) ]);
 };
 
+activities.fetch();
+
 module.exports = component;

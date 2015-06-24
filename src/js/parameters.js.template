@@ -1,0 +1,5 @@
+'use strict';
+
+var env = require('./core/env');
+
+dime.env.baseUrl = '';

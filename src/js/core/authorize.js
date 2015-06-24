@@ -71,7 +71,7 @@ Auth.prototype.signin = function (username, password) {
   var that = this;
 
   return m.request({
-    url: helper.url('login'),
+    url: helper.baseUrl('login'),
     method: 'POST',
     data: data
   }).then(
@@ -91,7 +91,7 @@ Auth.prototype.signout = function () {
   var that = this;
 
   return m.request({
-    url: helper.url('logout'),
+    url: helper.baseUrl('logout'),
     method: 'POST',
     config: function (xhr) {
 //      dime.events.emit('authorize', xhr);

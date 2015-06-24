@@ -187,7 +187,7 @@ Collection.prototype.fetch = function (options) {
   var reset = true;
   var configuration = {
     method: 'GET',
-    url: helper.url('api', this.config.resourceUrl),
+    url: helper.baseUrl('api', this.config.resourceUrl),
     initialValue: this,
     config: function (xhr) {
       authorize.setup(xhr);
@@ -200,7 +200,7 @@ Collection.prototype.fetch = function (options) {
 
   if (_.isPlainObject(options)) {
     if (!_.isUndefined(options.resourceUrl)) {
-      configuration.url = helper.url(options.resourceUrl);
+      configuration.url = helper.baseUrl(options.resourceUrl);
     }
     if (!_.isUndefined(options.reset)) {
       reset = options.reset;
@@ -237,7 +237,7 @@ Collection.prototype.persist = function (data, options) {
   });
   var configuration = {
     method: 'POST',
-    url: helper.url('api', this.config.resourceUrl),
+    url: helper.baseUrl('api', this.config.resourceUrl),
     initialValue: data,
     data: data,
     config: function (xhr) {
@@ -246,7 +246,7 @@ Collection.prototype.persist = function (data, options) {
   };
 
   if (data[this.config.idAttribute]) {
-    configuration.url = helper.url(configuration.url, data[this.config.idAttribute]);
+    configuration.url = helper.baseUrl(configuration.url, data[this.config.idAttribute]);
     configuration.method = 'PUT';
   }
 
@@ -273,7 +273,7 @@ Collection.prototype.remove = function (data, options) {
   var that = this;
   var configuration = {
     method: 'DELETE',
-    url: helper.url('api', this.config.resourceUrl),
+    url: helper.baseUrl('api', this.config.resourceUrl),
     initialValue: data,
     config: function (xhr) {
       authorize.setup(xhr);
@@ -281,7 +281,7 @@ Collection.prototype.remove = function (data, options) {
   };
 
   if (data[this.config.idAttribute]) {
-    configuration.url = helper.url(configuration.url, data[this.config.idAttribute]);
+    configuration.url = helper.baseUrl(configuration.url, data[this.config.idAttribute]);
   }
 
   return m

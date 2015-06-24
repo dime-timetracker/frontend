@@ -3,6 +3,7 @@
 var m = require('mithril');
 var _ = require('lodash');
 var moment = require('moment');
+var env = require('./env');
 
 module.exports = {
     currency: function(amount, pattern) {
@@ -58,24 +59,27 @@ module.exports = {
 
     /**
      * concatenates arguments to base url, divided by slash
+     *
+     * Example:
+     *
+     * helper.baseUrl('api', 'customer') => /base/url/api/customer
      */
-    url: function () {
+    baseUrl: function () {
       var uri = [];
       var contain = false;
 
       for (var i = 0; i < arguments.length; i++) {
-        // FIXME
-//        if (dime.env.baseUrl
-//                && _.isString(arguments[i])
-//                && arguments[i].indexOf(dime.env.baseUrl) !== -1) {
-//          contain = true;
-//        }
+        if (env.baseUrl
+                && _.isString(arguments[i])
+                && arguments[i].indexOf(env.baseUrl) !== -1) {
+          contain = true;
+        }
         uri.push(arguments[i]);
       }
 
-//      if (!contain && dime.env.baseUrl) {
-//        uri.unshift(dime.env.baseUrl);
-//      }
+      if (!contain && env.baseUrl) {
+        uri.unshift(env.baseUrl);
+      }
 
       return uri.join('/');
     }
