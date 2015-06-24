@@ -2,6 +2,7 @@
 
 var m = require('mithril');
 var helper = require('./helper');
+var uuid = require('simple-uuid');
 
 var Auth = function () {
   if (!(this instanceof Auth)) {
@@ -27,7 +28,7 @@ Auth.prototype.username = function (username) {
 Auth.prototype.client = function () {
   var id = localStorage.client;
   if (!id) {
-    id = Math.uuid();
+    id = uuid();
     localStorage.client = id;
   }
   return id;

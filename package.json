@@ -15,6 +15,7 @@
     "lodash": "^3.9.3",
     "mithril": "^0.2.0",
     "moment": "^2.10.3",
+    "simple-uuid": "0.0.1",
     "translate.js": "0.0.2"
   },
   "scripts": {
