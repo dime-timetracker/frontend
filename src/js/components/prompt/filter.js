@@ -23,7 +23,8 @@ function buttonBookmarkView (scope) {
 }
 
 function inputView (scope) {
-  return m('input#prompt.form-control.mousetrap', {
+  return m('input.form-control.mousetrap', {
+    id: scope.htmlId,
     placeholder: t('prompt.filter.placeholder', {
       shortcut: formatShortcut(scope.shortcut)
     }),
@@ -35,26 +36,27 @@ function inputView (scope) {
     }
   });
 }
-    
+
 module.exports = {
   controller: function (parentScope) {
     var scope = {
       shortcut: 'mod-f',
+      inputView: inputView,
+      icon: 'icon-filter-list',
+      htmlId: 'filter'
+    };
+    scope.iconViews = [
+      function () { return buttonReportView(scope); },
+      function () { return buttonBookmarkView(scope); }
+    ];
+    scope.inputView = function () {
+      return inputView(scope);
     };
     //TODO trigger Mousetrap
 
     return scope;
   },
   view: function (scope) {
-    return m('.media', [
-      m('.media-object.pull-left',
-        m('label.form-icon-label', {
-          for: 'filter'
-        }, m('span.icon.icon-filter-list'))
-      ),
-      buttonReportView(scope),
-      buttonBookmarkView(scope),
-      m('.media-inner', inputView(scope))
-    ]);
+    return m.component(require('../prompt'), scope);
   }
 };
