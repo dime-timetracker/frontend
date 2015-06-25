@@ -1,7 +1,7 @@
 'use strict';
 
 var m = require('mithril');
-var parameters = require('./parameter');
+var parameters = require('./parameters');
 
 var routes = {
   '/': require('./components/activity'),

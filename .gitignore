@@ -3,4 +3,4 @@
 /.sass-cache
 /dist
 public/js/*
-src/js/parameter.js
+src/js/parameters.js
