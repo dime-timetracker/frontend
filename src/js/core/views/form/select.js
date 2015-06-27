@@ -11,7 +11,7 @@ var helper = require('../../helper');
  * @param   {string} selected define the selected option
  * @returns {VirtualElement} select element
  */
-module.exports = function (values, onchange, selected) {
+var select = function (values, onchange, selected) {
   var options = [];
   var attr = {};
 
@@ -36,3 +36,5 @@ module.exports = function (values, onchange, selected) {
 
   return m('select.form-control', attr, options);
 };
+
+module.exports = select;

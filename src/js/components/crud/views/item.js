@@ -3,10 +3,10 @@
 var m = require('mithril');
 var _ = require('lodash');
 var removeButton = require('./removeButton');
-var inputs = {
-  boolean: require('../../../core/views/inputs/boolean'),
-  input: require('../../../core/views/inputs/input'),
-  select: require('../../../core/views/inputs/select')
+var form = {
+  input: require('../../../core/views/form/input'),
+  select: require('../../../core/views/form/select'),
+  selectBoolean: require('../../../core/views/form/selectBoolean')
 };
 var models = {
   customer: require('../../../core/model/Customer'),
@@ -32,7 +32,7 @@ module.exports = function (scope, item) {
     var input;
     switch (property.type) {
     case 'boolean':
-      input = inputs.boolean(value, function update(value) {
+      input = form.selectBoolean(value, function update(value) {
         item[property.key] = value;
         scope.collection.persist(item);
       });
@@ -48,7 +48,7 @@ module.exports = function (scope, item) {
         });
       });
 
-      input = inputs.select(values, function update(e) {
+      input = form.select(values, function update(e) {
         var idx = e.target.selectedIndex;
         var key = e.target.options[idx].value;
 
@@ -59,7 +59,7 @@ module.exports = function (scope, item) {
       }, value.alias);
       break;
     default:
-      input = inputs.input(value, function update(value) {
+      input = form.input(value, function update(value) {
         item[property.key] = value;
         scope.collection.persist(item);
       }, property.type);

@@ -3,7 +3,7 @@
 var m = require('mithril');
 var _ = require('lodash');
 
-module.exports = function (value, update) {
+var text = function (value, update) {
   var attr = {
     contenteditable: true
   };
@@ -15,3 +15,5 @@ module.exports = function (value, update) {
   }
   return m('span.form-control', attr, value);
 };
+
+module.exports = text;

@@ -3,7 +3,7 @@
 var m = require('mithril');
 var moment = require('moment');
 var helper = require('../../../core/helper');
-var input = require('../../../core/views/inputs/input');
+var input = require('../../../core/views/form/input');
 
 module.exports = function (timeslice) {
   var activity = this;

@@ -3,7 +3,7 @@
 var m = require('mithril');
 var _ = require('lodash');
 
-module.exports = function (value, update, type) {
+var input = function (value, update, type) {
   var attr = {
     type: 'text'
   };
@@ -23,3 +23,5 @@ module.exports = function (value, update, type) {
 
   return m('input.form-control', attr);
 };
+
+module.exports = input;
