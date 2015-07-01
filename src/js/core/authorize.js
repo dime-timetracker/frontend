@@ -5,6 +5,18 @@ var helper = require('./helper');
 var uuid = require('simple-uuid');
 var store = require('store');
 
+/**
+ * Auth is the interface to authorize then user agains the api.
+ *
+ * Example:
+ *
+ *   * Auth.username() => 'username'
+ *   * Auth.device() => 'device name'
+ *   * Auth.signin(username, password) => m.request promise
+ *   * Auth.signout() => m.request promise
+ *
+ * @returns {Auth}
+ */
 var Auth = function () {
   if (!(this instanceof Auth)) {
     return new Auth();
@@ -14,34 +26,89 @@ var Auth = function () {
 Auth.prototype = Object.create(null);
 Auth.prototype.constructor = Auth;
 
+/**
+ * Save username to store or return its value.
+ *
+ * Example:
+ *  * Auth.username('test') => Auth
+ *  * Auth.username() => 'test'
+ *
+ * @param {string} username The username you want to store
+ * @returns {string|Auth} stored username or {Auth} object
+ */
 Auth.prototype.username = function (username) {
+  var result = store.get('username');
   if (username !== undefined) {
     store.set('username', username);
+    result = this;
   }
-  return store.get('username');
+  return result;
 };
 
-Auth.prototype.client = function () {
-  var id = store.get('client');
-  if (!id) {
-    id = uuid();
-    store.set('client', id);
+/**
+ * Save the device name store or return its value.
+ *
+ * Example:
+ *   * Auth.device() => '0AAF8E02-8F5F-4F62-81DC-BF4A4F9800ED' (UUID)
+ *   * Auth.device('Notebook') => Auth
+ *   * Auth.device() => 'Notebook'
+ *
+ * @param {string} name device name you want to store
+ * @returns {string|Auth} stored device name or {Auth} object
+ */
+Auth.prototype.device = function (name) {
+  var result = store.get('device');
+
+  if (name !== undefined) {
+    store.set('device', name);
+    result = this;
+  } else if (result !== undefined) {
+    result = uuid();
+    store.set('device', result);
   }
-  return id;
+
+  return result;
 };
 
+/**
+ * Save the token to store.
+ *
+ * Example:
+ *   * Auth.token('xfetF23467efef23!23') => Auth
+ *   * Auth.token() => 'xfetF23467efef23!23'
+ *
+ * @param {string} token you want to store
+ * @returns {string|Auth} stored token or {Auth} object
+ */
 Auth.prototype.token = function (token) {
+  var result = store.get('token');
+
   if (token !== undefined) {
     store.set('token', token);
+    result = this;
   }
-  return store.get('token');
+
+  return result;
 };
 
+/**
+ * Remove the username and token from store.
+ * 
+ * @returns {Auth}
+ */
 Auth.prototype.clear = function () {
+
   store.remove('username');
   store.remove('token');
+
+  return this;
 };
 
+/**
+ * Check if username and token is in the store.
+ *
+ * @returns {boolean}
+ */
 Auth.prototype.is = function () {
   return (this.username() && this.token());
 };
@@ -55,10 +122,17 @@ Auth.prototype.needed = function () {
   m.request({});
 };
 
+/**
+ * Sign into the api using username and password.
+ *
+ * @param {string} username
+ * @param {string} password
+ * @returns {m.request.promise} The promise of the request function.
+ */
 Auth.prototype.signin = function (username, password) {
   var data = {
     username: username,
-    client: this.client(),
+    device: this.device(),
     password: password
   };
   var that = this;
@@ -80,6 +154,11 @@ Auth.prototype.signin = function (username, password) {
   );
 };
 
+/**
+ * Signout from the api, removes username and token from store and route to '/login'.
+ * 
+ * @returns {m.request} Promise of the request function.
+ */
 Auth.prototype.signout = function () {
   var that = this;
 
@@ -87,7 +166,7 @@ Auth.prototype.signout = function () {
     url: helper.baseUrl('logout'),
     method: 'POST',
     config: function (xhr) {
-//      dime.events.emit('authorize', xhr);
+      that.setup(xhr);
     }
   }).then(
     function success (response) {
@@ -101,10 +180,16 @@ Auth.prototype.signout = function () {
   );
 };
 
+/**
+ * Setup the XMLHttpRequest with the Authorization header.
+ * 
+ * @param {XMLHttpRequest} xhr
+ * @returns {boolean} true the request was modified, false there are no credentials or xhr is not a XMLHttpRequest.
+ */
 Auth.prototype.setup = function (xhr) {
   var result = false;
   if (this.is() && xhr && xhr.setRequestHeader) {
-    xhr.setRequestHeader('Authorization', 'DimeTimetracker ' + [this.username(), this.client(), this.token()].join(','));
+    xhr.setRequestHeader('Authorization', 'DimeTimetracker ' + [this.username(), this.device(), this.token()].join(','));
     result = true;
   }
   return result;
