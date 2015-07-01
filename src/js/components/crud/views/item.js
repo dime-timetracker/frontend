@@ -32,8 +32,11 @@ module.exports = function (scope, item) {
     var input;
     switch (property.type) {
     case 'boolean':
-      input = form.selectBoolean(value, function update(value) {
-        item[property.key] = value;
+      input = form.selectBoolean(value, function update(e) {
+        var idx = e.target.selectedIndex;
+        var value = e.target.options[idx].value;
+        
+        item[property.key] =  value;
         scope.collection.persist(item);
       });
       break;

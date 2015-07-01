@@ -7,8 +7,8 @@ var select = require('./select');
 
 var selectBoolean = function (value, update) {
   var values = [
-    { 1: t('yes') },
-    { 0: t('no') }
+    { 'key': 1, 'value': t('yes') },
+    { 'key': 0, 'value': t('no') }
   ];
 
   return select(values, update, (value === true) ? 1 : 0);
