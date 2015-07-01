@@ -4,8 +4,11 @@ var Collection = require('../Collection');
 var Model = require('../model/Activity');
 var lastUpdate = require('../helper/compare/activityLastUpdate');
 
-module.exports = new Collection({
+var activities = new Collection({
   resourceUrl: 'activity',
+  requestAttributes: {
+    with: 100
+  },
   model: Model,
   compare: function (a, b) {
     var result = 0;
@@ -18,3 +21,5 @@ module.exports = new Collection({
   },
   compareKey: lastUpdate
 });
+
+module.exports = activities;

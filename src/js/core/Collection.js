@@ -1,12 +1,13 @@
 'use strict';
 
-var m = require('mithril');
 var _ = require('lodash');
-var authorize = require('./authorize');
-var helper = require('./helper');
-var Pager = require('./Pager');
 var qsort = require('./helper/qsort');
 var naturalCompare = require('./helper/compare/natural');
+var objectKey = require('./helper/compare/objectKey');
+
+var m = require('mithril');
+var authorize = require('./authorize');
+var helper = require('./helper');
 
 /**
 * Collection is a array of objects.
@@ -21,18 +22,23 @@ var naturalCompare = require('./helper/compare/natural');
 * Options:
 *
 * {
-*   resourceUrl: 'RESOURCE-NAME',
-*   idAttribure: 'id',
 *   model: Constructor.function,
 *   compare: compareFunction,         // default: naturalCompare
 *   compareKey: comparekeyFunction    // default: compareKey (obj.name || obj.alias || obj.id)
+*
+*   resourceUrl: 'RESOURCE-NAME',
+*   requestAttributes: {
+*     page: 1,
+*     with: 50
+*   },
+*   idAttribure: 'id'
 * }
 *
 *
 * Example:
 *
 * var c = new Collection({
-*  model: dime.mode.Activity,
+*  model: Activity,
 *
 * });
 *
@@ -46,15 +52,10 @@ var Collection = function (options, data) {
   }
 
   this.config = _.extend({
-    idAttribute: 'id',
     compare: naturalCompare,
-    compareKey: function (obj) {
-      var result = undefined;
-      if (!_.isUndefined(obj)) {
-        result = obj.name || obj.alias || obj.id;
-      }
-      return result;
-    }
+    compareKey: objectKey,
+    idAttribute: 'id',
+    requestAttributes: {}
   }, options || {});
 
   // Convert data to models
@@ -70,6 +71,18 @@ var Collection = function (options, data) {
 Collection.prototype = new Array();
 Collection.prototype.constructor = Collection;
 
+/**
+ * Change or replace the configuration of a collection.
+ *
+ * Example:
+ *
+ *   * collection.configure('idAttribute', 'alias') => Collection
+ *   * collection.configure({'idAttribute': 'alias'}) => Collection
+ *
+ * @param {string|object} name
+ * @param {string} value Value
+ * @returns {Collection}
+ */
 Collection.prototype.configure = function (name, value) {
   if (!_.isUndefined(name)) {
     if (_.isPlainObject(name)) {
@@ -81,29 +94,40 @@ Collection.prototype.configure = function (name, value) {
   return this;
 };
 
-// Array
+// Array functions
 
+/**
+ * Add data object to collection. The data object will go
+ * thru the Collection.create method to ensure the model.
+ * 
+ * @param {object} data plain data object
+ * @returns {collection}
+ */
 Collection.prototype.add = function (data) {
   var item = data;
   if (data !== undefined && _.isObject(data)) {
-    item = this.create(data);
+    item = this.modelize(data);
     this.push(item);
   }
-  return item;
+  return this;
 };
 
-Collection.prototype.create = function (data) {
-  var model = data;
-  if (this.config.model !== undefined && !(data instanceof this.config.model)) {
-    model = new this.config.model(data);
-  }
-  return model;
-};
-
+/**
+ * Filter collection data and create a new cloned collection.
+ * 
+ * @param {object} filter
+ * @returns {Collection} cloned collection with filtered data
+ */
 Collection.prototype.filter = function (filter) {
   return new Collection(this.config, _.filter(this, filter));
 };
 
+/**
+ * Find a model in collection.
+ *
+ * @param {object} data object data to search for
+ * @returns {object} model object
+ */
 Collection.prototype.find = function (data) {
   var filter;
   if (_.isPlainObject(data)) {
@@ -115,14 +139,54 @@ Collection.prototype.find = function (data) {
   return _.findWhere(this, filter);
 };
 
+/**
+ * Get first item of collection.
+ * 
+ * @returns {object} model object or undefined if collection empty
+ */
 Collection.prototype.first = function () {
   return (this.length > 0) ? this[0] : undefined;
 };
 
+/**
+ * Get last item of collection,
+ *
+ * @returns {object} model object or undefined if collection empty
+ */
 Collection.prototype.last = function () {
   return (this.length > 0) ? this[this.length - 1] : undefined;
 };
 
+/**
+ * Create a new model object out of the plain data object. It uses
+ * the model function defined in configuration. The new model will
+ * not added to the collection.
+ *
+ * @param {object} data plain data object
+ * @returns {Model} Model object if model function defined
+ */
+Collection.prototype.modelize = function (data) {
+  var model = data || {};
+  if (this.config.model !== undefined && !(data instanceof this.config.model)) {
+    model = new this.config.model(data);
+  }
+  return model;
+};
+
+/**
+ * Return the total count of item, the api can deliver.
+ * 
+ * @returns {Number}
+ */
+Collection.prototype.total = function () {
+  return (this.pagination && this.pagination.total) ? this.pagination.total : 0;
+};
+
+/**
+ * Get the real data array without configuration.
+ * 
+ * @returns {Array}
+ */
 Collection.prototype.toArray = function () {
   var array = [];
   this.forEach(function (item) {
@@ -133,7 +197,8 @@ Collection.prototype.toArray = function () {
 
 /**
  * Sort collection by key and compare functions. Without parameter the
- * config.compare and config.compareKey will be used.
+ * config.compare and config.compareKey will be used. The sort will be
+ * internal and create not a clone.
  * 
  * @param {function} key = function (obj) { return obj.key };
  * @param {function} compare = function (a, b) { return 1 || 0 || -1; };
@@ -156,10 +221,10 @@ Collection.prototype.order = function (key, compare) {
 };
 
 /**
- * Search for data object and remove it from Collection.
+ * Search for data object and remove it from collection.
  * 
- * @param {object} data
- * @returns {object}
+ * @param {object} data object you wanne remove.
+ * @returns {object} data object
  */
 Collection.prototype.removeFromCollection = function (data) {
   var idx = this.indexOf(data);
@@ -181,10 +246,30 @@ Collection.prototype.reset = function () {
   return this;
 };
 
-// REST API
+// REST API functions
+
+/**
+ * Fetch data from api.
+ *
+ * Example:
+ *   * collection.fetch() => m.request  // (will fetch the next from the api)
+ *   * collection.fetch({
+ *      requestAttributes: {
+ *        page: 1,
+ *        with: 50,
+ *        filter: ...
+ *      },
+ *      reset: true
+ *   }) => m.request  // (remove all items from collecten and fetch the first 50 items from the api)
+ *
+ * @param {object} options
+ * @returns {m.request} promise of the m.request
+ */
 Collection.prototype.fetch = function (options) {
   var that = this;
-  var reset = true;
+  var reset = false;
+
+  // Request configuration
   var configuration = {
     method: 'GET',
     url: helper.baseUrl('api', this.config.resourceUrl),
@@ -193,17 +278,38 @@ Collection.prototype.fetch = function (options) {
       authorize.setup(xhr);
     },
     extract: function (xhr, xhrOptions) {
-      that.pager = new Pager(that, xhr);
+      that.pagination = {};
+
+      // extract total number
+      that.pagination.total = parseInt(xhr.getResponseHeader('X-Dime-Total') || 0);
+
+      // extract pagination links
+      if (xhr.getResponseHeader('Link')) {
+        var uri = xhr.getResponseHeader('Link').split(', ');
+        uri.forEach(function (link) {
+          var m = link.match(/<(.*)>; rel="(.*)"/);
+          that.pagination[m[2]] = m[1];
+        }, this);
+      }
       return xhr.responseText;
     }
   };
 
+  // Configure the request via option parameter
   if (_.isPlainObject(options)) {
-    if (!_.isUndefined(options.resourceUrl)) {
-      configuration.url = helper.baseUrl(options.resourceUrl);
-    }
     if (!_.isUndefined(options.reset)) {
       reset = options.reset;
+    }
+
+    // Modify resource url with pagination
+    var requestAttributes = _.extends({}, this.config.requestAttributes, options.requestAttributes || {});
+    if (!_.isEmpty(requestAttributes)) {
+      configuration.url = helper.buildUrl(configuration.url, requestAttributes);
+    }
+  } else {
+    // If paginage exists and has next url, use it
+    if (this.pagination && this.pagination.next) {
+      configuration.url = helper.baseUrl(this.pagination.next);
     }
   }
 
@@ -221,6 +327,7 @@ Collection.prototype.fetch = function (options) {
       that.order();
     }, function error(response) {
       if (_.isPlainObject(response) && response.error) {
+        // TODO Notify
         if (console) {
           console.log(response);
         }
@@ -228,13 +335,21 @@ Collection.prototype.fetch = function (options) {
     });
 };
 
-Collection.prototype.persist = function (data, options) {
+/**
+ * Send POST or PUT to api.
+ *
+ * @param {Object} data
+ * @returns {m.request} Promise of the m.request
+ */
+Collection.prototype.persist = function (data) {
   var that = this;
   _.forOwn(data, function (item, key) {
     if (item instanceof Collection) {
       data[key] = item.toArray();
     }
   });
+
+  // Request configuration
   var configuration = {
     method: 'POST',
     url: helper.baseUrl('api', this.config.resourceUrl),
@@ -245,6 +360,7 @@ Collection.prototype.persist = function (data, options) {
     }
   };
 
+  // Look for the identifer
   if (data[this.config.idAttribute]) {
     configuration.url = helper.baseUrl(configuration.url, data[this.config.idAttribute]);
     configuration.method = 'PUT';
@@ -269,7 +385,13 @@ Collection.prototype.persist = function (data, options) {
     });
 };
 
-Collection.prototype.remove = function (data, options) {
+/**
+ * Send DELETE to api.
+ *
+ * @param {Object} data
+ * @returns {m.request} Promise of the m.request
+ */
+Collection.prototype.remove = function (data) {
   var that = this;
   var configuration = {
     method: 'DELETE',

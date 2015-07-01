@@ -3,7 +3,9 @@
 var Collection = require('../Collection');
 var Model = require('../model/Setting');
 
-module.exports = new Collection({
+var settings = new Collection({
   resourceUrl: "setting",
   model: Model
 });
+
+module.exports = settings;

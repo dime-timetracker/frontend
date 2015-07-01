@@ -1,6 +1,7 @@
 'use strict';
 
 var m = require('mithril');
+var _ = require('lodash');
 var helper = require('./helper');
 var uuid = require('simple-uuid');
 var store = require('store');
@@ -62,7 +63,7 @@ Auth.prototype.device = function (name) {
   if (name !== undefined) {
     store.set('device', name);
     result = this;
-  } else if (result !== undefined) {
+  } else if (_.isUndefined(result) || _.isEmpty(result)) {
     result = uuid();
     store.set('device', result);
   }
@@ -114,15 +115,6 @@ Auth.prototype.is = function () {
 };
 
 /**
- * Check if api is accessable.
- *
- * @returns {boolean}
- */
-Auth.prototype.needed = function () {
-  m.request({});
-};
-
-/**
  * Sign into the api using username and password.
  *
  * @param {string} username
@@ -132,10 +124,12 @@ Auth.prototype.needed = function () {
 Auth.prototype.signin = function (username, password) {
   var data = {
     username: username,
-    device: this.device(),
+    client: this.device(),
     password: password
   };
   var that = this;
+
+  console.log(data);
 
   return m.request({
     url: helper.baseUrl('login'),

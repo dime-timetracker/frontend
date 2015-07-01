@@ -178,7 +178,7 @@ Activity.prototype.startStopTimeslice = function () {
     });
   } else {
 //    dime.states.activity.change('running');
-    var timeslice = this.timeslices.create({
+    var timeslice = this.timeslices.modelize({
       activity: parseInt(activity.id) // we could submit the whole activity, but this is not required here
     });
     activity.timeslices.persist(timeslice);
@@ -198,7 +198,7 @@ Activity.prototype.updateDescription = function (description) {
 };
 
 Activity.prototype.addTimeslice = function (timeslice) {
-  timeslice = timeslice || this.timeslices.create({
+  timeslice = timeslice || this.timeslices.modelize({
     activity: parseInt(this.id) // we could submit the whole activity, but this is not required here
   });
   this.timeslices.persist(timeslice);

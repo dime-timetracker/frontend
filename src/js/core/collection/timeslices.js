@@ -3,7 +3,9 @@
 var Collection = require('../Collection');
 var Model = require('../model/Timeslice');
 
-module.exports = new Collection({
+var timelices = new Collection({
   resourceUrl: "timeslice",
   model: Model
 });
+
+module.exports = timelices;

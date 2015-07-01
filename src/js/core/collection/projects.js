@@ -3,7 +3,9 @@
 var Collection = require('../Collection');
 var Model = require('../model/Project');
 
-module.exports = new Collection({
+var projects = new Collection({
   resourceUrl: "project",
   model: Model
 });
+
+module.exports = projects;

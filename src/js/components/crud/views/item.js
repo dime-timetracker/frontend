@@ -19,6 +19,11 @@ var collections = {
   service: require('../../../core/collection/services')
 };
 
+var item = function (scope, item) {
+  var columns = [];
+  return m('tr', columns.concat(m("td.empty", removeButton(scope, item))));
+};
+
 module.exports = function (scope, item) {
 
   var columns = scope.properties.map(function (property) {

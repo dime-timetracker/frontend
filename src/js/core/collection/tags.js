@@ -3,7 +3,9 @@
 var Collection = require('../Collection');
 var Model = require('../model/Tag');
 
-module.exports = new Collection({
+var tags = new Collection({
   resourceUrl: "tag",
   model: Model
 });
+
+module.exports = tags;
