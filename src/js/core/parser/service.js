@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = function (obj) {
-  return require('./alias')(obj, 'customer', '@');
+  return require('./alias')(obj, 'service', ':');
 };

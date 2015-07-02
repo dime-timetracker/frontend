@@ -28,6 +28,12 @@ function parse (text, order) {
 }
 
 register('customer', require('./parser/customer'));
+register('project', require('./parser/project'));
+register('service', require('./parser/service'));
+register('tags', require('./parser/tags'));
+register('times', require('./parser/times'));
+register('filterTimes', require('./parser/filterTimes'));
+register('description', require('./parser/description'));
 
 module.exports = {
   register: register,

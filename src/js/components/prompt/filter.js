@@ -4,9 +4,15 @@ var debug = global.window.dimeDebug('prompt.filter');
 var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
+var parser = require('../../core/parser');
 
 function onUpdateFilter (e, scope) {
+  var supportedFilters = [
+    'customer', 'project', 'service', 'tags', 'times', 'filterTimes', 'description'
+  ];
   debug('Update filter: ', e.target.value);
+  var filters = parser.parse(e.target.value, supportedFilters);
+  debug(filters);
 }
 
 function buttonReportView (scope) {
