@@ -45,6 +45,7 @@ function inputView (scope) {
 module.exports = {
   controller: function (parentScope) {
     var scope = {
+      collection: parentScope.collection,
       shortcut: 'mod-f',
       inputView: inputView,
       icon: 'icon-filter-list',
