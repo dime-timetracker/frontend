@@ -23,7 +23,9 @@ function parse (text, order) {
     }
   }
 
-  delete result._text;
+  if (result._text) {
+    delete result._text;
+  }
   return result;
 }
 
