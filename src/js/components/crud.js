@@ -35,7 +35,7 @@ component.controller = function () {
   }
 
   scope.type = type;
-  scope.properties = models[type].properties;
+  scope.properties = models[type].prototype.properties;
   scope.collection = collections[type];
 
   scope.add = function (e) {

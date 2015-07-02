@@ -15,10 +15,11 @@ var Activity = function (data) {
   if (!(this instanceof Activity)) {
     return new Activity(data);
   }
-  _.extend(this, {
+
+  Model.call(this, _.extend({
     description: t('(Click here to enter a description!)'),
     updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
-  }, data);
+  }, data || {}));
 
   this.customer = new Customer(this.customer);
   this.project = new Project(this.project);
@@ -46,48 +47,7 @@ var Activity = function (data) {
     }
   }, this.timeslices || []);
 };
-Activity.prototype = new Model();
-Activity.prototype.constructor = Activity;
-
-Activity.properties = function properties(model) {
-  var context = {
-    model: model,
-    properties: [
-      {
-        key: 'description',
-        title: 'description',
-        type: 'text'
-      },
-      {
-        key: 'rate',
-        title: 'rate',
-        type: 'number'
-      },
-      {
-        key: 'customer',
-        title: 'customer',
-        type: 'relation'
-      },
-      {
-        key: 'project',
-        title: 'project',
-        type: 'relation'
-      },
-      {
-        key: 'service',
-        title: 'service',
-        type: 'relation'
-      },
-      {
-        key: 'tags',
-        title: 'tags',
-        type: 'tags'
-      }
-    ]
-  };
-//  dime.events.emit('model-activity-properties', context);
-  return context.properties;
-};
+Activity.prototype = _.create(Model.prototype, {constructor: Activity});
 
 Activity.prototype.onSwitchRelation = function (relation, item) {
   this[relation] = item;
@@ -194,7 +154,6 @@ Activity.prototype.toggleTimeslices = function () {
 
 Activity.prototype.updateDescription = function (description) {
   this.description = description;
-//  dime.resources.activity.persist(this);
 };
 
 Activity.prototype.addTimeslice = function (timeslice) {

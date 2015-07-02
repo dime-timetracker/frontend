@@ -13,10 +13,10 @@ var component = {};
 
 component.controller = function (collection, properties, item) {
   var scope = {};
-
   scope.collection = collection;
   scope.item = item;
-  scope.changed = false;
+  scope.changed = item.isNew();
+
   scope.columns = properties.map(function (property) {
     var model = {};
     var type = property.type || 'text';

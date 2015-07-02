@@ -24,10 +24,7 @@ function activityListView (scope) {
 module.exports = {
   controller: function () {
     // FIXME Pager settings ...
-    activities.fetch().then(function (x) {
-      console.log(activities);
-      return x;
-    });
+    activities.fetch();
 
     var scope = {
       collection: activities,

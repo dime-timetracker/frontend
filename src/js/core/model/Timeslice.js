@@ -8,14 +8,15 @@ var Timeslice = function (data) {
   if (!(this instanceof Timeslice)) {
     return new Timeslice(data);
   }
-  _.extend(this, {
+
+  Model.call(this, _.extend({
     startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
     duration: 0
-  }, data);
+  }, data));
+
 };
 
-Timeslice.prototype = new Model();
-Timeslice.prototype.constructor = Timeslice;
+Timeslice.prototype = _.create(Model.prototype, {constructor: Timeslice});
 
 Timeslice.prototype.totalDuration = function (precision) {
   var result = 0;
