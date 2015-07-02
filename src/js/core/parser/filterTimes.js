@@ -3,6 +3,7 @@
 var moment = require('moment');
 
 module.exports = function (obj) {
+  var filter = {};
   [
     {
       'keyword': 'today',
@@ -30,7 +31,6 @@ module.exports = function (obj) {
       'stop': moment().subtract(1, 'month').endOf('month')
     }
   ].forEach(function (pattern) {
-    var filter = {};
     var regex = new RegExp('\\b' + pattern.keyword + '\\b');
     if (obj._text.match(regex)) {
       filter.start = pattern.start;
@@ -38,5 +38,8 @@ module.exports = function (obj) {
       obj._text = obj._text.replace(regex, '', 'g');
     }
   });
+  if (filter.start || filter.stop) {
+    obj.filter = filter;
+  }
   return obj;
 };
