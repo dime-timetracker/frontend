@@ -3,6 +3,7 @@
 // TODO: refactor!!!
 
 var moment = require('moment');
+var isEmpty = require('lodash/lang/isEmpty');
 
 module.exports = function (obj) {
   var start = null;
@@ -34,9 +35,9 @@ module.exports = function (obj) {
       regex = /((\d+):(\d{2})h?-)/;
       matches = obj._text.match(regex);
       if (null != matches) {
-        stop = moment()
-        start = moment().hours(matches[3])
-          .minutes(matches[4]);
+        stop = moment();
+        start = moment().hours(matches[2])
+          .minutes(matches[3]);
         while (stop.isBefore(start)) {
           start = start.subtract(1, 'day');
         }
@@ -59,7 +60,7 @@ module.exports = function (obj) {
             regex = /(^| )(\d+)([\.,](\d+))?h/;
             matches = obj._text.match(regex);
             if (null == matches) {
-              return;
+              return obj;
             }
             hours = matches[2];
             minutes = matches[4]/10 * 60;
@@ -80,7 +81,7 @@ module.exports = function (obj) {
   if (stop !== null) {
     timeslice.stoppedAt = moment(stop).format('YYYY-MM-DD HH:mm');
   }
-  if (!_.isEmpty(timeslice)) {
+  if (!isEmpty(timeslice)) {
     obj.timeslices = [ timeslice ];
   }
 
