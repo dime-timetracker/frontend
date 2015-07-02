@@ -8,7 +8,7 @@ var routes = {
   '/': require('./components/activity'),
   '/login': require('./components/login'),
   '/settings': require('./components/setting'),
-  '/:name': require('./components/crud/crud')
+  '/:name': require('./components/crud')
  };
 
 m.route.mode = 'hash';

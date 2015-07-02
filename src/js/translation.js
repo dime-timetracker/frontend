@@ -8,7 +8,7 @@ var translations = {
 };
 
 module.exports = function() {
-  var language = (navigator.language || navigator.userLanguage).substr(0, 2);
+  var language = (global.window.navigator.language || global.window.navigator.userLanguage).substr(0, 2);
   var t = translator(translations[language] || translations['en']);
   return t.apply(undefined, arguments);
 };

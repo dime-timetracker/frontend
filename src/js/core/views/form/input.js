@@ -12,9 +12,7 @@ var input = function (value, update, type) {
   }
 
   if (_.isFunction(update)) {
-    attr.oninput = function(e) {
-      update(e.target.value);
-    };
+    attr.oninput = update;
   }
 
   if (!_.isUndefined(type)) {

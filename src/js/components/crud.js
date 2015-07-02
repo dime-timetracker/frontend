@@ -2,22 +2,20 @@
 
 var m = require('mithril');
 var _ = require('lodash');
-var t = require('../../translation');
-var helper = require('../../core/helper');
+var t = require('../translation');
+var helper = require('../core/helper');
 var models = {
-  customer: require('../../core/model/Customer'),
-  project: require('../../core/model/Project'),
-  service: require('../../core/model/Service')
+  customer: require('../core/model/Customer'),
+  project: require('../core/model/Project'),
+  service: require('../core/model/Service')
 };
 var collections = {
-  customer: require('../../core/collection/customers'),
-  project: require('../../core/collection/projects'),
-  service: require('../../core/collection/services')
+  customer: require('../core/collection/customers'),
+  project: require('../core/collection/projects'),
+  service: require('../core/collection/services')
 };
-var views = {
-  button: require('../../core/views/button'),
-  item: require('./views/item')
-};
+var itemComponent = require('./crud/item');
+var button = require('../core/views/button');
 
 var component = {};
 
@@ -39,7 +37,7 @@ component.controller = function () {
   scope.type = type;
   scope.properties = models[type].properties;
   scope.collection = collections[type];
-  //scope.collection.fetch();
+
   scope.add = function (e) {
     scope.collection.add({});
     return false;
@@ -60,7 +58,7 @@ component.view = function (scope) {
   var header = m('thead', m('tr', headers));
 
   var rows = m('tbody', scope.collection.map(function (item) {
-    return views.item(scope, item);
+    return m.component(itemComponent, scope.collection, scope.properties, item);
   }));
 
   var list = [
@@ -68,7 +66,7 @@ component.view = function (scope) {
     m('table.table.table-stripe.table-hover', [header, rows])
   ];
 
-  return m('div.list-' + scope.type, [list, views.button('Add ' + scope.type, '/' + scope.type, scope.add)]);
+  return m('div.list-' + scope.type, [list, button('Add ' + scope.type, '/' + scope.type, scope.add)]);
 };
 
 module.exports = component;

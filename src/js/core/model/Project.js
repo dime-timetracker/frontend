@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Model = require('../Model');
 var Customer = require('./Customer');
+var customers = require('../collection/customers');
 
 var Project = function (data) {
   if (!(this instanceof Project)) {
@@ -36,7 +37,7 @@ Project.properties = [
     key: 'customer',
     title: 'customer',
     type: 'relation',
-    resource: 'customer'
+    collection: customers
   },
   {
     key: 'rate',
