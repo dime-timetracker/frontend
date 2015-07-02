@@ -75,6 +75,8 @@ component.controller = function (collection, properties, item) {
   };
 
   scope.remove = function (e) {
+    if (e) e.preventDefault();
+    
     var question = t('Do you really want to delete "[name]"?').replace('[name]', item.name);
     if (global.window.confirm(question)) {
       collection.remove(item);
@@ -104,11 +106,11 @@ component.view = function (scope) {
   });
 
   var actions = [
-    m("a.btn.btn-flat[href=#]", { onclick: scope.remove }, m("span.icon.icon-delete"))
+    m("a.btn.btn-flat", { config: m.route, href: m.route(), onclick: scope.remove }, m("span.icon.icon-delete"))
   ];
   
   if (scope.changed) {
-    actions.push(m("a.btn.btn-yellow[href=#]", { onclick: scope.save }, m("span.icon.icon-done")));
+    actions.push(m("a.btn.btn-yellow", { config: m.route, href: m.route(), onclick: scope.save }, m("span.icon.icon-done")));
   }
   columns.push( m("td.empty", actions));
 

@@ -404,19 +404,20 @@ Collection.prototype.remove = function (data) {
 
   if (data[this.config.idAttribute]) {
     configuration.url = helper.baseUrl(configuration.url, data[this.config.idAttribute]);
-  }
-
-  return m
-    .request(configuration)
-    .then(function success (response) {
-      return that.removeFromCollection(data);
-    }, function error (response) {
-      if (_.isPlainObject(response) && response.error) {
-        if (console) {
-          console.log(response);
+    return m
+      .request(configuration)
+      .then(function success(response) {
+        return that.removeFromCollection(data);
+      }, function error(response) {
+        if (_.isPlainObject(response) && response.error) {
+          if (console) {
+            console.log(response);
+          }
         }
-      }
-    });
+      });
+  } else {
+    this.removeFromCollection(data)
+  }
 };
 
 module.exports = Collection;

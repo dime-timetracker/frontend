@@ -21,7 +21,7 @@ var component = {};
 
 component.allowed = ['customer', 'project', 'service'];
 
-// FIXME
+// FIXME move to init process
 _.forOwn(collections, function (value, key) {
   value.fetch();
 });
@@ -30,8 +30,9 @@ component.controller = function () {
   var scope = {};
 
   var type = m.route.param('name');
-  if (-1 === component.allowed.indexOf(type)) {
+  if (!models[type]) {
     m.route('/');
+    return false;
   }
 
   scope.type = type;
@@ -39,8 +40,9 @@ component.controller = function () {
   scope.collection = collections[type];
 
   scope.add = function (e) {
+    if (e) e.preventDefault();
+
     scope.collection.add({});
-    return false;
   };
 
   return scope;

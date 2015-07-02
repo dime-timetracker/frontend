@@ -18,16 +18,21 @@ function promptView (scope) {
 
 function activityListView (scope) {
   var list = scope.collection.map(itemView, scope);
-  return m('.tile-wrap', [ list, buttonView(t('Add Activity'), '', scope.add) ]);
+  return m('.tile-wrap', [ list, buttonView(t('Add Activity'), '/', scope.add) ]);
 }
 
 module.exports = {
   controller: function () {
-    // FIXME Pager settings ...
+    // FIXME move to init process
     activities.fetch();
 
     var scope = {
-      collection: activities,
+      collection: activities
+    };
+
+    scope.add = function (e) {
+      if (e) e.preventDefault();
+      scope.collection.add({});
     };
 
     return scope;
