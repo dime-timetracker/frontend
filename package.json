@@ -11,6 +11,7 @@
     "watchify": "^3.2.2"
   },
   "dependencies": {
+    "debug": "^2.2.0",
     "lodash": "^3.9.3",
     "mithril": "^0.2.0",
     "moment": "^2.10.3",

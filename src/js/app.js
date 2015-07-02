@@ -2,6 +2,7 @@
 
 var m = require('mithril');
 var parameters = require('./parameters');
+global.window.dimeDebug = require('debug');
 
 var routes = {
   '/': require('./components/activity'),

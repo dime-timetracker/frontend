@@ -1,5 +1,6 @@
 'use strict';
 
+var debug = global.window.dimeDebug('prompt.filter');
 var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
@@ -16,6 +17,7 @@ function buttonBookmarkView (scope) {
   return m('.media-object.pull-right',
     m('span.form-icon-label', {
       onclick: function () {
+        debug('Clicked bookmark icon');
         console.error('TODO: bookmark');
       }
     }, m('span.icon.icon-bookmark' + (scope.isBookmarked ? '' : '-outline')))
@@ -32,7 +34,7 @@ function inputView (scope) {
     onblur: scope.blur,
     onkeydown: scope.keydown,
     onkeyup: function(e) {
-      console.log('FIXME: update bookmark icon');
+      debug('Updated filter:', e.target.value);
     }
   });
 }
