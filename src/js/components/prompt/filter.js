@@ -5,6 +5,10 @@ var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
 
+function onUpdateFilter (e, scope) {
+  debug('Update filter: ', e.target.value);
+}
+
 function buttonReportView (scope) {
   return m('.media-object.pull-right',
     m('a[href="/report"].form-icon-label', {
@@ -18,7 +22,6 @@ function buttonBookmarkView (scope) {
     m('span.form-icon-label', {
       onclick: function () {
         debug('Clicked bookmark icon');
-        console.error('TODO: bookmark');
       }
     }, m('span.icon.icon-bookmark' + (scope.isBookmarked ? '' : '-outline')))
   );
@@ -34,7 +37,7 @@ function inputView (scope) {
     onblur: scope.blur,
     onkeydown: scope.keydown,
     onkeyup: function(e) {
-      debug('Updated filter:', e.target.value);
+      scope.onUpdateFilter(e, scope);
     }
   });
 }
@@ -54,6 +57,7 @@ module.exports = {
     scope.inputView = function () {
       return inputView(scope);
     };
+    scope.onUpdateFilter = onUpdateFilter;
     //TODO trigger Mousetrap
 
     return scope;
