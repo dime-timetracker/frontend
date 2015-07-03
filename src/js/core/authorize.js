@@ -129,8 +129,6 @@ Auth.prototype.signin = function (username, password) {
   };
   var that = this;
 
-  console.log(data);
-
   return m.request({
     url: helper.baseUrl('login'),
     method: 'POST',

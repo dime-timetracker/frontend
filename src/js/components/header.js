@@ -3,6 +3,9 @@
 var m = require('mithril');
 var menu = require('./menu');
 
+var configuration = require('../core/configuration');
+configuration.general.children.header = require('./header/config');
+
 function logoView (scope) {
   return m('a[href="#/"].header-logo', [
     m('span.icon.' + scope.icon), ' ', scope.name]

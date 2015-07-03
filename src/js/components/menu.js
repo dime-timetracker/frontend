@@ -34,6 +34,13 @@ var items = [
     weight: 0
   },
   {
+    id: "setting",
+    route: "/settings",
+    name: "Settings",
+    icon: 'icon-settings',
+    weight: 0
+  },
+  {
     id: "logout",
     name: "Logout",
     icon: 'icon-exit-to-app',
