@@ -6,16 +6,17 @@ var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
 var parser = require('../../core/parser');
 
-function onUpdateFilter (e, scope) {
-  var supportedFilters = [
-    'customer', 'project', 'service', 'tags', 'times', 'filterTimes', 'description'
-  ];
-  debug('Update filter: ', e.target.value);
-  var filters = parser.parse(e.target.value, supportedFilters);
-  debug(filters);
+function onSubmitFilter (e, scope) {
+  debug('Filtering by ' + e.target.value);
+  scope.collection.fetch({
+    requestAttributes: {
+      filter: e.target.value
+    },
+    reset: true
+  });
 }
 
-function buttonReportView (scope) {
+function buttonReportView () {
   return m('.media-object.pull-right',
     m('a[href="/report"].form-icon-label', {
       config: m.route
@@ -43,7 +44,7 @@ function inputView (scope) {
     onblur: scope.blur,
     onkeydown: scope.keydown,
     onkeyup: function(e) {
-      scope.onUpdateFilter(e, scope);
+      debug(e.target.value);
     }
   });
 }
@@ -64,7 +65,9 @@ module.exports = {
     scope.inputView = function () {
       return inputView(scope);
     };
-    scope.onUpdateFilter = onUpdateFilter;
+    scope.blur = function (e) {
+      onSubmitFilter(e, scope);
+    };
     //TODO trigger Mousetrap
 
     return scope;

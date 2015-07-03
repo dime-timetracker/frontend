@@ -4,6 +4,7 @@ var _ = require('lodash');
 var qsort = require('./helper/qsort');
 var naturalCompare = require('./helper/compare/natural');
 var objectKey = require('./helper/compare/objectKey');
+var debug = global.window.dimeDebug('collection');
 
 var m = require('mithril');
 var authorize = require('./authorize');
@@ -240,9 +241,8 @@ Collection.prototype.removeFromCollection = function (data) {
  */
 Collection.prototype.reset = function () {
   while (this.length) {
-    delete this[0];
+    this.shift();
   }
-  this.length = 0;
   return this;
 };
 
@@ -302,9 +302,9 @@ Collection.prototype.fetch = function (options) {
     }
 
     // Modify resource url with pagination
-    var requestAttributes = _.extends({}, this.config.requestAttributes, options.requestAttributes || {});
+    var requestAttributes = _.extend({}, this.config.requestAttributes, options.requestAttributes || {});
     if (!_.isEmpty(requestAttributes)) {
-      configuration.url = helper.buildUrl(configuration.url, requestAttributes);
+      configuration.url = helper.buildUrl([configuration.url], requestAttributes);
     }
   } else {
     // If paginage exists and has next url, use it
