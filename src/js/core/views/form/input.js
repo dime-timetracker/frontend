@@ -1,21 +1,24 @@
 'use strict';
 
 var m = require('mithril');
-var _ = require('lodash');
+var isUndefined = require('lodash/lang/isUndefined');
+var isFunction = require('lodash/lang/isFunction');
 
 var input = function (value, update, type) {
   var attr = {
     type: 'text'
   };
-  if (!_.isUndefined(value)) {
+  if (!isUndefined(value)) {
     attr.value = value;
   }
 
-  if (_.isFunction(update)) {
-    attr.oninput = update;
+  if (isFunction(update)) {
+    attr.oninput = function (e) {
+      update(e.target.value, e);
+    };
   }
 
-  if (!_.isUndefined(type)) {
+  if (!isUndefined(type)) {
     attr.type = type;
   }
 

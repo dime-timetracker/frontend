@@ -1,7 +1,9 @@
 'use strict';
 
 var m = require('mithril');
-var _ = require('lodash');
+var isArray = require('lodash/lang/isArray');
+var isFunction = require('lodash/lang/isFunction');
+var isPlainObject = require('lodash/lang/isPlainObject');
 var helper = require('../../helper');
 
 /**
@@ -15,15 +17,19 @@ var select = function (values, onchange, selected) {
   var options = [];
   var attr = {};
 
-  if (_.isFunction(onchange)) {
-    attr.onchange = onchange;
+  if (isFunction(onchange)) {
+    attr.onchange = function (e) {
+      var idx = e.target.selectedIndex;
+      var value = e.target.options[idx].value;
+      onchange(value, e);
+    };
   }
 
-  if (_.isArray(values)) {
+  if (isArray(values)) {
     options = values.map(function buildOptions(item) {
       var key = item;
       var value = item;
-      if (_.isPlainObject(item)) {
+      if (isPlainObject(item)) {
         key = item.key;
         value = item.value;
       }

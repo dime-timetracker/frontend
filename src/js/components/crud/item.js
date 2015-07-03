@@ -28,10 +28,7 @@ component.controller = function (collection, properties, item) {
     model.type = type;
     switch (type) {
       case 'boolean': 
-        model.action = function (e) {
-          var idx = e.target.selectedIndex;
-          var value = e.target.options[idx].value;
-
+        model.action = function (value, e) {
           item[property.key] = value;
           scope.changed = true;
         };
@@ -48,19 +45,16 @@ component.controller = function (collection, properties, item) {
           return result;
         };
 
-        model.action = function (e) {
-          var idx = e.target.selectedIndex;
-          var key = e.target.options[idx].value;
-
+        model.action = function (value, e) {
           item[property.key] = property.collection.find({
-            'alias': key
+            'alias': value
           });
           scope.changed = true;
         };
         break;
       default:
-        model.action = function (e) {
-          item[property.key] = e.target.value;
+        model.action = function (value, e) {
+          item[property.key] = value;
           scope.changed = true;
         };
     }

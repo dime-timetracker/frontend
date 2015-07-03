@@ -2,32 +2,10 @@
 
 var _ = require('lodash');
 var settings = require('./collection/settings');
-
+var extractNamespace = require('./helper/extractNamespace');
+var extractName = require('./helper/extractName');
 var defaultDelimiter = '/';
 
-var extractNamespace = function (name, delimiter) {
-  delimiter = delimiter || '.';
-  var idx = name.lastIndexOf(delimiter);
-  var result = name;
-
-  if (idx > -1) {
-    result = name.slice(0, idx);
-  }
-
-  return result;
-};
-
-var extractName = function (name, delimiter) {
-  delimiter = delimiter || '.';
-  var idx = name.lastIndexOf(delimiter);
-  var result = name;
-
-  if (idx > -1) {
-    result = name.slice(idx-1);
-  }
-
-  return result;
-};
 
 /**
  * Configuration is the interface between Settings and Configuration View.
@@ -75,8 +53,8 @@ Configuration.prototype = _.create(Object.prototype, { constructor: Configuratio
  * @returns {mixed}
  */
 Configuration.prototype.get = function (name, defaultValue) {
-  name = extractName(name, defaultDelimiter);
   var namespace = extractNamespace(name, defaultDelimiter);
+  name = extractName(name, defaultDelimiter);
 
   var value = defaultValue;
   var filter = {
@@ -105,8 +83,8 @@ Configuration.prototype.get = function (name, defaultValue) {
  * @returns {Configuration}
  */
 Configuration.prototype.set = function (name, value) {
-  name = extractName(name, defaultDelimiter);
   var namespace = extractNamespace(name, defaultDelimiter);
+  name = extractName(name, defaultDelimiter);
 
   var filter = {
     name: name

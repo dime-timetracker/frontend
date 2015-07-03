@@ -28,8 +28,7 @@ module.exports = {
           incomePrecisionSeconds: {
             title: "Income Precision (in minutes)",
             description: "Round each timeslice duration according to this precision",
-            namespace: "activity",
-            name: "display/incomePrecisionSeconds",
+            name: "activity/display/incomePrecisionSeconds",
             type: "number",
             onRead: function(value) { return value/60; },
             onWrite: function(value) { return value*60; },

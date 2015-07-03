@@ -6,8 +6,6 @@ var helper = require('./helper');
 var uuid = require('simple-uuid');
 var store = require('./store');
 
-console.log(store.getItem('username'));
-
 /**
  * Auth is the interface to authorize then user agains the api.
  *

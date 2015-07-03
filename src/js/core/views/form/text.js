@@ -1,16 +1,16 @@
 'use strict';
 
 var m = require('mithril');
-var _ = require('lodash');
+var isFunction = require('lodash/lang/isFunction');
 
 var text = function (value, update) {
   var attr = {
     contenteditable: true
   };
 
-  if (_.isFunction(update)) {
+  if (isFunction(update)) {
     attr.onchange = function(e) {
-      update(e.target.textContent);
+      update(e.target.textContent, e);
     };
   }
   return m('span.form-control', attr, value);
