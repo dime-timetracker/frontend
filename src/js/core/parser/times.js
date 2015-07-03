@@ -1,17 +1,16 @@
 'use strict';
 
-// TODO: refactor!!!
-
 var moment = require('moment');
 var isEmpty = require('lodash/lang/isEmpty');
+var now;
 
 function parseStartStop (obj) {
   // 01:23-03:49 (start and stop given)
   var regex = /(\d+:\d{2})-(\d+:\d{2})/;
   var matches = obj._text.match(regex);
   if (null !== matches) {
-    obj._start = moment(moment().format('YYYY-MM-DD ') + matches[1]);
-    obj._stop  = moment(moment().format('YYYY-MM-DD ') + matches[2]);
+    obj._start = moment(moment(now).format('YYYY-MM-DD ') + matches[1]);
+    obj._stop  = moment(moment(now).format('YYYY-MM-DD ') + matches[2]);
     while (obj._stop.isBefore(obj._start)) {
       obj._start = obj._start.subtract(1, 'day');
     }
@@ -24,8 +23,8 @@ function parseStopOnly (obj) {
   var regex = /(-(\d+):(\d{2})h?)/;
   var matches = obj._text.match(regex);
   if (null !== matches) {
-    obj._start = moment();
-    obj._stop = moment();
+    obj._start = moment(now);
+    obj._stop = moment(now);
     obj._stop.hours(matches[2]);
     obj._stop.minutes(matches[3]);
     while (obj._stop.isBefore(obj._start)) {
@@ -40,8 +39,8 @@ function parseStartOnly (obj) {
   var regex = /((\d+):(\d{2})h?-)/;
   var matches = obj._text.match(regex);
   if (null != matches) {
-    obj._stop = moment();
-    obj._start = moment().hours(matches[2])
+    obj._stop = moment(now);
+    obj._start = moment(now).hours(matches[2])
       .minutes(matches[3]);
     while (obj._stop.isBefore(obj._start)) {
       obj._start = obj._start.subtract(1, 'day');
@@ -78,22 +77,23 @@ function parseDuration (obj) {
     }
   }
   if (0 < hours || 0 < minutes) {
-    obj._start = moment();
+    obj._start = moment(now);
     obj._start.subtract(hours, 'hours');
     obj._start.subtract(minutes, 'minutes');
-    obj._stop = moment();
+    obj._stop = moment(now);
     return regex;
   }
 }
 
-module.exports = function (obj) {
+module.exports = function (obj, _now) {
+  now = _now || moment();
   obj._start = null;
   obj._stop = null;
 
-  var matchedRegex = parseStartStop(obj) ||
-    parseStopOnly(obj) ||
-    parseStartOnly(obj) ||
-    parseDuration(obj);
+  var matchedRegex = parseStartStop(obj, now) ||
+    parseStopOnly(obj, now) ||
+    parseStartOnly(obj, now) ||
+    parseDuration(obj, now);
 
   var timeslice = {};
   if (obj._start !== null) {
