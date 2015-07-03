@@ -57,27 +57,30 @@ function inputView (scope) {
   });
 }
 
-module.exports = {
-  controller: function (parentScope) {
-    var scope = {
-      collection: parentScope.collection,
-      shortcut: 'mod-f',
-      inputView: inputView,
-      icon: 'icon-filter-list',
-      htmlId: 'filter'
-    };
-    scope.iconViews = [
-      function () { return buttonReportView(scope); },
-      function () { return buttonBookmarkView(scope); }
-    ];
-    scope.inputView = function () {
-      return inputView(scope);
-    };
-    //TODO trigger Mousetrap
+function controller (parentScope) {
+  var scope = {
+    collection: parentScope.collection,
+    shortcut: 'mod-f',
+    inputView: inputView,
+    icon: 'icon-filter-list',
+    htmlId: 'filter'
+  };
+  scope.iconViews = [
+    function () { return buttonReportView(scope); },
+    function () { return buttonBookmarkView(scope); }
+  ];
+  scope.inputView = function () {
+    return inputView(scope);
+  };
 
-    return scope;
-  },
-  view: function (scope) {
-    return m.component(require('../prompt'), scope);
-  }
+  return scope;
+}
+
+function view (scope) {
+  return m.component(require('../prompt'), scope);
+}
+
+module.exports = {
+  controller: controller,
+  view: view
 };
