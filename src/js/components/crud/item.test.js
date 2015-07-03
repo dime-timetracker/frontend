@@ -3,6 +3,7 @@
 var expect = require('expect.js');
 
 var item = require('./item');
+var Model = require('../../core/Model');
 
 var collection = {
   persist: function (model) {
@@ -41,15 +42,15 @@ var properties = [
   }
 ];
 
-describe('Test crud item', function() {
+describe('Crud item', function() {
   var scope;
   it('should generate columns based on properties', function () {
-    scope = item.controller(collection, properties, {
+    scope = item.controller(collection, properties, new Model({
       name: 'Name',
       alias: 'Alias',
       rate: 30,
       enabled: true
-    });
+    }));
     expect(scope.collection).to.be.eql(collection);
     expect(scope.columns).to.be.an('array');
     expect(scope.columns[0].type).to.be.eql('text');

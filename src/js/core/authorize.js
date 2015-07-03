@@ -4,7 +4,7 @@ var m = require('mithril');
 var _ = require('lodash');
 var helper = require('./helper');
 var uuid = require('simple-uuid');
-var store = require('store');
+var store = require('./store');
 
 /**
  * Auth is the interface to authorize then user agains the api.
@@ -38,9 +38,9 @@ Auth.prototype.constructor = Auth;
  * @returns {string|Auth} stored username or {Auth} object
  */
 Auth.prototype.username = function (username) {
-  var result = store.get('username');
+  var result = store.getItem('username');
   if (username !== undefined) {
-    store.set('username', username);
+    store.setItem('username', username);
     result = this;
   }
   return result;
@@ -58,14 +58,14 @@ Auth.prototype.username = function (username) {
  * @returns {string|Auth} stored device name or {Auth} object
  */
 Auth.prototype.device = function (name) {
-  var result = store.get('device');
+  var result = store.getItem('device');
 
   if (name !== undefined) {
-    store.set('device', name);
+    store.setItem('device', name);
     result = this;
   } else if (_.isUndefined(result) || _.isEmpty(result)) {
     result = uuid();
-    store.set('device', result);
+    store.setItem('device', result);
   }
 
   return result;
@@ -82,10 +82,10 @@ Auth.prototype.device = function (name) {
  * @returns {string|Auth} stored token or {Auth} object
  */
 Auth.prototype.token = function (token) {
-  var result = store.get('token');
+  var result = store.getItem('token');
 
   if (token !== undefined) {
-    store.set('token', token);
+    store.setItem('token', token);
     result = this;
   }
 
@@ -94,13 +94,18 @@ Auth.prototype.token = function (token) {
 
 /**
  * Remove the username and token from store.
- * 
+ *
+ * @param {boolean} all remove device from store too.
  * @returns {Auth}
  */
-Auth.prototype.clear = function () {
+Auth.prototype.clear = function (all) {
 
-  store.remove('username');
-  store.remove('token');
+  store.removeItem('username');
+  store.removeItem('token');
+
+  if (all) {
+    store.removeItem('device');
+  }
 
   return this;
 };
