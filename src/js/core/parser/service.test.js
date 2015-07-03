@@ -22,4 +22,13 @@ describe('service alias parser', function() {
     expect(result._text).to.eql('foo  baz');
   });
 
+  it('should extract service alias containing numbers', function () {
+    var input = 'foo :qa2 baz';
+    var result = parseService({ _text: input });
+    expect(result).to.have.property('service');
+    expect(result.service).to.eql({alias: 'qa2'});
+    expect(result).to.have.property('_text');
+    expect(result._text).to.eql('foo  baz');
+  });
+
 });
