@@ -16,6 +16,14 @@ function onSubmitFilter (e, scope) {
   });
 }
 
+function onKeyUp (e, scope) {
+  var keyCode = e.which || e.keyCode;
+  if (13 === keyCode) {
+    onSubmitFilter(e, scope);
+    e.target.blur();
+  }
+}
+
 function buttonReportView () {
   return m('.media-object.pull-right',
     m('a[href="/report"].form-icon-label', {
@@ -44,7 +52,7 @@ function inputView (scope) {
     onblur: scope.blur,
     onkeydown: scope.keydown,
     onkeyup: function(e) {
-      debug(e.target.value);
+      onKeyUp(e, scope);
     }
   });
 }
@@ -64,9 +72,6 @@ module.exports = {
     ];
     scope.inputView = function () {
       return inputView(scope);
-    };
-    scope.blur = function (e) {
-      onSubmitFilter(e, scope);
     };
     //TODO trigger Mousetrap
 
