@@ -1,6 +1,7 @@
 'use strict';
 
 var m = require('mithril');
+var t = require('../../translation');
 var isFunction = require('lodash/lang/isFunction');
 var isString = require('lodash/lang/isString');
 
@@ -11,9 +12,15 @@ var isString = require('lodash/lang/isString');
  * @param {string} text Text is displayed as title.
  * @param {string} action
  * @param {function} onclick
+ * @param {string} icon
+ * @param {string} color
  * @returns {VirtualElement}
  */
-module.exports = function (text, action, onclick) {
+module.exports = function (text, action, onclick, icon, color) {
+  text = t(text);
+  icon = icon || '.icon-add';
+  color = color || '.fbtn-red';
+  
   var attr = {
     config: m.route,
     title: text
@@ -28,6 +35,6 @@ module.exports = function (text, action, onclick) {
   }
 
   return m('.fbtn-container', m('.fbtn-inner', 
-    m('a[href=""].fbtn.fbtn-red', attr, [ m('span.fbtn-text', text), m('span.icon.icon-add') ])
+    m('a[href=""].fbtn' + color, attr, [ m('span.fbtn-text', text), m('span.icon' + icon) ])
   ));
 };

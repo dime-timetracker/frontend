@@ -4,7 +4,9 @@ var m = require('mithril');
 var forOwn = require('lodash/object/forOwn');
 var configuration = require('../core/configuration');
 
+// views
 var card = require('./setting/card');
+var buttonView = require('../core/views/button');
 
 var component = {};
 
@@ -21,7 +23,7 @@ component.view = function (scope) {
     content.push(card(value));
   });
 
-  return m('div', content);
+  return m('div', [content, buttonView('Save', '/settings', undefined, '.icon-done', '.fbtn-green')]);
 };
 
 module.exports = component;

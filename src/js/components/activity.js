@@ -23,7 +23,7 @@ function promptView (scope) {
 
 function activityListView (scope) {
   var list = scope.collection.map(itemView, scope);
-  return m('.tile-wrap', [ list, buttonView(t('Add Activity'), '/', scope.add) ]);
+  return m('.tile-wrap', [ list, buttonView('Add Activity', '/', scope.add) ]);
 }
 
 module.exports = {
