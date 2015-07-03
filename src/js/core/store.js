@@ -1,13 +1,13 @@
 'use strict';
 
 var Store = function () {
-  if (!this instanceof Store) {
+  if (!(this instanceof Store)) {
     return new Store();
   }
 };
 
-Store.prototype = {};
-Store.prototype.contructor = Store;
+Store.prototype = Object.create(null);
+Store.prototype.constructor = Store;
 
 Store.prototype.getItem = function (key) {
   return (this[key] !== undefined) ? this[key] : undefined;
@@ -31,6 +31,6 @@ Store.prototype.clear = function (key) {
   }
 };
 
-module.export = global.window.localStorage || new Store();
+module.exports = global.window.localStorage || new Store();
 
 
