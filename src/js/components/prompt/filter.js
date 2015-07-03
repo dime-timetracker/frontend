@@ -4,7 +4,7 @@ var debug = global.window.dimeDebug('prompt.filter');
 var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
-var parser = require('../../core/parser');
+var mousetrap = require('coreh-mousetrap');
 
 function onSubmitFilter (e, scope) {
   debug('Filtering by ' + e.target.value);
@@ -57,6 +57,14 @@ function inputView (scope) {
   });
 }
 
+function registerMouseEvents (scope) {
+  debug(scope.shortcut);
+  mousetrap.bind(scope.shortcut, function() {
+    global.window.document.getElementById('filter').focus();
+    return false;
+  });
+}
+
 function controller (parentScope) {
   var scope = {
     collection: parentScope.collection,
@@ -72,6 +80,7 @@ function controller (parentScope) {
   scope.inputView = function () {
     return inputView(scope);
   };
+  registerMouseEvents(scope);
 
   return scope;
 }
