@@ -5,9 +5,8 @@ var t = require('../translation');
 var activities = require('../core/collection/activities');
 
 var configuration = require('../core/configuration');
-configuration.activity = require('./activity/config');
-configuration.prompt = require('./prompt/config');
-
+configuration.addSection(require('./prompt/config'));
+configuration.addSection(require('./activity/config'));
 
 var buttonView = require('../core/views/button');
 var itemView = require('./activity/views/item');

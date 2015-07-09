@@ -29,24 +29,24 @@ component.controller = function () {
 component.view = function (scope) {
   var content = [];
 
-  forOwn(configuration, function (section) {
-    // sections
+  forOwn(configuration.sections, function (section, key) {
     var children = [];
-    forOwn(section.children, function (value, ckey) {
-      children.push(m('p.card-heading', headerWithDescription(value)));
+    forOwn(section, function (values, ckey) {
+      var path = key + '/' + ckey;
+      children.push(m('p.card-heading', headerWithDescription(path)));
 
-      forOwn(value.children, function (v) {
-        children.push(m.component(form, v));
+      forOwn(values, function (value, valueKey) {
+        children.push(m.component(form, {configItem: value, path: path + '/' + valueKey} ));
       });
     });
     if (children.length > 0) {
-      content.push(m('h2.content-sub-heading', headerWithDescription(section)));
+      content.push(m('h2.content-sub-heading', headerWithDescription(key)));
       content.push(cardView(children));
     }
   });
 
   if (scope.dirty.length > 0) {
-    content.push(buttonView('Save', '/settings', undefined, '.icon-done', '.fbtn-green'));
+    content.push(buttonView('button.save', '/settings', undefined, '.icon-done', '.fbtn-green'));
   }
 
   return m('div', content);
