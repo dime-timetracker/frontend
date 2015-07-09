@@ -5,6 +5,7 @@ var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
 var mousetrap = require('coreh-mousetrap');
+var bookmarks = require('./filter/bookmarks');
 
 var configuration = require('../../core/configuration');
 
@@ -20,6 +21,7 @@ function onSubmitFilter (e, scope) {
 
 function onKeyUp (e, scope) {
   var keyCode = e.which || e.keyCode;
+  scope.query = e.target.value.trim();
   if (13 === keyCode) {
     onSubmitFilter(e, scope);
     e.target.blur();
@@ -35,12 +37,13 @@ function buttonReportView () {
 }
 
 function buttonBookmarkView (scope) {
+  var isBookmarked = bookmarks.isKnownQuery(scope.query);
   return m('.media-object.pull-right',
     m('span.form-icon-label', {
       onclick: function () {
-        debug('Clicked bookmark icon');
+        bookmarks.add('', scope.query);
       }
-    }, m('span.icon.icon-bookmark' + (scope.isBookmarked ? '' : '-outline')))
+    }, m('span.icon.icon-bookmark' + (isBookmarked ? '' : '-outline')))
   );
 }
 
