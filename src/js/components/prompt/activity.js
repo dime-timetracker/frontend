@@ -3,6 +3,25 @@
 var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
+var mousetrap = require('coreh-mousetrap');
+var debug = global.window.dimeDebug('prompt.activity');
+var parse = require('../../core/parser').parse;
+
+function createActivity (e, scope) {
+  var string = e.target.value;
+  debug('Creating activity by ' + string);
+  var activity = parse(string, ['customer', 'project', 'service', 'tags', 'times', 'description']);
+  scope.addActivity(activity);
+  e.target.blur();
+}
+
+function onKeyUp (e, scope) {
+  var keyCode = e.which || e.keyCode;
+  if (13 === keyCode) {
+    createActivity(e, scope);
+    e.target.blur();
+  }
+}
 
 function inputView (scope) {
   return m('input.form-control.mousetrap', {
@@ -12,25 +31,42 @@ function inputView (scope) {
     }),
     onfocus: scope.focus,
     onblur: scope.blur,
-    onkeydown: scope.keydown
+    onkeydown: scope.keydown,
+    onkeyup: function (e) {
+      onKeyUp(e, scope);
+    }
   });
 }
 
-module.exports = {
-  controller: function (parentScope) {
-    var scope = {
-      shortcut: 'mod-a',
-      icon: 'icon-access-time',
-      htmlId: 'prompt'
-    };
-    scope.inputView = function () {
-      return inputView(scope);
-    };
-    //TODO trigger Mousetrap
+function registerMouseEvents (scope) {
+  mousetrap(global.window).bind(scope.shortcut, function() {
+    global.window.document.getElementById('prompt').focus();
+    return false;
+  });
+}
 
-    return scope;
-  },
-  view: function (scope) {
-    return m.component(require('../prompt'), scope);
-  }
+function controller (listScope) {
+  var scope = {
+    shortcut: 'd a',
+    icon: 'icon-access-time',
+    htmlId: 'prompt',
+    addActivity: function (activity) {
+      listScope.collection.persist(activity);
+    },
+  };
+  scope.inputView = function () {
+    return inputView(scope);
+  };
+  registerMouseEvents(scope);
+
+  return scope;
+}
+
+function view (scope) {
+  return m.component(require('../prompt'), scope);
+}
+
+module.exports = {
+  controller: controller,
+  view: view
 };
