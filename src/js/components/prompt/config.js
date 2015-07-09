@@ -62,7 +62,7 @@ module.exports = {
           namespace: 'prompt',
           name: 'shortcuts/focusFilter',
           type: 'text',
-          defaultValue: 'mod+f'
+          defaultValue: 'd f'
         }
       }
     }
