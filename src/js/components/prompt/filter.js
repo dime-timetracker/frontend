@@ -6,6 +6,8 @@ var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
 var mousetrap = require('coreh-mousetrap');
 
+var configuration = require('../../core/configuration');
+
 function onSubmitFilter (e, scope) {
   debug('Filtering by ' + e.target.value);
   scope.collection.fetch({
@@ -67,7 +69,7 @@ function registerMouseEvents (scope) {
 function controller (parentScope) {
   var scope = {
     collection: parentScope.collection,
-    shortcut: 'mod-f',
+    shortcut: configuration.get('prompt/shortcuts/focusFilter', 'd f'),
     inputView: inputView,
     icon: 'icon-filter-list',
     htmlId: 'filter'
