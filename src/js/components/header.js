@@ -16,12 +16,9 @@ var component = {};
 
 component.controller = function () {
   var scope = {
-    icon: 'icon-access-time',
-    name: 'Dime Timetracker'
+    icon: configuration.get('general/header/icon'),
+    name: configuration.get('general/header/name'),
   };
-  // TODO
-  //scope.icon = scope.config.get(scope.config.general.children.customize.children.icon);
-  //scope.name = scope.config.get(scope.config.general.children.customize.children.name);
   return scope;
 };
 
@@ -37,9 +34,7 @@ component.view = function (scope) {
     ),
     logoView(scope)
   ];
-  var color = 'green';
-  // TODO
-  //var color = scope.config.get(scope.config.general.children.customize.children.color);
+  var color = configuration.get('general/header/color');
   if (color) {
     color = '.' + color.split(' ').join('.');
   }
