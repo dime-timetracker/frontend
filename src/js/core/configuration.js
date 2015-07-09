@@ -23,8 +23,16 @@ var configuration = {
  * @returns {mixed}
  */
 configuration.get = function (name, defaultValue) {
+  var nameParts = name.split(defaultDelimiter);
   var namespace = extractNamespace(name, defaultDelimiter);
   name = extractName(name, defaultDelimiter);
+
+  var section = this.sections[nameParts[0]];
+  if (undefined === defaultValue && section) {
+    if (section[nameParts[1]] && section[nameParts[1]][nameParts[2]]) {
+      defaultValue = section[nameParts[1]][nameParts[2]].defaultValue;
+    }
+  }
 
   var value = defaultValue;
   var filter = {
