@@ -5,9 +5,10 @@ var find = require('lodash/collection/find');
 var isEqual = require('lodash/lang/isEqual');
 
 var configPath = 'filter/bookmarks';
+var bookmarks;
 
 function getList () {
-  return JSON.parse(configuration.get(configPath, '[]'));
+  return bookmarks || JSON.parse(configuration.get(configPath, '[]'));
 }
 
 function getQueryParts (query) {
@@ -51,6 +52,7 @@ function remove (name) {
 }
 
 module.exports = {
+  injectList: function (list) { bookmarks = list }, // for testing purposes
   add: add,
   remove: remove,
   update: update,
