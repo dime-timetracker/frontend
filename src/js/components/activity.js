@@ -27,9 +27,6 @@ function activityListView (scope) {
 
 module.exports = {
   controller: function () {
-    // FIXME move to init process
-    activities.fetch();
-
     var scope = {
       collection: activities
     };

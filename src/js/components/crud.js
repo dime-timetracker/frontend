@@ -21,11 +21,6 @@ var component = {};
 
 component.allowed = ['customer', 'project', 'service'];
 
-// FIXME move to init process
-_.forOwn(collections, function (value, key) {
-  value.fetch();
-});
-
 component.controller = function () {
   var scope = {};
 

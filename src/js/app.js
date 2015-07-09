@@ -11,6 +11,16 @@ var routes = {
   '/:name': require('./components/crud')
  };
 
+function prefetchData () {
+  require('./core/collection/activities').fetch();
+  require('./core/collection/customers').fetch();
+  require('./core/collection/projects').fetch();
+  require('./core/collection/services').fetch();
+  require('./core/collection/settings').fetch();
+  require('./core/collection/tags').fetch();
+}
+prefetchData();
+
 m.route.mode = 'hash';
 m.route(document.getElementById("app"), '/', routes);
 m.mount(document.getElementById("app-header"), require('./components/header'));
