@@ -16,12 +16,13 @@ function prefetchData () {
   require('./core/collection/customers').fetch();
   require('./core/collection/projects').fetch();
   require('./core/collection/services').fetch();
-  require('./core/collection/settings').fetch();
   require('./core/collection/tags').fetch();
 }
-prefetchData();
+require('./core/collection/settings').fetch().then(function () {
+  prefetchData();
 
-m.route.mode = 'hash';
-m.route(document.getElementById("app"), '/', routes);
-m.mount(document.getElementById("app-header"), require('./components/header'));
-m.mount(document.getElementById("app-menu"), require('./components/menu'));
+  m.route.mode = 'hash';
+  m.route(global.window.document.getElementById("app"), '/', routes);
+  m.mount(global.window.document.getElementById("app-header"), require('./components/header'));
+  m.mount(global.window.document.getElementById("app-menu"), require('./components/menu'));
+});
