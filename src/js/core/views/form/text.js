@@ -9,7 +9,7 @@ var text = function (value, update) {
   };
 
   if (isFunction(update)) {
-    attr.onchange = function(e) {
+    attr.oninput = function(e) {
       update(e.target.textContent, e);
     };
   }
