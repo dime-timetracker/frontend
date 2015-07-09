@@ -58,8 +58,7 @@ function inputView (scope) {
 }
 
 function registerMouseEvents (scope) {
-  debug(scope.shortcut);
-  mousetrap.bind(scope.shortcut, function() {
+  mousetrap(global.window).bind(scope.shortcut, function() {
     global.window.document.getElementById('filter').focus();
     return false;
   });
