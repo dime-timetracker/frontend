@@ -19,6 +19,7 @@
     "mithril": "^0.2.0",
     "moment": "^2.10.3",
     "mousetrap": "^1.5.3",
+    "mousetrap-pause": "^1.0.0",
     "simple-uuid": "0.0.1",
     "translate.js": "0.0.2"
   },
