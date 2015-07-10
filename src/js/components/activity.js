@@ -9,7 +9,7 @@ configuration.addSection(require('./shell/config'));
 configuration.addSection(require('./activity/config'));
 
 var buttonView = require('../core/views/button');
-var itemView = require('./activity/views/item');
+var item = require('./activity/item');
 var grid = require('../core/views/grid');
 var card = require('../core/views/card');
 
@@ -24,11 +24,13 @@ function consoleView (scope) {
 }
 
 function activityListView (scope) {
-  var list = scope.collection.map(itemView, scope);
+  var list = scope.collection.map(function (activity) {
+    return m.component(item, activity);
+  }, scope);
   return m('.tile-wrap', [ list, buttonView('Add Activity', '/', scope.add) ]);
 }
 
-module.exports = {
+var component = {
   controller: function () {
     var scope = {
       collection: activities
@@ -45,3 +47,5 @@ module.exports = {
     return m('.activities', [ shellView(scope), activityListView(scope), consoleView(scope) ]);
   }
 };
+
+module.exports = component;
