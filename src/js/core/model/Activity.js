@@ -21,10 +21,16 @@ var Activity = function (data) {
     updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
   }, data || {}));
 
-  this.customer = new Customer(this.customer);
-  this.project = new Project(this.project);
-  this.service = new Service(this.service);
-  
+  if (this.customer) {
+    this.customer = new Customer(this.customer);
+  }
+  if (this.project) {
+    this.project = new Project(this.project);
+  }
+  if (this.service) {
+    this.service = new Service(this.service);
+  }
+
   this.tags = new Collection({
     resourceUrl: 'tag',
     model: Tag
@@ -47,7 +53,20 @@ var Activity = function (data) {
     }
   }, this.timeslices || []);
 };
-Activity.prototype = _.create(Model.prototype, {constructor: Activity});
+Activity.prototype = _.create(Model.prototype, {
+  constructor: Activity,
+  properties: {
+    customer: {
+      type: 'relation'
+    },
+    project: {
+      type: 'relation'
+    },
+    service: {
+      type: 'relation'
+    }
+  }
+});
 
 Activity.prototype.onSwitchRelation = function (relation, item) {
   this[relation] = item;
@@ -170,4 +189,3 @@ Activity.prototype.removeTimeslice = function (timeslice) {
 };
 
 module.exports = Activity;
-

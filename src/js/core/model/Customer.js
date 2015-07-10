@@ -16,6 +16,22 @@ var Customer = function (data) {
 Customer.prototype = _.create(Model.prototype, {
   constructor: Customer,
   shortcut: '@',
+  //
+  // properties: {
+  //   name: {
+  //     type: 'text'
+  //   },
+  //   alias: {
+  //     type: 'text'
+  //   },
+  //   rate: {
+  //     type: 'number'
+  //   },
+  //   enabled: {
+  //     type: 'boolean'
+  //   }
+  // }
+
   properties: [
     {
       key: 'name',

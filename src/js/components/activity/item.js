@@ -2,10 +2,12 @@
 
 var m = require('mithril');
 var t = require('../../translation');
-var timesliceList =  require('./timesliceList')
+var timesliceList =  require('./timesliceList');
 
 var badge = require('./badge');
 var btnStartStop = require('./btnStartStop');
+var crudItem =  require('../crud/item');
+var description =  require('./description');
 
 var component = {};
 
@@ -47,15 +49,12 @@ component.view = function (scope) {
   inner.push(m('span.pull-right', m.component(btnStartStop, scope.model)));
 
   // Description
-  inner.push(m('span', {
-    contenteditable: true,
-    oninput: scope.updateDescription
-  }, scope.model.description));
+  inner.push(m.component(description, scope.model));
 
   // Badges for customer, project, service
-  inner.push(m.component(badge, scope.model.customer));
-  inner.push(m.component(badge, scope.model.project));
-  inner.push(m.component(badge, scope.model.service));
+  // inner.push(m.component(badge, scope.model.customer));
+  // inner.push(m.component(badge, scope.model.project));
+  // inner.push(m.component(badge, scope.model.service));
 
   var content = [];
   content.push(m('.tile-inner', inner));
