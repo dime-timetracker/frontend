@@ -4,10 +4,8 @@ var debug = global.window.dimeDebug('shell.filter');
 var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
-var mousetrap = require('mousetrap');
 var bookmarks = require('./filter/bookmarks');
 var shell = require('../shell');
-
 var configuration = require('../../core/configuration');
 
 function onSubmitFilter (e, scope) {
@@ -18,15 +16,7 @@ function onSubmitFilter (e, scope) {
     },
     reset: true
   });
-}
-
-function onKeyUp (e, scope) {
-  var keyCode = e.which || e.keyCode;
-  scope.query = e.target.value.trim();
-  if (13 === keyCode) {
-    onSubmitFilter(e, scope);
-    e.target.blur();
-  }
+  scope.blur(e, scope);
 }
 
 function buttonReportView () {
@@ -57,31 +47,22 @@ function inputView (scope) {
     onfocus: scope.focus,
     onblur: scope.blur,
     onkeydown: scope.keydown,
-    onkeyup: function(e) {
-      onKeyUp(e, scope);
-    },
     value: scope.query
-  });
-}
-
-function registerMouseEvents (scope) {
-  mousetrap(global.window).bind(scope.shortcut, function() {
-    global.window.document.getElementById('filter').focus();
-    return false;
   });
 }
 
 function controller (listScope) {
   var scope = {
     collection: listScope.collection,
-    shortcut: configuration.get('shell/shortcuts/focusFilter', 'd f'),
+    shortcut: configuration.get('shell/shortcuts/focusFilter'),
     inputView: inputView,
     icon: 'icon-filter-list',
     htmlId: 'filter',
     query: null,
   };
-  scope.focus = function (e) {shell.focus(e, scope);};
+  scope.onSubmit = function (e) {onSubmitFilter(e, scope);};
   scope.blur = function (e) {shell.blur(e, scope);};
+  scope.focus = function (e) {shell.focus(e, scope);};
   scope.iconViews = [
     function () { return buttonReportView(scope); },
     function () { return buttonBookmarkView(scope); }
@@ -89,7 +70,7 @@ function controller (listScope) {
   scope.inputView = function () {
     return inputView(scope);
   };
-  registerMouseEvents(scope);
+  shell.registerMouseEvents(scope);
 
   return scope;
 }

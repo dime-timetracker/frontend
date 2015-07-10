@@ -4,16 +4,23 @@ var m = require('mithril');
 var mousetrap = require('mousetrap-pause')(require('mousetrap'));
 var configuration = require('../core/configuration');
 
+function registerMouseEvents (scope) {
+  mousetrap(global.window).bind(scope.shortcut, function() {
+    global.window.document.getElementById(scope.htmlId).focus();
+    return false;
+  });
+}
+
 function blur (e) {
-  mousetrap.unpause();
-  e.target.value = '';
+  mousetrap(global.window).unpause();
   e.target.blur();
 }
 
 function focus (e, scope) {
-  mousetrap.pause();
+  mousetrap(global.window).pause();
 
   mousetrap(e.target).bind(configuration.get('shell/shortcuts/blurShell'), function () {
+    e.target.value = '';
     blur(e, scope);
   });
 
@@ -40,31 +47,38 @@ function focus (e, scope) {
   });
 }
 
-module.exports = {
-  controller: function (parentScope) {
-    var scope = {
-      htmlId: parentScope.htmlId,
-      icon: parentScope.icon,
-      iconViews: parentScope.iconViews || [],
-      inputView: parentScope.inputView,
-      shortcut: parentScope.shortcut,
-    };
-    scope.focus = function (e) {focus(e, scope);};
-    scope.blur = function (e) {blur(e, scope);};
-    return scope;
-  },
-  view: function (scope) {
-    var parts = scope.iconViews.map(function (view) {
-      return view();
-    });
-    parts.unshift(
+function controller (parentScope) {
+  var scope = {
+    htmlId: parentScope.htmlId,
+    icon: parentScope.icon,
+    iconViews: parentScope.iconViews || [],
+    inputView: parentScope.inputView,
+    shortcut: parentScope.shortcut,
+  };
+  scope.focus = function (e) {focus(e, scope);};
+  scope.blur = function (e) {blur(e, scope);};
+  return scope;
+}
+
+function view (scope) {
+  var parts = scope.iconViews.map(function (view) {
+    return view();
+  });
+  parts.unshift(
       m('.media-object.pull-left',
         m('label.form-icon-label', {
           for: scope.htmlId
         }, m('span.icon.' + scope.icon))
-      )
-    );
-    parts.push(m('.media-inner', scope.inputView()));
-    return m('.media', parts);
-  }
+       )
+      );
+  parts.push(m('.media-inner', scope.inputView()));
+  return m('.media', parts);
+}
+
+module.exports = {
+  controller: controller,
+  view: view,
+  focus: focus,
+  blur: blur,
+  registerMouseEvents: registerMouseEvents
 };

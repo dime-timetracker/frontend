@@ -5,7 +5,7 @@ var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
 var debug = global.window.dimeDebug('shell.activity');
 var parse = require('../../core/parser').parse;
-var mousetrap = require('mousetrap');
+var shell = require('../shell');
 
 function createActivity (e, scope) {
   var string = e.target.value;
@@ -16,14 +16,6 @@ function createActivity (e, scope) {
   e.target.blur();
 }
 
-function onKeyUp (e, scope) {
-  var keyCode = e.which || e.keyCode;
-  if (13 === keyCode) {
-    createActivity(e, scope);
-    e.target.blur();
-  }
-}
-
 function inputView (scope) {
   return m('input.form-control.mousetrap', {
     id: scope.htmlId,
@@ -31,16 +23,6 @@ function inputView (scope) {
     onfocus: scope.focus,
     onblur: scope.blur,
     onkeydown: scope.keydown,
-    onkeyup: function (e) {
-      onKeyUp(e, scope);
-    }
-  });
-}
-
-function registerMouseEvents (scope) {
-  mousetrap(global.window).bind(scope.shortcut, function() {
-    global.window.document.getElementById('shell').focus();
-    return false;
   });
 }
 
@@ -59,13 +41,16 @@ function controller (listScope) {
   scope.inputView = function () {
     return inputView(scope);
   };
-  registerMouseEvents(scope);
+  scope.onSubmit = function (e) {createActivity(e, scope);};
+  scope.blur = function (e) {shell.blur(e, scope);};
+  scope.focus = function (e) {shell.focus(e, scope);};
+  shell.registerMouseEvents(scope);
 
   return scope;
 }
 
 function view (scope) {
-  return m.component(require('../shell'), scope);
+  return m.component(shell, scope);
 }
 
 module.exports = {
