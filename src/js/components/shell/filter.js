@@ -1,19 +1,20 @@
 'use strict';
 
-var debug = global.window.dimeDebug('prompt.filter');
+var debug = global.window.dimeDebug('shell.filter');
 var m = require('mithril');
 var t = require('../../translation');
 var formatShortcut = require('../../core/helper').mousetrapCommand;
-var mousetrap = require('coreh-mousetrap');
+var mousetrap = require('mousetrap');
 var bookmarks = require('./filter/bookmarks');
+var shell = require('../shell');
 
 var configuration = require('../../core/configuration');
 
 function onSubmitFilter (e, scope) {
-  debug('Filtering by ' + e.target.value);
+  scope.query = e.target.value;
   scope.collection.fetch({
     requestAttributes: {
-      filter: e.target.value
+      filter: scope.query
     },
     reset: true
   });
@@ -50,7 +51,7 @@ function buttonBookmarkView (scope) {
 function inputView (scope) {
   return m('input.form-control.mousetrap', {
     id: scope.htmlId,
-    placeholder: t('prompt.filter.placeholder', {
+    placeholder: t('shell.filter.placeholder', {
       shortcut: formatShortcut(scope.shortcut)
     }),
     onfocus: scope.focus,
@@ -58,7 +59,8 @@ function inputView (scope) {
     onkeydown: scope.keydown,
     onkeyup: function(e) {
       onKeyUp(e, scope);
-    }
+    },
+    value: scope.query
   });
 }
 
@@ -69,14 +71,17 @@ function registerMouseEvents (scope) {
   });
 }
 
-function controller (parentScope) {
+function controller (listScope) {
   var scope = {
-    collection: parentScope.collection,
-    shortcut: configuration.get('prompt/shortcuts/focusFilter', 'd f'),
+    collection: listScope.collection,
+    shortcut: configuration.get('shell/shortcuts/focusFilter', 'd f'),
     inputView: inputView,
     icon: 'icon-filter-list',
-    htmlId: 'filter'
+    htmlId: 'filter',
+    query: null,
   };
+  scope.focus = function (e) {shell.focus(e, scope);};
+  scope.blur = function (e) {shell.blur(e, scope);};
   scope.iconViews = [
     function () { return buttonReportView(scope); },
     function () { return buttonBookmarkView(scope); }
@@ -90,7 +95,7 @@ function controller (parentScope) {
 }
 
 function view (scope) {
-  return m.component(require('../prompt'), scope);
+  return m.component(shell, scope);
 }
 
 module.exports = {

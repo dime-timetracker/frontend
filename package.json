@@ -14,11 +14,11 @@
     "watchify": "^3.2.2"
   },
   "dependencies": {
-    "coreh-mousetrap": "^2.0.0",
     "debug": "^2.2.0",
     "lodash": "^3.9.3",
     "mithril": "^0.2.0",
     "moment": "^2.10.3",
+    "mousetrap": "^1.5.3",
     "simple-uuid": "0.0.1",
     "translate.js": "0.0.2"
   },

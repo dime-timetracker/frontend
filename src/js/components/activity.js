@@ -5,7 +5,7 @@ var t = require('../translation');
 var activities = require('../core/collection/activities');
 
 var configuration = require('../core/configuration');
-configuration.addSection(require('./prompt/config'));
+configuration.addSection(require('./shell/config'));
 configuration.addSection(require('./activity/config'));
 
 var buttonView = require('../core/views/button');
@@ -13,14 +13,14 @@ var itemView = require('./activity/views/item');
 var grid = require('../core/views/grid');
 var card = require('../core/views/card');
 
-function promptView (scope) {
+function shellView (scope) {
   return card(grid(
-    m.component(require('./prompt/filter'), scope)
+    m.component(require('./shell/filter'), scope)
   ));
 }
 
 function consoleView (scope) {
-  return m('div.console', card(grid(m.component(require('./prompt/activity'), scope))));
+  return m('div.console', card(grid(m.component(require('./shell/activity'), scope))));
 }
 
 function activityListView (scope) {
@@ -42,6 +42,6 @@ module.exports = {
     return scope;
   },
   view: function (scope) {
-    return m('.activities', [ promptView(scope), activityListView(scope), consoleView(scope) ]);
+    return m('.activities', [ shellView(scope), activityListView(scope), consoleView(scope) ]);
   }
 };

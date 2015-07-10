@@ -11,7 +11,7 @@ var configuration = {
   sections: {
     general: {},
     activity: {},
-    prompt: {}
+    shell: {}
   }
 };
 
