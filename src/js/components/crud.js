@@ -55,7 +55,7 @@ component.view = function (scope) {
   var header = m('thead', m('tr', headers));
 
   var rows = m('tbody', scope.collection.map(function (item) {
-    return m.component(itemComponent, scope.collection, scope.properties, item);
+    return m.component(itemComponent, item, scope.collection);
   }));
 
   var list = [

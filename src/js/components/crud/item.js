@@ -11,13 +11,13 @@ var form = {
 
 var component = {};
 
-component.controller = function (collection, properties, item) {
+component.controller = function (item, collection) {
   var scope = {};
   scope.collection = collection;
   scope.item = item;
   scope.changed = item.isNew();
 
-  scope.columns = properties.map(function (property) {
+  scope.columns = item.properties.map(function (property) {
     var model = {};
     var type = property.type || 'text';
 
@@ -27,7 +27,7 @@ component.controller = function (collection, properties, item) {
     };
     model.type = type;
     switch (type) {
-      case 'boolean': 
+      case 'boolean':
         model.action = function (value, e) {
           item[property.key] = value;
           scope.changed = true;
@@ -70,7 +70,7 @@ component.controller = function (collection, properties, item) {
 
   scope.remove = function (e) {
     if (e) e.preventDefault();
-    
+
     var question = t('Do you really want to delete "[name]"?').replace('[name]', item.name);
     if (global.window.confirm(question)) {
       collection.remove(item);
@@ -102,7 +102,7 @@ component.view = function (scope) {
   var actions = [
     m("a.btn.btn-flat", { config: m.route, href: m.route(), onclick: scope.remove }, m("span.icon.icon-delete"))
   ];
-  
+
   if (scope.changed) {
     actions.push(m("a.btn.btn-yellow", { config: m.route, href: m.route(), onclick: scope.save }, m("span.icon.icon-done")));
   }
