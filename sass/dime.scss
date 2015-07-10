@@ -1,5 +1,11 @@
 @import 'material/base.scss';
 
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}
+}
 
 .header .nav li:hover ul.hide {
   display: inherit;
@@ -166,4 +172,41 @@
 .activity-icon {
   background: url('../img/activity-gray.png') no-repeat center right;
   padding-right: 28px;
+}
+
+.console {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background-color: black;
+  color: green;
+  z-index: 20;
+
+  .card {
+    background: black;
+    border: none;
+
+    input.form-control {
+      border-bottom: none;
+      color: green;
+      font-family: Consolas,'Lucida Console','DejaVu Sans Mono';
+      font-size: 80%;
+      font-weight: bold;
+
+      @include placeholder {
+        color: #484;
+      }
+
+      &:focus {
+        @include placeholder {
+          color: #252;
+        }
+      }
+    }
+  }
+}
+
+.fbtn-container {
+  bottom: 34px;
 }

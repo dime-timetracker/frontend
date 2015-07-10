@@ -26,9 +26,7 @@ function onKeyUp (e, scope) {
 function inputView (scope) {
   return m('input.form-control.mousetrap', {
     id: scope.htmlId,
-    placeholder: t('prompt.activity.placeholder', {
-      shortcut: formatShortcut(scope.shortcut)
-    }),
+    placeholder: scope.placeholder,
     onfocus: scope.focus,
     onblur: scope.blur,
     onkeydown: scope.keydown,
@@ -48,12 +46,15 @@ function registerMouseEvents (scope) {
 function controller (listScope) {
   var scope = {
     shortcut: 'd a',
-    icon: 'icon-access-time',
+    icon: 'icon-play-arrow',
     htmlId: 'prompt',
     addActivity: function (activity) {
       listScope.collection.persist(activity);
-    },
+    }
   };
+  scope.placeholder = ' ' + t('prompt.activity.placeholder', {
+    shortcut: formatShortcut(scope.shortcut)
+  });
   scope.inputView = function () {
     return inputView(scope);
   };

@@ -15,9 +15,12 @@ var card = require('../core/views/card');
 
 function promptView (scope) {
   return card(grid(
-    m.component(require('./prompt/activity'), scope),
     m.component(require('./prompt/filter'), scope)
   ));
+}
+
+function consoleView (scope) {
+  return m('div.console', card(grid(m.component(require('./prompt/activity'), scope))));
 }
 
 function activityListView (scope) {
@@ -39,6 +42,6 @@ module.exports = {
     return scope;
   },
   view: function (scope) {
-    return m('.activities', [ promptView(scope), activityListView(scope) ]);
+    return m('.activities', [ promptView(scope), activityListView(scope), consoleView(scope) ]);
   }
 };

@@ -10691,4 +10691,50 @@ input[type="checkbox"]:checked + .switch-toggle-yellow, input[type="radio"]:chec
   background: url("../img/activity-gray.png") no-repeat center right;
   padding-right: 28px; }
 
+.console {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  background-color: black;
+  color: green;
+  z-index: 20; }
+  .console .card {
+    background: black;
+    border: none; }
+    .console .card input.form-control, .console .card input.picker__select--month,
+    .console .card input.picker__select--year {
+      border-bottom: none;
+      color: green;
+      font-family: Consolas,'Lucida Console','DejaVu Sans Mono';
+      font-size: 80%;
+      font-weight: bold; }
+      .console .card input.form-control::-webkit-input-placeholder, .console .card input.picker__select--month::-webkit-input-placeholder,
+      .console .card input.picker__select--year::-webkit-input-placeholder {
+        color: #484; }
+      .console .card input.form-control:-moz-placeholder, .console .card input.picker__select--month:-moz-placeholder,
+      .console .card input.picker__select--year:-moz-placeholder {
+        color: #484; }
+      .console .card input.form-control::-moz-placeholder, .console .card input.picker__select--month::-moz-placeholder,
+      .console .card input.picker__select--year::-moz-placeholder {
+        color: #484; }
+      .console .card input.form-control:-ms-input-placeholder, .console .card input.picker__select--month:-ms-input-placeholder,
+      .console .card input.picker__select--year:-ms-input-placeholder {
+        color: #484; }
+      .console .card input.form-control:focus::-webkit-input-placeholder, .console .card input.picker__select--month:focus::-webkit-input-placeholder,
+      .console .card input.picker__select--year:focus::-webkit-input-placeholder {
+        color: #252; }
+      .console .card input.form-control:focus:-moz-placeholder, .console .card input.picker__select--month:focus:-moz-placeholder,
+      .console .card input.picker__select--year:focus:-moz-placeholder {
+        color: #252; }
+      .console .card input.form-control:focus::-moz-placeholder, .console .card input.picker__select--month:focus::-moz-placeholder,
+      .console .card input.picker__select--year:focus::-moz-placeholder {
+        color: #252; }
+      .console .card input.form-control:focus:-ms-input-placeholder, .console .card input.picker__select--month:focus:-ms-input-placeholder,
+      .console .card input.picker__select--year:focus:-ms-input-placeholder {
+        color: #252; }
+
+.fbtn-container {
+  bottom: 34px; }
+
 /*# sourceMappingURL=dime.css.map */
