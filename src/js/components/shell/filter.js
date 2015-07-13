@@ -7,6 +7,7 @@ var formatShortcut = require('../../core/helper').mousetrapCommand;
 var bookmarks = require('./filter/bookmarks');
 var shell = require('../shell');
 var configuration = require('../../core/configuration');
+configuration.addSection(require('./config'));
 
 function onSubmitFilter (e, scope) {
   scope.query = e.target.value;

@@ -3,12 +3,15 @@
 var m = require('mithril');
 var mousetrap = require('mousetrap-pause')(require('mousetrap'));
 var configuration = require('../core/configuration');
+configuration.addSection(require('./shell/config'));
 
 function registerMouseEvents (scope) {
-  mousetrap(global.window).bind(scope.shortcut, function() {
-    global.window.document.getElementById(scope.htmlId).focus();
-    return false;
-  });
+  if (scope.shortcut) {
+    mousetrap(global.window).bind(scope.shortcut, function() {
+      global.window.document.getElementById(scope.htmlId).focus();
+      return false;
+    });
+  }
 }
 
 function blur (e) {
@@ -19,10 +22,12 @@ function blur (e) {
 function focus (e, scope) {
   mousetrap(global.window).pause();
 
-  mousetrap(e.target).bind(configuration.get('shell/shortcuts/blurShell'), function () {
-    e.target.value = '';
-    blur(e, scope);
-  });
+  if (configuration.get('shell/shortcuts/blurShell')) {
+    mousetrap(e.target).bind(configuration.get('shell/shortcuts/blurShell'), function () {
+      e.target.value = '';
+      blur(e, scope);
+    });
+  }
 
   /*
   mousetrap(e.target).bind(configuration.get('shell/shortcuts/triggerAutocompletion'), function (triggerEvent) {
@@ -42,9 +47,11 @@ function focus (e, scope) {
   });
   */
 
-  mousetrap(e.target).bind(configuration.get('shell/shortcuts/submitShell'), function () {
-    scope.onSubmit(e, scope);
-  });
+  if (configuration.get('shell/shortcuts/submitShell')) {
+    mousetrap(e.target).bind(configuration.get('shell/shortcuts/submitShell'), function () {
+      scope.onSubmit(e, scope);
+    });
+  }
 }
 
 function controller (parentScope) {

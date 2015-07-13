@@ -3,21 +3,25 @@
 var m = require('mithril');
 var mq = require('mithril-query');
 
-global.window = m.deps({
+var fakeWindow = {
   dimeDebug: function () {
     return function () {};
   },
-});
+  attachEvent: function () {
+    return function () {};
+  },
+}
+global.window = m.deps(fakeWindow);
 
 var expect = require('expect.js');
-var filter = require('./filter');
 
 describe('filter', function() {
   var scope;
 
   // Mousetrap makes use of these
   global.navigator = {};
-  global.document = { attachEvent: function () {} };
+  global.document = { attachEvent: fakeWindow.attachEvent };
+  var filter = require('./filter');
 
   beforeEach(function () {
     var parentScope = {};
@@ -43,7 +47,7 @@ describe('filter', function() {
   it('should register a shortcut', function () {
     var registeredEvents = 0;
     // Mousetrap binds 3 events per shortcut
-    global.document.attachEvent = function (e, handler) {
+    fakeWindow.attachEvent = function (e, handler) {
       if (-1 < ['onkeypress', 'onkeydown', 'onkeyup'].indexOf(e) && 'function' === typeof handler) {
         ++registeredEvents;
       }
