@@ -1,4 +1,6 @@
- var qsort = function (compare, key, array, left, right) {
+'use strict';
+
+var qsort = function(compare, key, array, left, right) {
   left = left || 0;
   right = right || array.length - 1;
   var i = left;

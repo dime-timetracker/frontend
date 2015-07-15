@@ -1,6 +1,7 @@
 'use strict';
 
 var moment = require('moment');
+var isNumber = require('lodash/lang/isNumber');
 
 /**
  * Format duration.
@@ -14,7 +15,7 @@ var moment = require('moment');
  * @returns {String}
  */
 var duration = function (data, unit) {
-  if (data !== undefined && _.isNumber(data)) {
+  if (data !== undefined && isNumber(data)) {
     unit = unit || 'seconds';
     var duration = moment.duration(data, unit);
 
