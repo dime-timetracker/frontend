@@ -3,7 +3,6 @@
 var m = require('mithril');
 var _ = require('lodash');
 var t = require('../translation');
-var helper = require('../core/helper');
 var models = {
   customer: require('../core/model/Customer'),
   project: require('../core/model/Project'),

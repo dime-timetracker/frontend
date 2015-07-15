@@ -2,8 +2,8 @@
 
 var m = require('mithril');
 var moment = require('moment');
-var helper = require('../../core/helper');
 var input = require('../../core/views/form/input');
+var duration = require('../../core/helper/duration');
 
 var component = {};
 
@@ -23,7 +23,7 @@ component.controller = function (activity, timeslice) {
   }
 
   scope.formatDuration = function () {
-     return helper.duration(timeslice.totalDuration(), 'seconds')
+     return duration(timeslice.totalDuration())
   };
 
   scope.remove = function (e) {

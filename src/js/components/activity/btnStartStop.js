@@ -2,7 +2,7 @@
 
 var m = require('mithril');
 var t = require('../../translation');
-var helper = require('../../core/helper');
+var duration = require('../../core/helper/duration');
 
 var component = {};
 
@@ -14,7 +14,7 @@ component.controller = function (activity) {
   };
 
   scope.duration = function () {
-    return helper.duration(activity.totalDuration(), 'seconds');
+    return duration(activity.totalDuration());
   }
 
   scope.action = function (e) {

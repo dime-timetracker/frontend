@@ -4,7 +4,6 @@ var m = require('mithril');
 var isArray = require('lodash/lang/isArray');
 var isFunction = require('lodash/lang/isFunction');
 var isPlainObject = require('lodash/lang/isPlainObject');
-var helper = require('../../helper');
 
 /**
  * select - generate a select VirtualElement.

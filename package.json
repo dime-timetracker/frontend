@@ -31,6 +31,6 @@
     "watch:js": "node_modules/.bin/watchify src/js/app.js -o public/js/app.js --debug --verbose",
     "watch:css": "node_modules/.bin/stylus --watch src/styles/dime.styl -o public/css/",
     "watch:build": "npm run watch:js && npm run watch:css'",
-    "watch:test": "npm run test -- -w"
+    "watch:test": "node_modules/.bin/mocha -w src/**/*.test.js"
   }
 }

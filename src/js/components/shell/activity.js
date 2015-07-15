@@ -2,7 +2,7 @@
 
 var m = require('mithril');
 var t = require('../../translation');
-var formatShortcut = require('../../core/helper').mousetrapCommand;
+var formatShortcut = require('../../core/helper/mousetrapCommand');
 var debug = global.window.dimeDebug('shell.activity');
 var parse = require('../../core/parser').parse;
 var shell = require('../shell');

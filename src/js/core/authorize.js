@@ -2,9 +2,9 @@
 
 var m = require('mithril');
 var _ = require('lodash');
-var helper = require('./helper');
 var uuid = require('simple-uuid');
 var store = require('./store');
+var baseUrl = require('./helper/baseUrl');
 
 /**
  * Auth is the interface to authorize then user agains the api.
@@ -135,7 +135,7 @@ Auth.prototype.signin = function (username, password) {
   var that = this;
 
   return m.request({
-    url: helper.baseUrl('login'),
+    url: baseUrl('login'),
     method: 'POST',
     data: data
   }).then(
@@ -153,14 +153,14 @@ Auth.prototype.signin = function (username, password) {
 
 /**
  * Signout from the api, removes username and token from store and route to '/login'.
- * 
+ *
  * @returns {m.request} Promise of the request function.
  */
 Auth.prototype.signout = function () {
   var that = this;
 
   return m.request({
-    url: helper.baseUrl('logout'),
+    url: baseUrl('logout'),
     method: 'POST',
     config: function (xhr) {
       that.setup(xhr);
@@ -179,7 +179,7 @@ Auth.prototype.signout = function () {
 
 /**
  * Setup the XMLHttpRequest with the Authorization header.
- * 
+ *
  * @param {XMLHttpRequest} xhr
  * @returns {boolean} true the request was modified, false there are no credentials or xhr is not a XMLHttpRequest.
  */

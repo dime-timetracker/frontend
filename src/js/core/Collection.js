@@ -4,11 +4,12 @@ var _ = require('lodash');
 var qsort = require('./helper/qsort');
 var naturalCompare = require('./helper/compare/natural');
 var objectKey = require('./helper/compare/objectKey');
+var baseUrl = require('./helper/baseUrl');
+var buildUrl = require('./helper/buildUrl');
 var debug = global.window.dimeDebug('collection');
 
 var m = require('mithril');
 var authorize = require('./authorize');
-var helper = require('./helper');
 
 /**
 * Collection is a array of objects.
@@ -100,7 +101,7 @@ Collection.prototype.configure = function (name, value) {
 /**
  * Add data object to collection. The data object will go
  * thru the Collection.create method to ensure the model.
- * 
+ *
  * @param {object} data plain data object
  * @returns {collection}
  */
@@ -115,7 +116,7 @@ Collection.prototype.add = function (data) {
 
 /**
  * Filter collection data and create a new cloned collection.
- * 
+ *
  * @param {object} filter
  * @returns {Collection} cloned collection with filtered data
  */
@@ -142,7 +143,7 @@ Collection.prototype.find = function (data) {
 
 /**
  * Get first item of collection.
- * 
+ *
  * @returns {object} model object or undefined if collection empty
  */
 Collection.prototype.first = function () {
@@ -176,7 +177,7 @@ Collection.prototype.modelize = function (data) {
 
 /**
  * Return the total count of item, the api can deliver.
- * 
+ *
  * @returns {Number}
  */
 Collection.prototype.total = function () {
@@ -185,7 +186,7 @@ Collection.prototype.total = function () {
 
 /**
  * Get the real data array without configuration.
- * 
+ *
  * @returns {Array}
  */
 Collection.prototype.toArray = function () {
@@ -200,7 +201,7 @@ Collection.prototype.toArray = function () {
  * Sort collection by key and compare functions. Without parameter the
  * config.compare and config.compareKey will be used. The sort will be
  * internal and create not a clone.
- * 
+ *
  * @param {function} key = function (obj) { return obj.key };
  * @param {function} compare = function (a, b) { return 1 || 0 || -1; };
  * @returns {Collection} this
@@ -223,7 +224,7 @@ Collection.prototype.order = function (key, compare) {
 
 /**
  * Search for data object and remove it from collection.
- * 
+ *
  * @param {object} data object you wanne remove.
  * @returns {object} data object
  */
@@ -272,7 +273,7 @@ Collection.prototype.fetch = function (options) {
   // Request configuration
   var configuration = {
     method: 'GET',
-    url: helper.baseUrl('api', this.config.resourceUrl),
+    url: baseUrl('api', this.config.resourceUrl),
     initialValue: this,
     config: function (xhr) {
       authorize.setup(xhr);
@@ -304,12 +305,12 @@ Collection.prototype.fetch = function (options) {
     // Modify resource url with pagination
     var requestAttributes = _.extend({}, this.config.requestAttributes, options.requestAttributes || {});
     if (!_.isEmpty(requestAttributes)) {
-      configuration.url = helper.buildUrl([configuration.url], requestAttributes);
+      configuration.url = buildUrl(configuration.url, requestAttributes);
     }
   } else {
     // If paginage exists and has next url, use it
     if (this.pagination && this.pagination.next) {
-      configuration.url = helper.baseUrl(this.pagination.next);
+      configuration.url = baseUrl(this.pagination.next);
     }
   }
 
@@ -352,7 +353,7 @@ Collection.prototype.persist = function (data) {
   // Request configuration
   var configuration = {
     method: 'POST',
-    url: helper.baseUrl('api', this.config.resourceUrl),
+    url: baseUrl('api', this.config.resourceUrl),
     initialValue: data,
     data: data,
     config: function (xhr) {
@@ -362,7 +363,7 @@ Collection.prototype.persist = function (data) {
 
   // Look for the identifer
   if (data[this.config.idAttribute]) {
-    configuration.url = helper.baseUrl(configuration.url, data[this.config.idAttribute]);
+    configuration.url = baseUrl(configuration.url, data[this.config.idAttribute]);
     configuration.method = 'PUT';
   }
 
@@ -395,7 +396,7 @@ Collection.prototype.remove = function (data) {
   var that = this;
   var configuration = {
     method: 'DELETE',
-    url: helper.baseUrl('api', this.config.resourceUrl),
+    url: baseUrl('api', this.config.resourceUrl),
     initialValue: data,
     config: function (xhr) {
       authorize.setup(xhr);
@@ -403,7 +404,7 @@ Collection.prototype.remove = function (data) {
   };
 
   if (data[this.config.idAttribute]) {
-    configuration.url = helper.baseUrl(configuration.url, data[this.config.idAttribute]);
+    configuration.url = baseUrl(configuration.url, data[this.config.idAttribute]);
     return m
       .request(configuration)
       .then(function success(response) {
