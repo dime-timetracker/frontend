@@ -29,11 +29,13 @@ function focus (e, scope) {
     });
   }
 
+  if (configuration.get('shell/shortcuts/triggerAutocompletion') && scope.onAutocomplete) {
+    mousetrap(e.target).bind(configuration.get('shell/shortcuts/triggerAutocompletion'), function (triggerEvent) {
+      scope.onAutocomplete(triggerEvent, scope);
+      return false;
+    });
+  }
   /*
-  mousetrap(e.target).bind(configuration.get('shell/shortcuts/triggerAutocompletion'), function (triggerEvent) {
-    scope.module.autocomplete(triggerEvent, scope);
-    return false;
-  });
   mousetrap(e.target).bind(configuration.get('shell/shortcuts/cycleSuggestionsLeft'), function () {
     scope.module.cycleSuggestions('left', e, scope);
     return false;
