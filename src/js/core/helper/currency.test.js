@@ -17,7 +17,7 @@ describe('currency', function () {
     var result = currency(3.22, {}, 'de-DE');
     expect(result).to.be('3,22' + nbsp + '€');
 
-    var result = currency(3.22, undefined, 'de-DE');
+    result = currency(3.22, undefined, 'de-DE');
     expect(result).to.be('3,22' + nbsp + '€');
   });
 
