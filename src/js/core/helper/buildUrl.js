@@ -1,6 +1,7 @@
 'use strict';
 
 var isArray = require('lodash/lang/isArray');
+var isPlainObject = require('lodash/lang/isPlainObject');
 var baseUrl = require('./baseUrl');
 var urlParameters = require('./urlParameters');
 
@@ -26,7 +27,7 @@ var buildUrl = function (path, parameters) {
     result.push(baseUrl.apply(this, path));
   }
 
-  if (_.isPlainObject(parameters)) {
+  if (isPlainObject(parameters)) {
     result.push(urlParameters(parameters));
   }
 
