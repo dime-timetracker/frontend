@@ -1,5 +1,6 @@
 'use strict';
 
+var isArray = require('lodash/lang/isArray');
 var baseUrl = require('./baseUrl');
 var urlParameters = require('./urlParameters');
 
