@@ -1,0 +1,29 @@
+font-url(file)
+  return 'fonts/' + file
+
+webfont(family, file, hack-chrome-windows = false, weight = normal, style = normal)
+  @font-face
+    font-family family
+    src url(font-url(file + '.eot'))
+    src url(font-url(file + '.eot?#iefix')) format('embedded-opentype'),
+        url(font-url(file + '.woff')) format('woff'),
+        url(font-url(file + '.ttf')) format('truetype'),
+        url(font-url(file + '.svg#'+ family)) format('svg')
+    font-weight weight
+    font-style style
+  if hack-chrome-windows
+    @media screen and (-webkit-min-device-pixel-ratio:0)
+      @font-face
+        font-family family
+        src url(font-url(file + '.svg#'+ family)) format('svg')
+
+webfont('Roboto', 'Roboto-Thin', true, 100)
+webfont('Roboto', 'Roboto-ThinItalic', true, 100, italic)
+webfont('Roboto', 'Roboto-Regular', true, 400)
+webfont('Roboto', 'Roboto-Italic', true, 400, italic)
+webfont('Roboto', 'Roboto-Bold', true, 700)
+webfont('Roboto', 'Roboto-BoldItalic', true, 700, italic)
+
+webfont('MaterialDesignIcon', 'MaterialDesignIcon', true)
+
+webfont('FontAwesome', 'FontAwesome', true)

@@ -20,6 +20,7 @@
     "moment": "^2.10.3",
     "mousetrap": "^1.5.3",
     "mousetrap-pause": "^1.0.0",
+    "normalize-styl": "^3.0.3",
     "simple-uuid": "0.0.1",
     "translate.js": "0.0.2"
   },
