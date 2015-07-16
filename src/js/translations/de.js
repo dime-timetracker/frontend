@@ -35,6 +35,7 @@ module.exports = {
     'config.shell/shortcuts/triggerAutocompletion.title': 'Autovervollständigung aktivieren',
     'config.shell/shortcuts/cycleSuggestionsLeft.title': 'springe zum vorherigen Ergebnis der Autovervollständigung wechseln',
     'config.shell/shortcuts/cycleSuggestionsRight.title': 'springe zum nächsten Ergebnis der Autovervollständigung wechseln',
+    'default.currency': 'EUR',
     'shell.activity.placeholder': 'Eine Aktivität hinzufügen ({shortcut})',
     'shell.filter.placeholder': 'Liste filtern ({shortcut})',
     'yes': 'ja',
