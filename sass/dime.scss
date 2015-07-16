@@ -190,13 +190,12 @@
 }
 
 .console {
-  position: fixed;
-  width: 100%;
-  left: 0;
-  bottom: 0;
   background-color: black;
+  bottom: 0;
   color: green;
-  z-index: 20;
+  height: 3em;
+  left: 0;
+  width: 100%;
 
   .card {
     background: black;
@@ -220,6 +219,11 @@
       }
     }
   }
+}
+
+.filter {
+  margin-bottom: -1em;
+  margin-top: 2em;
 }
 
 .fbtn-container {

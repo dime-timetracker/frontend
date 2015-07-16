@@ -1,7 +1,6 @@
 'use strict';
 
 var m = require('mithril');
-var t = require('../translation');
 var activities = require('../core/collection/activities');
 
 var configuration = require('../core/configuration');
@@ -13,14 +12,14 @@ var item = require('./activity/item');
 var grid = require('../core/views/grid');
 var card = require('../core/views/card');
 
-function shellView (scope) {
-  return card(grid(
+function filterView (scope) {
+  return m('.filter', card(grid(
     m.component(require('./shell/filter'), scope)
-  ));
+  )));
 }
 
 function consoleView (scope) {
-  return m('div.console', card(grid(m.component(require('./shell/activity'), scope))));
+  return m('.console', card(grid(m.component(require('./shell/activity'), scope))));
 }
 
 function activityListView (scope) {
@@ -37,14 +36,16 @@ var component = {
     };
 
     scope.add = function (e) {
-      if (e) e.preventDefault();
+      if (e) {
+        e.preventDefault();
+      }
       scope.collection.add({});
     };
 
     return scope;
   },
   view: function (scope) {
-    return m('.activities', [ shellView(scope), activityListView(scope), consoleView(scope) ]);
+    return m('.activities', [ consoleView(scope), filterView(scope), activityListView(scope) ]);
   }
 };
 
