@@ -19,7 +19,12 @@ component.controller = function(item, collection) {
 };
 
 component.view = function(form) {
-  var inner = form.model.name;
+  var inner = [
+    form.model.name
+  ];
+  if (form.model.alias) {
+    inner.push(m('span.badge', form.model.shortcut + form.model.alias));
+  }
 
   var options = {
     active: (form.show) ? true : false,

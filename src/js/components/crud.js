@@ -2,15 +2,11 @@
 
 var m = require('mithril');
 var t = require('../translation');
-var models = {
-  customer: require('../core/model/Customer'),
-  project: require('../core/model/Project'),
-  service: require('../core/model/Service')
-};
 var collections = {
   customer: require('../core/collection/customers'),
   project: require('../core/collection/projects'),
-  service: require('../core/collection/services')
+  service: require('../core/collection/services'),
+  tag: require('../core/collection/tags')
 };
 var itemComponent = require('./crud/item');
 var button = require('../core/views/button');
@@ -20,14 +16,13 @@ var component = {};
 component.controller = function() {
   // Change route if name is not listed
   var type = m.route.param('name');
-  if (!models[type]) {
+  if (!collections[type]) {
     m.route('/');
     return false;
   }
 
   var scope = {
     type: type,
-    properties: models[type].prototype.properties,
     collection: collections[type]
   };
 
@@ -45,16 +40,27 @@ component.view = function(scope) {
   var list = [];
 
   list.push(m('h2', t(scope.type + 's')));
-  
+
   list.push(m('h3.content-sub-heading', t('crud.enabled')));
-  scope.collection.filter({ enabled: 1 }).forEach(function(model) {
-    list.push(m.component(itemComponent, model, scope.collection));
-  });
+
+  var collection = scope.collection.filter({ enabled: 1 });
+  if (collection.length > 0) {
+    collection.forEach(function(model) {
+      list.push(m.component(itemComponent, model, scope.collection));
+    });
+  } else {
+    list.push('p', t('crud.empty'));
+  }
 
   list.push(m('h3.content-sub-heading', t('crud.disabled')));
-  scope.collection.filter({ enabled: 0 }).forEach(function(model) {
-    list.push(m.component(itemComponent, model, scope.collection));
-  });
+  collection = scope.collection.filter({ enabled: 0 });
+  if (collection.length > 0) {
+    collection.forEach(function(model) {
+      list.push(m.component(itemComponent, model, scope.collection));
+    });
+  } else {
+    list.push(m('p', t('crud.empty')));
+  }
 
   list.push(button('Add ' + scope.type, '/' + scope.type, scope.add));
 

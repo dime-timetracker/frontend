@@ -34,6 +34,13 @@ var items = [
     weight: 0
   },
   {
+    id: "tags",
+    route: "/tag",
+    name: "Tags",
+    icon: 'icon-label',
+    weight: 0
+  },
+  {
     id: "setting",
     route: "/settings",
     name: "Settings",
