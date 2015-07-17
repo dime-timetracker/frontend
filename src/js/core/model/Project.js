@@ -1,6 +1,7 @@
 'use strict';
 
-var _ = require('lodash');
+var create = require('lodash/object/create');
+var extend = require('lodash/object/extend');
 var Model = require('../Model');
 var Customer = require('./Customer');
 var customers = require('../collection/customers');
@@ -10,44 +11,40 @@ var Project = function (data) {
     return new Project(data);
   }
 
-  Model.call(this, _.extend({
+  Model.call(this, extend({
     name: undefined,
     alias: undefined
   }, data || {}));
 
   this.customer = new Customer(this.customer);
 };
-Project.prototype = _.create(Model.prototype, {
+Project.prototype = create(Model.prototype, {
   constructor: Project,
   shortcut: '/',
-  properties: [
-    {
-      key: 'name',
-      title: 'name',
-      type: 'text'
-    },
-    {
-      key: 'alias',
-      title: 'alias',
-      type: 'text'
-    },
-    {
-      key: 'customer',
-      title: 'customer',
+  properties: {
+    name: {},
+    customer: {
       type: 'relation',
       collection: customers
     },
-    {
-      key: 'rate',
-      title: 'rate',
+    description: {},
+    alias: {},
+    enabled: {
+      type: 'boolean'
+    },
+    rate: {
       type: 'number'
     },
-    {
-      key: 'enabled',
-      title: 'enabled',
-      type: 'boolean'
+    budgetPrice: {
+      type: 'number'
+    },
+    budgetTime: {
+      type: 'number'
+    },
+    isBudgetFixed: {
+      type: 'number'
     }
-  ]
+  }
 });
 
 module.exports = Project;

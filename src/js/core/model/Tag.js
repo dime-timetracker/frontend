@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
+var create = require('lodash/object/create');
 var Model = require('../Model');
 
 var Tag = function (data) {
@@ -11,26 +11,17 @@ var Tag = function (data) {
   Model.call(this, data);
 };
 
-Tag.prototype = _.create(Model.prototype, {
+Tag.prototype = create(Model.prototype, {
   constructor: Tag,
   shortcut: '#',
-  properties: [
-    {
-      key: 'name',
-      title: 'name',
+  properties: {
+    name: {
       type: 'text'
     },
-    {
-      key: 'alias',
-      title: 'alias',
-      type: 'text'
-    },
-    {
-      key: 'enabled',
-      title: 'enabled',
+    enabled: {
       type: 'boolean'
     }
-  ]
+  }
 });
 
 module.exports = Tag;

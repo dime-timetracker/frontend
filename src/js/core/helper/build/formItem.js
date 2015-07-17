@@ -3,27 +3,29 @@
 /**
  * Create a view model of a model property.
  *
- * formItem.call(form, model.proerties[0]) =>
+ * formItem.call(form, 'name', model.properties.name) =>
  * { key: '', type: 'text', action: func, value: func, values: func }
  *
- * @param  {Object} property model property
+ * @param {String} property property name
+ * @param  {Object} options property options
  * @return {Object}          view model
  */
-var formItem = function(property) {
+var formItem = function(property, options) {
   var form = this;
+  options = options || {};
   var item = {
-    key: property.key,
-    type: property.type || 'text',
+    key: property,
+    type: options.type || 'text',
     value: function() {
-      return form.model[property.key];
+      return form.model[property];
     }
   };
-  
+
   switch (item.type) {
     case 'relation':
       item.values = function() {
         var result = [];
-        property.collection.forEach(function(value) {
+        options.collection.forEach(function(value) {
           result.push({
             'key': value.alias,
             'value': value.name || value.alias
@@ -33,7 +35,7 @@ var formItem = function(property) {
       };
 
       item.action = function(value) {
-        form.model[property.key] = property.collection.find({
+        form.model[property] = options.collection.find({
           'alias': value
         });
         form.changed = true;
@@ -41,7 +43,7 @@ var formItem = function(property) {
       break;
     default:
       item.action = function(value) {
-        form.model[property.key] = value;
+        form.model[property] = value;
         form.changed = true;
       };
   }

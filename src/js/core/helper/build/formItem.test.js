@@ -21,10 +21,7 @@ describe('formItem', function () {
   };
 
   it('should generate a form item model of type text', function() {
-    var item = buildFormItem.call(form, {
-      key: 'name',
-      title: 'name'
-    });
+    var item = buildFormItem.call(form, 'name');
 
     expect(item).to.be.an('object');
     expect(item).to.not.be.empty();
@@ -40,9 +37,7 @@ describe('formItem', function () {
   });
 
   it('should generate a form item model of type boolean', function() {
-    var item = buildFormItem.call(form, {
-      key: 'enabled',
-      title: 'name',
+    var item = buildFormItem.call(form, 'enabled', {
       type: 'boolean'
     });
 
@@ -61,9 +56,7 @@ describe('formItem', function () {
 
   it('should generate a form item model of type relation', function() {
     var customer1 = {name: 'c1', alias: 'a1'};
-    var item = buildFormItem.call(form, {
-      key: 'customer',
-      title: 'customer',
+    var item = buildFormItem.call(form, 'customer', {
       type: 'relation',
       collection: new Collection({}, [customer1, {name: 'b1', alias: 'b1'}])
     });

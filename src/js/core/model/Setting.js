@@ -1,16 +1,18 @@
 'use strict';
 
-var _ = require('lodash');
+var create = require('lodash/object/create');
 var Model = require('../Model');
 
 var Setting = function (data) {
   if (!(this instanceof Setting)) {
     return new Setting(data);
   }
-  _.extend(this, {}, data);
+
+  Model.call(this, data);
 };
 
-Setting.prototype = new Model();
-Setting.prototype.constructor = Setting;
+Setting.prototype = create(Model.prototype, {
+  constructor: Setting
+});
 
 module.exports = Setting;

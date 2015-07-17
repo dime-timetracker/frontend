@@ -1,6 +1,7 @@
 'use strict';
 
-var _ = require('lodash');
+var isUndefined = require('lodash/lang/isUndefined');
+var forOwn = require('lodash/object/forOwn');
 var t = require('../../../translation');
 var formItem = require('./formItem');
 
@@ -12,14 +13,14 @@ var formItem = require('./formItem');
  * @return {Object} form view model
  */
 var buildForm = function(model, collection) {
-  if (_.isUndefined(model.properties)) {
+  if (isUndefined(model.properties)) {
     throw {
       message: 'buildForm: Model has no properties',
       source: model
     };
   }
 
-  if(_.isUndefined(collection)) {
+  if(isUndefined(collection)) {
     throw {
       message: 'buildForm: Collection is undefined',
       source: this
@@ -30,6 +31,7 @@ var buildForm = function(model, collection) {
     model: model,
     collection: collection,
     changed: model.isNew(),
+    items: [],
     save: function (e) {
       if (e) {
         e.preventDefault();
@@ -50,7 +52,10 @@ var buildForm = function(model, collection) {
     }
   };
 
-  form.items = model.properties.map(formItem, form);
+  // Generiere Items
+  forOwn(model.properties, function (value, key) {
+    this.items.push(formItem.call(this, key, value));
+  }, form);
 
   return form;
 };

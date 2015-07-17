@@ -16,28 +16,20 @@ var Service = function (data) {
 Service.prototype = _.create(Model.prototype, {
   constructor: Service,
   shortcut: ':',
-  properties: [
-    {
-      key: 'name',
-      title: 'name',
+  properties: {
+    name: {
       type: 'text'
     },
-    {
-      key: 'alias',
-      title: 'alias',
+    alias: {
       type: 'text'
     },
-    {
-      key: 'rate',
-      title: 'rate',
+    rate: {
       type: 'number'
     },
-    {
-      key: 'enabled',
-      title: 'enabled',
+    enabled: {
       type: 'boolean'
     }
-  ]
+  }
 });
 
 module.exports = Service;

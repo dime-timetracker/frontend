@@ -1,7 +1,7 @@
 'use strict';
 
 var m = require('mithril');
-var _ = require('lodash');
+var forOwn = require('lodash/object/forOwn');
 var t = require('../translation');
 var models = {
   customer: require('../core/model/Customer'),
@@ -20,7 +20,15 @@ var component = {};
 
 component.allowed = ['customer', 'project', 'service'];
 
-component.controller = function () {
+var buildHeader = function(properties) {
+  var result = [];
+  forOwn(properties, function(value, key) {
+    result.push(m('th', value.options || {}, t(value.title || key)));
+  });
+  return result;
+};
+
+component.controller = function() {
   var scope = {};
 
   var type = m.route.param('name');
@@ -33,8 +41,10 @@ component.controller = function () {
   scope.properties = models[type].prototype.properties;
   scope.collection = collections[type];
 
-  scope.add = function (e) {
-    if (e) e.preventDefault();
+  scope.add = function(e) {
+    if (e) {
+      e.preventDefault();
+    }
 
     scope.collection.add({});
   };
@@ -42,18 +52,16 @@ component.controller = function () {
   return scope;
 };
 
-component.view = function (scope) {
-  var headers = scope.properties.map(function (property) {
-    var options = property.options || {};
-    return m('th', options, t(property.title));
-  });
+component.view = function(scope) {
+  var headers = buildHeader(scope.properties);
+
   headers.push(
     m('th.empty')
   );
 
   var header = m('thead', m('tr', headers));
 
-  var rows = m('tbody', scope.collection.map(function (item) {
+  var rows = m('tbody', scope.collection.map(function(item) {
     return m.component(itemComponent, item, scope.collection);
   }));
 

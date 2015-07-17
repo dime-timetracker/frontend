@@ -6,8 +6,11 @@ var moment = require('moment');
 var Collection = require('../Collection');
 var Model = require('../Model');
 var Customer = require('./Customer');
+var customers = require('../collection/customers');
 var Project = require('./Project');
+var projects = require('../collection/projects');
 var Service = require('./Service');
+var services = require('../collection/services');
 var Timeslice = require('./Timeslice');
 var Tag = require('./Tag');
 
@@ -37,7 +40,7 @@ var Activity = function (data) {
   }, this.tags || []);
 
   this.timeslices = new Collection({
-    resourceUrl: "timeslice",
+    resourceUrl: 'timeslice',
     model: Timeslice,
     compare: function (a,b) {
       var result = 0;
@@ -56,14 +59,18 @@ var Activity = function (data) {
 Activity.prototype = _.create(Model.prototype, {
   constructor: Activity,
   properties: {
+    description: {},
     customer: {
-      type: 'relation'
+      type: 'relation',
+      collection: customers
     },
     project: {
-      type: 'relation'
+      type: 'relation',
+      collection: projects
     },
     service: {
-      type: 'relation'
+      type: 'relation',
+      collection: services
     }
   }
 });
@@ -83,7 +90,7 @@ Activity.prototype.onSwitchRelation = function (relation, item) {
         // assign customer to project, if it has none
         if (this.customer
                 && _.isObject(this.project.customer)
-                && "" == this.project.customer.alias
+                && '' == this.project.customer.alias
                 ) {
           this.project.customer = this.customer;
         }
@@ -94,7 +101,7 @@ Activity.prototype.onSwitchRelation = function (relation, item) {
       if (item.customer && item.customer.alias) {
         this.customer = item.customer;
       }
-      if (!_.isNull(this.project) && (!item.customer || "" == item.customer.alias)) {
+      if (!_.isNull(this.project) && (!item.customer || '' == item.customer.alias)) {
         this.project.customer = this.customer;
       }
 //      dime.resources.activity.persist(this);
