@@ -1,9 +1,12 @@
 'use strict';
 
 var m = require('mithril');
+var t = require('../../translation');
 var buildForm = require('../../core/helper/build/form');
 
-var form = {
+var tile = require('../../core/views/tile');
+var formViews = {
+  group: require('../../core/views/form/group'),
   input: require('../../core/views/form/input'),
   select: require('../../core/views/form/select'),
   selectBoolean: require('../../core/views/form/selectBoolean')
@@ -12,48 +15,66 @@ var form = {
 var component = {};
 
 component.controller = function(item, collection) {
-  var scope = {
-    form: buildForm(item, collection)
-  };
-  return scope;
+  return buildForm(item, collection);
 };
 
-component.view = function(scope) {
-  var columns = scope.form.items.map(function(model) {
+component.view = function(form) {
+  var inner = form.model.name;
+
+  var actions = [];
+
+  // TODO
+  actions.push(m('a.btn.btn-flat', {
+    onclick: function (e) {
+      if (e) {
+        e.preventDefault();
+      }
+      form.show = (form.show) ? false : true;
+    }
+  }, m('span.icon.icon-details.icon-lg')));
+
+  var subs = [];
+
+  var columns = form.items.map(function(model) {
     var input;
 
     switch (model.type) {
       case 'boolean':
-        input = form.selectBoolean(model.value(), model.action);
+        input = formViews.selectBoolean(model.value(), model.action);
         break;
       case 'relation':
-        input = form.select(model.values(), model.action, model.value().alias);
+        input = formViews.select(model.values(), model.action, model.value().alias);
         break;
       default:
-        input = form.input(model.value(), model.action, model.type);
+        input = formViews.input(model.value(), model.action, model.type);
     }
 
-    return m('td.' + model.key, input);
+    return formViews.group(input, t(model.key));
   });
+  subs.push(columns);
 
-  var actions = [
+  var subActions = [];
+  subs.push(subActions);
+
+  subActions.push(
     m('a.btn.btn-flat', {
       config: m.route,
       href: m.route(),
-      onclick: scope.form.remove
+      onclick: form.remove
     }, m('span.icon.icon-delete'))
-  ];
+  );
 
-  if (scope.changed) {
-    actions.push(m('a.btn.btn-yellow', {
-      config: m.route,
-      href: m.route(),
-      onclick: scope.form.save
-    }, m('span.icon.icon-done')));
+  if (form.changed) {
+    subActions.push(
+      m('a.btn.btn-green.pull-right', {
+        config: m.route,
+        href: m.route(),
+        onclick: form.save
+      }, m('span.icon.icon-done'))
+    );
   }
-  columns.push(m('td.empty', actions));
 
-  return m('tr', columns);
+  return tile(inner, actions, (form.show) ? subs  : undefined, form.show);
 };
 
 module.exports = component;
