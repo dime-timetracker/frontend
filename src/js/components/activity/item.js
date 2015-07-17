@@ -2,68 +2,63 @@
 
 var m = require('mithril');
 var t = require('../../translation');
-var timesliceList =  require('./timesliceList');
+var tile = require('../../core/views/tile');
+var timesliceList = require('./timesliceList');
 
-var badge = require('./badge');
 var btnStartStop = require('./btnStartStop');
-var crudItem =  require('../crud/item');
-var description =  require('./description');
+var description = require('./description');
 
 var component = {};
 
-component.controller = function (activity) {
+component.controller = function(activity) {
   var scope = {};
 
   scope.model = activity;
 
-  scope.toggleTimeslices = function (e) {
-    if (e) e.preventDefault();
-     activity.toggleTimeslices();
+  scope.toggleTimeslices = function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    activity.toggleTimeslices();
   };
 
-  scope.updateDescription = function (e) {
-    if (e) e.preventDefault();
-    activitiy.updateDescription(e.target.textContent);
+  scope.updateDescription = function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    activity.updateDescription(e.target.textContent);
   };
 
-  scope.remove = function (e) {
-    if (e) e.preventDefault();
-      var question = t('Do you really want to delete "[activity]"?').replace('[activity]', activity.description);
-      if (global.window.confirm(question)) {
-        activity.remove();
-      }
-  }
+  scope.remove = function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    var question = t('Do you really want to delete "[activity]"?')
+      .replace('[activity]', activity.description);
+    if (global.window.confirm(question)) {
+      activity.remove();
+    }
+  };
 
   return scope;
 };
 
-component.view = function (scope) {
-  var inner = [];
-
-  inner.push(m('button.btn.btn-flat', {
+component.view = function(scope) {
+  var options = {
+    actions: [],
+    subs: []
+  };
+  options.actions.push(m.component(btnStartStop, scope.model));
+  options.actions.push(m('a.btn.btn-flat', {
     title: t('Show timeslices'),
     onclick: scope.toggleTimeslices
-  }, m('span.icon.icon-access-time')));
-
-  inner.push(m('button.btn.btn-flat.pull-right', { onclick: scope.remove, title: t('Delete') }, m('span.icon.icon-delete')));
-  inner.push(m('span.pull-right', m.component(btnStartStop, scope.model)));
-
-  // Description
-  inner.push(m.component(description, scope.model));
-
-  // Badges for customer, project, service
-  // inner.push(m.component(badge, scope.model.customer));
-  // inner.push(m.component(badge, scope.model.project));
-  // inner.push(m.component(badge, scope.model.service));
-
-  var content = [];
-  content.push(m('.tile-inner', inner));
+  }, m('span.icon.icon-edit.icon-lg')));
 
   if (scope.model.showTimeslices) {
-    content.push(m('.tile-sub', m.component(timesliceList, scope.model)));
+    options.subs.push(m.component(timesliceList, scope.model));
   }
 
-  return m('.tile', content);
+  return tile(m.component(description, scope.model), options);
 };
 
 module.exports = component;

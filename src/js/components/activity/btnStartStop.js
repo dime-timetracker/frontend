@@ -37,7 +37,7 @@ component.view = function (scope) {
     scope.duration()
   ];
 
-  return  m("button.btn.btn-flat" + color, { title: t(title), onclick: scope.action }, content);
+  return  m("a.btn.btn-flat" + color, { title: t(title), onclick: scope.action }, content);
 };
 
 module.exports = component;
