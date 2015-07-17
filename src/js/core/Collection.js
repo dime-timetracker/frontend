@@ -1,5 +1,6 @@
 'use strict';
 
+var create = require('lodash/object/create');
 var _ = require('lodash');
 var qsort = require('./helper/qsort');
 var naturalCompare = require('./helper/compare/natural');
@@ -70,8 +71,9 @@ var Collection = function (options, data) {
   }
 };
 
-Collection.prototype = new Array();
-Collection.prototype.constructor = Collection;
+Collection.prototype = create(Array.prototype, {
+  constructor: Collection
+});
 
 /**
  * Change or replace the configuration of a collection.

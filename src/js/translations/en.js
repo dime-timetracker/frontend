@@ -2,6 +2,8 @@
 
 module.exports = {
   translation: {
+    'crud.enabled': 'Active',
+    'crud.disabled': 'Inactive',
     'Activity': 'Activity',
     'Activities': 'Activities',
     'Do you really want to delete "[activity]"?': 'Do you really want to delete "[activity]"?',

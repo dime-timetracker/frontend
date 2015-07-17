@@ -42,11 +42,17 @@ component.controller = function() {
 };
 
 component.view = function(scope) {
-  var list = [
-    m('h2', t(scope.type + 's')),
-  ];
+  var list = [];
 
-  scope.collection.forEach(function(model) {
+  list.push(m('h2', t(scope.type + 's')));
+  
+  list.push(m('h3.content-sub-heading', t('crud.enabled')));
+  scope.collection.filter({ enabled: 1 }).forEach(function(model) {
+    list.push(m.component(itemComponent, model, scope.collection));
+  });
+
+  list.push(m('h3.content-sub-heading', t('crud.disabled')));
+  scope.collection.filter({ enabled: 0 }).forEach(function(model) {
     list.push(m.component(itemComponent, model, scope.collection));
   });
 

@@ -40,6 +40,8 @@ module.exports = {
     'shell.filter.placeholder': 'Liste filtern ({shortcut})',
     'yes': 'ja',
     'no': 'nein',
+    'crud.enabled': 'Aktiv',
+    'crud.disabled': 'Inaktiv',
 
     'Activity': 'Aktivität',
     'Activities': 'Aktivitäten',

@@ -15,13 +15,18 @@ var isArray = require('lodash/lang/isArray');
  * | sub...                                                   |
  * ------------------------------------------------------------
  *
+ * Options:
+ * {
+ * 	active: true || false
+ * 	actions: [] || m()
+ * 	subs: [] || m()
+ * }
+ *
  * @param  {mixed} inner
- * @param  {mixed} actions
- * @param  {mixed} subs
- * @param  {boolean} active
+ * @param  {Object} options
  * @return {VirtualElement}
  */
-var tile = function(inner, actions, subs, active) {
+var tile = function(inner, options) {
   if (isEmpty(inner)) {
     throw {
       message: 'tile: Parameter inner is empty or undefined.',
@@ -29,33 +34,34 @@ var tile = function(inner, actions, subs, active) {
     };
   }
 
+  options = options || {};
   var content = [];
 
-  if (!isEmpty(actions)) {
-    if (isArray(actions)) {
+  if (!isEmpty(options.actions)) {
+    if (isArray(options.actions)) {
       content.push(
         m('.tile-action.tile-action-show',
-          m('ul.nav.nav-list', actions.map(function(item) {
+          m('ul.nav.nav-list', options.actions.map(function(item) {
             return m('li', item);
           }))));
     } else {
-      content.push(m('.tile-action.tile-action-show', m('ul.nav.nav-list', m('li', actions))));
+      content.push(m('.tile-action.tile-action-show', m('ul.nav.nav-list', m('li', options.actions))));
     }
   }
 
   content.push(m('.tile-inner', inner));
 
-  if (!isEmpty(subs)) {
-    if (isArray(subs)) {
-      subs.forEach(function(item) {
+  if (!isEmpty(options.subs)) {
+    if (isArray(options.subs)) {
+      options.subs.forEach(function(item) {
         content.push(m('.tile-sub', item));
       });
     } else {
-      content.push(m('.tile-sub', subs));
+      content.push(m('.tile-sub', options.subs));
     }
   }
 
-  return m('.tile' + ((active) ? '.active' : ''), content);
+  return m('.tile' + ((options.active) ? '.active' : ''), content);
 };
 
 module.exports = tile;

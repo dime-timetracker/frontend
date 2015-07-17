@@ -21,60 +21,62 @@ component.controller = function(item, collection) {
 component.view = function(form) {
   var inner = form.model.name;
 
-  var actions = [];
+  var options = {
+    active: (form.show) ? true : false,
+    actions: [],
+    subs: []
+  };
 
-  // TODO
-  actions.push(m('a.btn.btn-flat', {
+  options.actions.push(m('a.btn.btn-flat', {
     onclick: function (e) {
       if (e) {
         e.preventDefault();
       }
       form.show = (form.show) ? false : true;
     }
-  }, m('span.icon.icon-details.icon-lg')));
+  }, m('span.icon.icon-edit.icon-lg')));
 
-  var subs = [];
+  if (form.show) {
+    options.subs.push(form.items.map(function(model) {
+      var input;
 
-  var columns = form.items.map(function(model) {
-    var input;
+      switch (model.type) {
+        case 'boolean':
+          input = formViews.selectBoolean(model.value(), model.action);
+          break;
+        case 'relation':
+          input = formViews.select(model.values(), model.action, model.value().alias);
+          break;
+        default:
+          input = formViews.input(model.value(), model.action, model.type);
+      }
 
-    switch (model.type) {
-      case 'boolean':
-        input = formViews.selectBoolean(model.value(), model.action);
-        break;
-      case 'relation':
-        input = formViews.select(model.values(), model.action, model.value().alias);
-        break;
-      default:
-        input = formViews.input(model.value(), model.action, model.type);
-    }
+      return formViews.group(input, t(model.key));
+    }));
 
-    return formViews.group(input, t(model.key));
-  });
-  subs.push(columns);
+    var subActions = [];
+    options.subs.push(subActions);
 
-  var subActions = [];
-  subs.push(subActions);
-
-  subActions.push(
-    m('a.btn.btn-flat', {
-      config: m.route,
-      href: m.route(),
-      onclick: form.remove
-    }, m('span.icon.icon-delete'))
-  );
-
-  if (form.changed) {
     subActions.push(
-      m('a.btn.btn-green.pull-right', {
+      m('a.btn.btn-flat', {
         config: m.route,
         href: m.route(),
-        onclick: form.save
-      }, m('span.icon.icon-done'))
+        onclick: form.remove
+      }, m('span.icon.icon-delete'))
     );
+
+    if (form.changed) {
+      subActions.push(
+        m('a.btn.btn-green.pull-right', {
+          config: m.route,
+          href: m.route(),
+          onclick: form.save
+        }, m('span.icon.icon-done'))
+      );
+    }
   }
 
-  return tile(inner, actions, (form.show) ? subs  : undefined, form.show);
+  return tile(inner, options);
 };
 
 module.exports = component;
