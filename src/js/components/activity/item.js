@@ -55,6 +55,10 @@ component.view = function(scope) {
   options.actions.push(m('a.btn.btn-flat', {
     title: t('Show timeslices'),
     onclick: scope.toggleTimeslices
+  }, scope.model.showTimeslices ? m('span.icon.icon-close.icon-lg') : m('span.icon.icon-access-time.icon-lg')));
+  options.actions.push(m('a.btn.btn-flat', {
+    title: t('Show timeslices'),
+    onclick: scope.toggleTimeslices
   }, scope.model.showTimeslices ? m('span.icon.icon-close.icon-lg') : m('span.icon.icon-edit.icon-lg')));
 
   if (scope.model.showTimeslices) {
