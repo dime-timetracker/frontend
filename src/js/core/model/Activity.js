@@ -71,6 +71,9 @@ Activity.prototype = _.create(Model.prototype, {
     service: {
       type: 'relation',
       collection: services
+    },
+    rate: {
+      type: 'number'
     }
   }
 });

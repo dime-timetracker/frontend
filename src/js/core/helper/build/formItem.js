@@ -18,10 +18,19 @@ var formItem = function(property, options) {
     type: options.type || 'text',
     value: function() {
       return form.model[property];
+    },
+    action: function(value) {
+      form.model[property] = value;
+      form.changed = true;
     }
   };
 
   switch (item.type) {
+    case 'select':
+      item.values = function() {
+        return options.values;
+      };
+      break;
     case 'relation':
       item.values = function() {
         var result = [];
@@ -41,11 +50,6 @@ var formItem = function(property, options) {
         form.changed = true;
       };
       break;
-    default:
-      item.action = function(value) {
-        form.model[property] = value;
-        form.changed = true;
-      };
   }
   return item;
 };

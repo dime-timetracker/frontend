@@ -42,6 +42,9 @@ module.exports = {
     'no': 'nein',
     'crud.enabled': 'Aktiv',
     'crud.disabled': 'Inaktiv',
+    'description': 'Beschreibung',
+    'project': 'Projekt',
+    'service': 'Dienstleistung',
 
     'Activity': 'Aktivität',
     'Activities': 'Aktivitäten',

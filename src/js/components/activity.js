@@ -24,7 +24,7 @@ function consoleView (scope) {
 
 function activityListView (scope) {
   var list = scope.collection.map(function (activity) {
-    return m.component(item, activity);
+    return m.component(item, activity, scope.collection);
   }, scope);
   return m('.tile-wrap', [ list, buttonView('Add Activity', '/', scope.add) ]);
 }
