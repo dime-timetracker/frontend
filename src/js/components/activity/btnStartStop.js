@@ -2,7 +2,7 @@
 
 var m = require('mithril');
 var t = require('../../translation');
-var duration = require('../../core/helper/duration');
+var duration = require('../../core/views/duration');
 
 var component = {};
 
