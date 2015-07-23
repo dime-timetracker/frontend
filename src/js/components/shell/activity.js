@@ -9,9 +9,12 @@ var shell = require('../shell');
 
 function createActivity (e, scope) {
   var string = e.target.value;
-  debug('Creating activity by ' + string);
-  var activity = parse(string, ['customer', 'project', 'service', 'tags', 'times', 'description']);
-  scope.addActivity(activity);
+  if (string) {
+    var parsers = ['customer', 'project', 'service', 'tags', 'times', 'description'];
+    debug('Creating activity by ' + string);
+    var activity = parse(string, parsers);
+    scope.addActivity(activity);
+  }
   e.target.value = '';
   e.target.blur();
 }
