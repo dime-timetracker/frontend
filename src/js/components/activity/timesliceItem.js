@@ -1,53 +1,48 @@
 'use strict';
 
 var m = require('mithril');
-var moment = require('moment');
-var input = require('../../core/views/form/input');
-var duration = require('../../core/helper/duration');
+var duration = require('../../core/views/duration');
 
 var component = {};
 
 component.controller = function (activity, timeslice) {
-  var scope = {};
+  var scope = {
+    timeslice: timeslice
+  };
 
   scope.formatStart = function (format) {
-    return moment(timeslice.startedAt).format(format);
-  }
+    return timeslice.start().format(format);
+  };
 
   scope.formatStop = function (format) {
-    return scope.hasEnd() ? moment(timeslice.stoppedAt).format(format) : '';
-  }
-
-  scope.hasEnd = function () {
-    return timeslice.stoppedAt !== undefined || timeslice.stoppedAt !== null;
-  }
+    return timeslice.isRunning() ? timeslice.end().format(format) : '';
+  };
 
   scope.formatDuration = function () {
-     return duration(timeslice.totalDuration())
+    return duration(timeslice.totalDuration());
   };
 
   scope.remove = function (e) {
-    if (e) e.preventDefault();
+    if (e) {
+      e.preventDefault();
+    }
     activity.removeTimeslice(timeslice);
   };
 
   return scope;
-}
+};
 
 component.view = function (scope) {
-  var tr = [];
+  var content = [];
+  var start = scope.timeslice.start();
+  var end = scope.timeslice.end();
 
-  tr.push(m('td.start', input(scope.formatStart('YYYY-MM-DD'), undefined, 'date')));
-  tr.push(m('td.start', input(scope.formatStart('HH:mm:ss'), undefined, 'time')));
-  tr.push(m('td.stop', input(scope.formatStop('HH:mm:ss'), undefined, 'time')));
-  tr.push(m('td.stop', input(scope.formatStop('YYYY-MM-DD'), undefined, 'date')));
+  content.push(m('span.badge', start.format('YYYY-MM-DD')));
+  content.push(m('span.time', start.format('HH:MM')));
+  content.push(m('span.divider', ' - '));
+  content.push(m('span.time', end.format('HH:MM')));
 
-  tr.push(m('td.duration', scope.formatDuration()));
-  tr.push(m('td.actions.text-right', [
-    m('button.btn.btn-flat', { onclick: scope.remove }, m('span.icon.icon-delete'))
-  ]));
-
-  return m('tr', tr);
+  return m('div.tile', content);
 };
 
 
