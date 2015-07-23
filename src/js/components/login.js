@@ -3,7 +3,7 @@
 var m = require('mithril');
 var t = require('../translation');
 var authorize = require('../core/authorize');
-var card = require('../core/views/card');
+var card = require('../core/views/card/default');
 var formGroup = require('../core/views/form/group');
 
 var component = {};

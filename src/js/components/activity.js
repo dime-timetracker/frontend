@@ -10,7 +10,7 @@ configuration.addSection(require('./activity/config'));
 var buttonView = require('../core/views/button');
 var item = require('./activity/item');
 var grid = require('../core/views/grid');
-var card = require('../core/views/card');
+var card = require('../core/views/card/default');
 
 function filterView (scope) {
   return m('.filter', card(grid(

@@ -8,7 +8,7 @@ var headerWithDescription = require('./setting/headerWithDescription');
 
 // views
 var buttonView = require('../core/views/button');
-var cardView = require('../core/views/card');
+var cardView = require('../core/views/card/default');
 
 
 var component = {};
