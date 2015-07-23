@@ -2,7 +2,6 @@
 
 var m = require('mithril');
 var t = require('../../translation');
-var isEmpty = require('lodash/lang/isEmpty');
 var tile = require('../../core/views/tile');
 var buildForm = require('../../core/helper/build/form');
 var formView = require('../../core/views/form');
@@ -94,7 +93,7 @@ component.view = function(scope) {
   inner.push(m('span', scope.model.description));
   ['customer', 'project', 'service'].forEach(function (relation) {
     if (scope.model[relation]) {
-      inner.push(m('a[href=#]', {style: 'padding: 0 3px'}, scope.model[relation].shortcut + scope.model[relation].alias));
+      inner.push(m('span.badge', scope.model[relation].shortcut + scope.model[relation].alias));
     }
   });
 
