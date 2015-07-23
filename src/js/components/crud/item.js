@@ -4,6 +4,7 @@ var m = require('mithril');
 var buildForm = require('../../core/helper/build/form');
 var formView = require('../../core/views/form');
 var tile = require('../../core/views/tile');
+var toggleButton = require('../../core/components/toggleButton');
 
 var component = {};
 
@@ -25,14 +26,9 @@ component.view = function(form) {
     subs: []
   };
 
-  options.actions.push(m('a.btn.btn-flat', {
-    onclick: function (e) {
-      if (e) {
-        e.preventDefault();
-      }
-      form.show = (form.show) ? false : true;
-    }
-  }, form.show ? m('span.icon.icon-close.icon-lg') : m('span.icon.icon-edit.icon-lg')));
+  options.actions.push(m.component(toggleButton, '.icon-edit', form.show, function (state) {
+    form.show = state;
+  }));
 
   if (form.show) {
     options.subs.push(form.items.map(formView));
@@ -45,7 +41,7 @@ component.view = function(form) {
         config: m.route,
         href: m.route(),
         onclick: form.remove
-      }, m('span.icon.icon-delete'))
+      }, m('span.icon.icon-lg.icon-delete'))
     );
 
     if (form.changed) {
@@ -54,7 +50,7 @@ component.view = function(form) {
           config: m.route,
           href: m.route(),
           onclick: form.save
-        }, m('span.icon.icon-done'))
+        }, m('span.icon.icon-lg.icon-done'))
       );
     }
   }
