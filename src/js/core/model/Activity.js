@@ -22,7 +22,7 @@ var Activity = function (data) {
   Model.call(this, _.extend({
     description: t('(Click here to enter a description!)'),
     updatedAt: moment().format('YYYY-MM-DD HH:mm:ss')
-  }, data || {}));
+  }, data));
 
   if (this.customer) {
     this.customer = new Customer(this.customer);
@@ -157,7 +157,6 @@ Activity.prototype.totalDuration = function () {
 Activity.prototype.startStopTimeslice = function () {
   var activity = this;
   if (this.running()) {
-//    dime.states.activity.change('normal');
     this.timeslices.forEach(function (timeslice, idx) {
       if (timeslice.isRunning()) {
         timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -166,23 +165,11 @@ Activity.prototype.startStopTimeslice = function () {
       }
     });
   } else {
-//    dime.states.activity.change('running');
     var timeslice = this.timeslices.modelize({
       activity: parseInt(activity.id) // we could submit the whole activity, but this is not required here
     });
     activity.timeslices.persist(timeslice);
   }
-};
-
-Activity.prototype.toggleTimeslices = function () {
-  if (_.isUndefined(this.showTimeslices)) {
-    this.showTimeslices = false;
-  }
-  this.showTimeslices = !this.showTimeslices;
-};
-
-Activity.prototype.updateDescription = function (description) {
-  this.description = description;
 };
 
 Activity.prototype.addTimeslice = function (timeslice) {

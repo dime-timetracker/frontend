@@ -2,13 +2,14 @@
 
 var m = require('mithril');
 var t = require('../../translation');
+var isEmpty = require('lodash/lang/isEmpty');
 var tile = require('../../core/views/tile');
 var buildForm = require('../../core/helper/build/form');
 var formView = require('../../core/views/form');
 var timesliceList = require('./timesliceList');
 
 var btnStartStop = require('./btnStartStop');
-var description = require('./description');
+var toggleButton = require('../../core/components/toggleButton');
 
 var component = {};
 
@@ -17,19 +18,9 @@ component.controller = function(activity, collection) {
 
   scope.model = activity;
   scope.form = buildForm(activity, collection);
-
-  scope.toggleTimeslices = function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    activity.toggleTimeslices();
-  };
-
-  scope.updateDescription = function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    activity.updateDescription(e.target.textContent);
+  scope.toggle = {
+    timeslice: false,
+    edit: false
   };
 
   scope.remove = function(e) {
@@ -52,20 +43,28 @@ component.view = function(scope) {
     subs: []
   };
   options.actions.push(m.component(btnStartStop, scope.model));
-  options.actions.push(m('a.btn.btn-flat', {
-    title: t('Show timeslices'),
-    onclick: scope.toggleTimeslices
-  }, scope.model.showTimeslices ? m('span.icon.icon-close.icon-lg') : m('span.icon.icon-access-time.icon-lg')));
-  options.actions.push(m('a.btn.btn-flat', {
-    title: t('Show timeslices'),
-    onclick: scope.toggleTimeslices
-  }, scope.model.showTimeslices ? m('span.icon.icon-close.icon-lg') : m('span.icon.icon-edit.icon-lg')));
+  options.actions.push(m.component(
+    toggleButton,
+    '.icon-access-time',
+    scope.toggle.timeslice,
+    function (state) {
+      scope.toggle.timeslice = state;
+    }
+  ));
+  options.actions.push(m.component(
+    toggleButton,
+    '.icon-edit',
+    scope.toggle.edit,
+    function (state) {
+      scope.toggle.edit = state;
+    }
+  ));
 
-  if (scope.model.showTimeslices) {
+  if (scope.toggle.edit) {
+    options.active = true;
     options.subs.push(scope.form.items.map(formView));
-    var subActions = [];
-    options.subs.push(subActions);
 
+    var subActions = [];
     subActions.push(
       m('a.btn.btn-flat', {
         config: m.route,
@@ -83,6 +82,11 @@ component.view = function(scope) {
         }, m('span.icon.icon-done'))
       );
     }
+    options.subs.push(subActions);
+  }
+
+  if (scope.toggle.timeslice) {
+    options.active = true;
     options.subs.push(m.component(timesliceList, scope.model));
   }
 
