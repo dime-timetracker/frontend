@@ -1,7 +1,6 @@
 'use strict';
 
 var m = require('mithril');
-var t = require('../../lib/translation');
 var tile = require('../utils/views/tile');
 var buildForm = require('../../lib/helper/build/form');
 var formView = require('../utils/views/form');
