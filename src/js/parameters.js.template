@@ -1,5 +1,5 @@
 'use strict';
 
-var env = require('./core/env');
+var env = require('./lib/env');
 
 env.baseUrl = '';
