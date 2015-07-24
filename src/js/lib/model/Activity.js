@@ -150,7 +150,7 @@ Activity.prototype.runningTimeslice = function () {
 
 Activity.prototype.totalDuration = function () {
   return this.timeslices.reduce(function (prev, timeslice) {
-    return prev + timeslice.totalDuration();
+    return prev + timeslice.getDuration();
   }, 0);
 };
 

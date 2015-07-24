@@ -10,13 +10,15 @@ var definedAndNotNull = require('../helper/definedAndNotNull');
 var moment = require('moment');
 var Model = require('../Model');
 
+var timestampFormat = 'YYYY-MM-DD HH:mm:ss';
+
 var Timeslice = function (data) {
   if (!(this instanceof Timeslice)) {
     return new Timeslice(data);
   }
 
   Model.call(this, extend({
-    startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+    startedAt: moment().format(timestampFormat),
     duration: 0
   }, data));
 };
@@ -33,31 +35,39 @@ Timeslice.prototype = create(Model.prototype, {
   }
 });
 
-Timeslice.prototype.start = function () {
+Timeslice.prototype.getStart = function () {
   return moment(this.startedAt);
 };
 
-Timeslice.prototype.duration = function () {
+Timeslice.prototype.setStart = function (datetime) {
+  this.startedAt = moment(datetime).format(timestampFormat);
+};
+
+Timeslice.prototype.setStartDate = function (date) {
+  var newDate = moment(date);
+
+  this.startedAt = this.getStart()
+    .date(newDate.date())
+    .month(newDate.month())
+    .year(newDate.year())
+    .format(timestampFormat);
+};
+
+Timeslice.prototype.setStartTime = function (time) {
+  var newTime = moment(time);
+
+  this.startedAt = this.getStart()
+    .hour(newTime.hour())
+    .minute(newTime.minute())
+    .second(newTime.second())
+    .format(timestampFormat);
+};
+
+Timeslice.prototype.getDuration = function (precision) {
   var result = 0;
 
   if (isNull(this.duration) || this.duration === 0) {
-    result = this.end().diff(this.start(), 'seconds');
-  } else {
-    result = parseInt(this.duration);
-  }
-
-  return result;
-};
-
-Timeslice.prototype.end = function () {
-  return definedAndNotNull(this.stoppedAt) ? moment(this.stoppedAt) : moment();
-};
-
-Timeslice.prototype.totalDuration = function (precision) {
-  var result = 0;
-
-  if (isNull(this.duration) || this.duration === 0) {
-    result = this.end().diff(this.start(), 'seconds');
+    result = this.end().diff(this.getStart(), 'seconds');
   } else {
     result = parseInt(this.duration);
   }
@@ -72,12 +82,41 @@ Timeslice.prototype.totalDuration = function (precision) {
   return result;
 };
 
+Timeslice.prototype.getEnd = function () {
+  return definedAndNotNull(this.stoppedAt) ? moment(this.stoppedAt) : moment();
+};
+
+
+Timeslice.prototype.setEnd = function (datetime) {
+  this.stoppedAt = moment(datetime).format(timestampFormat);
+};
+
+Timeslice.prototype.setEndDate = function (date) {
+  var newDate = moment(date);
+
+  this.stoppedAt = this.getEnd()
+    .date(newDate.date())
+    .month(newDate.month())
+    .year(newDate.year())
+    .format(timestampFormat);
+};
+
+Timeslice.prototype.setEndTime = function (time) {
+  var newTime = moment(time);
+
+  this.stoppedAt = this.getEnd()
+    .hour(newTime.hour())
+    .minute(newTime.minute())
+    .second(newTime.second())
+    .format(timestampFormat);
+};
+
 Timeslice.prototype.isRunning = function () {
   return !definedAndNotNull(this.stoppedAt);
 };
 
-Timeslice.prototype.sameDay = function () {
-  return 1 > this.end().diff(this.start(), 'days');
+Timeslice.prototype.isSameDay = function () {
+  return 1 > this.getEnd().diff(this.getStart(), 'days');
 };
 
 module.exports = Timeslice;
