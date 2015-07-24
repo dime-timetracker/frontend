@@ -1,6 +1,9 @@
 'use strict';
 
-var _ = require('lodash');
+var create = require('lodash/object/create');
+var extend = require('lodash/object/extend');
+var isUndefined = require('lodash/lang/isUndefined');
+var uuid = require('simple-uuid');
 
 /**
  * Model
@@ -15,14 +18,15 @@ var Model = function (data) {
     return new Model();
   }
 
-  _.extend(this, {}, data || {});
+  extend(this, {
+    uuid: uuid()
+  }, data || {});
 };
 
-Model.prototype = {};
-Model.prototype.constructor = Model;
+Model.prototype = create(Object.prototype, {constructor: Model});
 
 Model.prototype.isNew = function () {
-  return _.isUndefined(this.id);
+  return isUndefined(this.id);
 };
 
 module.exports = Model;

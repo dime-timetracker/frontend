@@ -44,7 +44,9 @@ var buildForm = function(model, collection) {
         e.preventDefault();
       }
 
-      var question = t('Do you really want to delete "[name]"?').replace('[name]', model.name);
+      var question = t('delete.confirm', {
+        name: model.name || model.description
+      });
       if (global.window.confirm(question)) {
         collection.remove(model);
         form.changed = false;

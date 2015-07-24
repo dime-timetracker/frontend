@@ -12,11 +12,15 @@ var card = require('./utils/views/card/default');
 
 var shellActivities = require('./shell/activity');
 var shellFilter = require('./shell/filter');
-var item = require('./activity/item');
+var itemView = require('./activity/item');
 
 function activityListView (scope) {
   var list = scope.collection.map(function (activity) {
-    return m.component(item, activity, scope.collection);
+    return m.component(itemView, {
+      activity: activity,
+      key: activity.uuid,
+      collection: scope.collection
+    });
   }, scope);
   return m('.tile-wrap', [ list, buttonView('Add Activity', '/', scope.add) ]);
 }

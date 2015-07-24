@@ -10,33 +10,20 @@ var timesliceList = require('./timesliceList');
 var btnStartStop = require('./btnStartStop');
 var toggleButton = require('../utils/components/toggleButton');
 
-var component = {};
-
-component.controller = function(activity, collection) {
+function controller (activityScope) {
   var scope = {};
 
-  scope.model = activity;
-  scope.form = buildForm(activity, collection);
+  scope.model = activityScope.activity;
+  scope.form = buildForm(activityScope.activity, activityScope.collection);
   scope.toggle = {
     timeslice: false,
     edit: false
   };
 
-  scope.remove = function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    var question = t('Do you really want to delete "[activity]"?')
-      .replace('[activity]', activity.description);
-    if (global.window.confirm(question)) {
-      activity.remove();
-    }
-  };
-
   return scope;
-};
+}
 
-component.view = function(scope) {
+function view (scope) {
   var options = {
     actions: [],
     subs: []
@@ -98,6 +85,9 @@ component.view = function(scope) {
   });
 
   return tile(inner, options);
-};
+}
 
-module.exports = component;
+module.exports = {
+  controller: controller,
+  view: view
+};
