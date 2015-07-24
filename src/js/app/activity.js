@@ -21,28 +21,30 @@ function activityListView (scope) {
   return m('.tile-wrap', [ list, buttonView('Add Activity', '/', scope.add) ]);
 }
 
-var component = {
-  controller: function () {
-    var scope = {
-      collection: activities
-    };
+function controller () {
+  var scope = {
+    collection: activities
+  };
 
-    scope.add = function (e) {
-      if (e) {
-        e.preventDefault();
-      }
-      scope.collection.add({});
-    };
+  scope.add = function (e) {
+    if (e) {
+      e.preventDefault();
+    }
+    scope.collection.add({});
+  };
 
-    return scope;
-  },
-  view: function (scope) {
-    return m('.activities', [
-      card(m.component(shellActivities, scope)),
-      m('.filter', card(m.component(shellFilter, scope))),
-      activityListView(scope)
-    ]);
-  }
+  return scope;
+}
+
+function view (scope) {
+  return m('.activities', [
+    card(m.component(shellActivities, scope)),
+    m('.filter', card(m.component(shellFilter, scope))),
+    activityListView(scope)
+  ]);
+}
+
+module.exports = {
+  controller: controller,
+  view: view
 };
-
-module.exports = component;
