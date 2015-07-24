@@ -8,19 +8,11 @@ configuration.addSection(require('./shell/config'));
 configuration.addSection(require('./activity/config'));
 
 var buttonView = require('./utils/views/button');
-var item = require('./activity/item');
-var grid = require('./utils/views/grid');
 var card = require('./utils/views/card/default');
 
-function filterView (scope) {
-  return m('.filter', card(grid(
-    m.component(require('./shell/filter'), scope)
-  )));
-}
-
-function consoleView (scope) {
-  return m('.console', card(grid(m.component(require('./shell/activity'), scope))));
-}
+var shellActivities = require('./shell/activity');
+var shellFilter = require('./shell/filter');
+var item = require('./activity/item');
 
 function activityListView (scope) {
   var list = scope.collection.map(function (activity) {
@@ -45,7 +37,11 @@ var component = {
     return scope;
   },
   view: function (scope) {
-    return m('.activities', [ consoleView(scope), filterView(scope), activityListView(scope) ]);
+    return m('.activities', [
+      card(m.component(shellActivities, scope)),
+      m('.filter', card(m.component(shellFilter, scope))),
+      activityListView(scope)
+    ]);
   }
 };
 
