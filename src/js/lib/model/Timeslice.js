@@ -54,7 +54,7 @@ Timeslice.prototype.setStartDate = function (date) {
 };
 
 Timeslice.prototype.setStartTime = function (time) {
-  var newTime = moment(time);
+  var newTime = moment(this.getStart().format('YYYY-MM-DD ') + time);
 
   this.startedAt = this.getStart()
     .hour(newTime.hour())
@@ -102,7 +102,7 @@ Timeslice.prototype.setEndDate = function (date) {
 };
 
 Timeslice.prototype.setEndTime = function (time) {
-  var newTime = moment(time);
+  var newTime = moment(this.getEnd().format('YYYY-MM-DD ') + time);
 
   this.stoppedAt = this.getEnd()
     .hour(newTime.hour())
