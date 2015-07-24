@@ -8,7 +8,8 @@ var routes = {
   '/': require('./app/activity'),
   '/login': require('./app/login'),
   '/settings': require('./app/setting'),
-  '/:name': require('./app/crud')
+  '/report/:query': require('./app/report'),
+  '/:name': require('./app/crud'),
  };
 
 function prefetchData () {
