@@ -52,7 +52,11 @@ var Activity = function (data) {
       return result;
     },
     compareKey: function (obj) {
-      return parseInt(moment(obj.stoppedAt || obj.startedAt || obj.updatedAt || obj.createdAt).format('x'));
+      return parseInt(moment(
+        obj.stoppedAt ||
+        obj.startedAt ||
+        obj.updatedAt ||
+        obj.createdAt).format('x'));
     }
   }, this.timeslices || []);
 };
@@ -102,7 +106,7 @@ Activity.prototype.onSwitchRelation = function (relation, item) {
       if (item.customer && item.customer.alias) {
         this.customer = item.customer;
       }
-      if (!_.isNull(this.project) && (!item.customer || '' == item.customer.alias)) {
+      if (!_.isNull(this.project) && (!item.customer || '' === item.customer.alias)) {
         this.project.customer = this.customer;
       }
 //      dime.resources.activity.persist(this);
@@ -117,30 +121,30 @@ Activity.prototype.onSwitchRelation = function (relation, item) {
 };
 
 Activity.prototype.hasCustomer = function () {
-  return _.isObject(this.customer)
-          && _.isString(this.customer.alias)
-          && 0 < this.customer.alias.length;
+  return _.isObject(this.customer) &&
+          _.isString(this.customer.alias) &&
+          0 < this.customer.alias.length;
 };
 
 Activity.prototype.hasProject = function () {
-  return _.isObject(this.project)
-          && _.isString(this.project.alias)
-          && 0 < this.project.alias.length;
+  return _.isObject(this.project) &&
+          _.isString(this.project.alias) &&
+          0 < this.project.alias.length;
 };
 
 Activity.prototype.hasService = function () {
-  return _.isObject(this.service)
-          && _.isString(this.service.alias)
-          && 0 < this.service.alias.length;
+  return _.isObject(this.service) &&
+          _.isString(this.service.alias) &&
+          0 < this.service.alias.length;
 };
 
-Activity.prototype.running = function () {
+Activity.prototype.isRunning = function () {
   return this.timeslices.some(function (timeslice) {
     return timeslice.isRunning();
   });
 };
 
-Activity.prototype.runningTimeslice = function () {
+Activity.prototype.findRunningTimeslice = function () {
   return this.timeslices.find(function (timeslice) {
     return timeslice.isRunning();
   });
@@ -152,34 +156,33 @@ Activity.prototype.totalDuration = function () {
   }, 0);
 };
 
-Activity.prototype.startStopTimeslice = function () {
-  var activity = this;
-  if (this.running()) {
-    this.timeslices.forEach(function (timeslice, idx) {
-      if (timeslice.isRunning()) {
-        timeslice.stoppedAt = moment().format('YYYY-MM-DD HH:mm:ss');
-        timeslice.duration = moment(timeslice.stoppedAt).diff(moment(timeslice.startedAt), 'seconds');
-        activity.timeslices.persist(timeslice);
-      }
-    });
-  } else {
-    var timeslice = this.timeslices.modelize({
-      activity: parseInt(activity.id) // we could submit the whole activity, but this is not required here
-    });
-    activity.timeslices.persist(timeslice);
+Activity.prototype.start = function () {
+  var timeslice = this.timeslices.modelize({
+    activity: parseInt(this.id) // we could submit the whole activity, but this is not required here
+  });
+  this.timeslices.persist(timeslice);
+};
+
+Activity.prototype.stop = function () {
+  var timeslice = this.findRunningTimeslice();
+  if (timeslice) {
+    timeslice.setEnd();
+    timeslice.updateDuration();
+    this.timeslices.persist(timeslice);
   }
 };
 
 Activity.prototype.addTimeslice = function (timeslice) {
-  timeslice = timeslice || this.timeslices.modelize({
-    activity: parseInt(this.id) // we could submit the whole activity, but this is not required here
-  });
-  this.timeslices.persist(timeslice);
+  if (timeslice) {
+      this.timeslices.persist(timeslice);
+  }
   return timeslice;
 };
 
 Activity.prototype.removeTimeslice = function (timeslice) {
-  this.timeslices.remove(timeslice);
+  if (timeslice) {
+    this.timeslices.remove(timeslice);
+  }
   return timeslice;
 };
 

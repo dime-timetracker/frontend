@@ -49,30 +49,35 @@ function controller (args) {
 }
 
 function view (scope) {
-  var tr = [];
+  var start = [];
+  var end = [];
 
-  tr.push(m('td.start', input(scope.formatStart('YYYY-MM-DD'), function (value) {
+  start.push(input(scope.formatStart('YYYY-MM-DD'), function (value) {
     if (scope.timeslice.isSameDay()) {
       scope.timeslice.setEndDate(value);
     }
     scope.timeslice.setStartDate(value);
     scope.changed = true;
-  }, 'date')));
-  tr.push(m('td.start', input(scope.formatStart('HH:mm:ss'), function (value) {
+  }, 'date'));
+  start.push(input(scope.formatStart('HH:mm:ss'), function (value) {
     scope.timeslice.setStartTime(value);
     scope.changed = true;
-  }, 'time')));
-  tr.push(m('td.stop', input(scope.formatEnd('HH:mm:ss'), function (value) {
+  }, 'time'));
+
+  end.push(input(scope.formatEnd('HH:mm:ss'), function (value) {
     scope.timeslice.setEndTime(value);
     scope.changed = true;
-  }, 'time')));
-  tr.push(m('td.stop', input(scope.formatEnd('YYYY-MM-DD'), function (value) {
+  }, 'time'));
+  end.push(input(scope.formatEnd('YYYY-MM-DD'), function (value) {
     scope.timeslice.setEndDate(value);
     scope.changed = true;
-  }, 'date')));
+  }, 'date'));
 
+  var tr = [];
+
+  tr.push(m('td.start', start));
+  tr.push(m('td.end', end));
   tr.push(m('td.duration', scope.formatDuration()));
-
 
   var actions = [];
   tr.push(m('td.actions.text-right', actions));

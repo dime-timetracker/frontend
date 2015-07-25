@@ -35,34 +35,6 @@ Timeslice.prototype = create(Model.prototype, {
   }
 });
 
-Timeslice.prototype.getStart = function () {
-  return moment(this.startedAt);
-};
-
-Timeslice.prototype.setStart = function (datetime) {
-  this.startedAt = moment(datetime).format(timestampFormat);
-};
-
-Timeslice.prototype.setStartDate = function (date) {
-  var newDate = moment(date);
-
-  this.startedAt = this.getStart()
-    .date(newDate.date())
-    .month(newDate.month())
-    .year(newDate.year())
-    .format(timestampFormat);
-};
-
-Timeslice.prototype.setStartTime = function (time) {
-  var newTime = moment(this.getStart().format('YYYY-MM-DD ') + time);
-
-  this.startedAt = this.getStart()
-    .hour(newTime.hour())
-    .minute(newTime.minute())
-    .second(newTime.second())
-    .format(timestampFormat);
-};
-
 Timeslice.prototype.getDuration = function (precision) {
   var result = 0;
 
@@ -86,6 +58,17 @@ Timeslice.prototype.getEnd = function () {
   return definedAndNotNull(this.stoppedAt) ? moment(this.stoppedAt) : moment();
 };
 
+Timeslice.prototype.getStart = function () {
+  return moment(this.startedAt);
+};
+
+Timeslice.prototype.isRunning = function () {
+  return !definedAndNotNull(this.stoppedAt);
+};
+
+Timeslice.prototype.isSameDay = function () {
+  return 1 > this.getEnd().diff(this.getStart(), 'days');
+};
 
 Timeslice.prototype.setEnd = function (datetime) {
   this.stoppedAt = moment(datetime).format(timestampFormat);
@@ -111,12 +94,37 @@ Timeslice.prototype.setEndTime = function (time) {
     .format(timestampFormat);
 };
 
-Timeslice.prototype.isRunning = function () {
-  return !definedAndNotNull(this.stoppedAt);
+Timeslice.prototype.setStart = function (datetime) {
+  this.startedAt = moment(datetime).format(timestampFormat);
 };
 
-Timeslice.prototype.isSameDay = function () {
-  return 1 > this.getEnd().diff(this.getStart(), 'days');
+Timeslice.prototype.setStartDate = function (date) {
+  var newDate = moment(date);
+
+  this.startedAt = this.getStart()
+    .date(newDate.date())
+    .month(newDate.month())
+    .year(newDate.year())
+    .format(timestampFormat);
 };
+Timeslice.prototype.setStartTime = function (time) {
+  var newTime = moment(this.getStart().format('YYYY-MM-DD ') + time);
+
+  this.startedAt = this.getStart()
+    .hour(newTime.hour())
+    .minute(newTime.minute())
+    .second(newTime.second())
+    .format(timestampFormat);
+};
+
+Timeslice.prototype.calculateDuration = function () {
+  return this.end().diff(this.getStart(), 'seconds');
+};
+
+Timeslice.prototype.updateDuration = function () {
+  this.duration = this.calculateDuration();
+  return this.duration;
+};
+
 
 module.exports = Timeslice;

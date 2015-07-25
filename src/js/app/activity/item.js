@@ -1,19 +1,40 @@
 'use strict';
 
 var m = require('mithril');
+var t = require('../../lib/translation');
+
+var grid = require('../utils/views/grid');
 var tile = require('../utils/views/tile');
-var buildForm = require('../../lib/helper/build/form');
-var formView = require('../utils/views/form');
+
 var timesliceList = require('./timesliceList');
 
 var btnStartStop = require('./btnStartStop');
+
+var formBuilder = require('../utils/components/formBuilder');
 var toggleButton = require('../utils/components/toggleButton');
 
 function controller (activityScope) {
   var scope = {};
 
   scope.model = activityScope.activity;
-  scope.form = buildForm(activityScope.activity, activityScope.collection);
+  scope.onSubmit = function (e) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    activityScope.collection.persist(scope.model);
+  };
+  scope.onDelete = function (e) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    var question = t('delete.confirm', { name: scope.model.toString() });
+    if (global.window.confirm(question)) {
+      activityScope.collection.remove(scope.model);
+    }
+  };
+
   scope.toggle = {
     timeslice: false,
     edit: false
@@ -27,15 +48,11 @@ function view (scope) {
     actions: [],
     subs: []
   };
-  options.actions.push(m.component(btnStartStop, scope.model));
-  options.actions.push(m.component(
-    toggleButton,
-    '.icon-access-time',
-    scope.toggle.timeslice,
-    function (state) {
-      scope.toggle.timeslice = state;
-    }
-  ));
+  options.actions.push(m.component(btnStartStop, {
+    key: 'startstop-' + scope.model.uuid,
+    activity: scope.model
+  }));
+
   options.actions.push(m.component(
     toggleButton,
     '.icon-edit',
@@ -47,32 +64,19 @@ function view (scope) {
 
   if (scope.toggle.edit) {
     options.active = true;
-    options.subs.push(scope.form.items.map(formView));
 
-    var subActions = [];
-    subActions.push(
-      m('a.btn.btn-flat', {
-        config: m.route,
-        href: m.route(),
-        onclick: scope.form.remove
-      }, m('span.icon.icon-delete'))
-    );
-
-    if (scope.form.changed) {
-      subActions.push(
-        m('a.btn.btn-green.pull-right', {
-          config: m.route,
-          href: m.route(),
-          onclick: scope.form.save
-        }, m('span.icon.icon-done'))
-      );
-    }
-    options.subs.push(subActions);
-  }
-
-  if (scope.toggle.timeslice) {
-    options.active = true;
-    options.subs.push(m.component(timesliceList, scope.model));
+    options.subs.push(grid(
+      m.component(formBuilder, {
+        key: 'form-' + scope.model.uuid,
+        model: scope.model,
+        onSubmit: scope.onSubmit,
+        onDelete: scope.onDelete
+      }),
+      m.component(timesliceList, {
+        key: 'timeslices-' + scope.model.uuid,
+        activity: scope.model
+      })
+    ));
   }
 
   var inner = [];
