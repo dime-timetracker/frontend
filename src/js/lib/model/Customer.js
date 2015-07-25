@@ -11,8 +11,9 @@ var Customer = function (data) {
   Model.call(this, _.extend({
     name: undefined,
     alias: undefined
-  }, data || {}));
+  }, data));
 };
+
 Customer.prototype = _.create(Model.prototype, {
   constructor: Customer,
   shortcut: '@',
@@ -31,5 +32,9 @@ Customer.prototype = _.create(Model.prototype, {
     }
   }
 });
+
+Customer.prototype.toString = function () {
+  return this.name;
+};
 
 module.exports = Customer;

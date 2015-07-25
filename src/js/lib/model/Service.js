@@ -32,4 +32,8 @@ Service.prototype = _.create(Model.prototype, {
   }
 });
 
+Service.prototype.toString = function () {
+  return this.name;
+};
+
 module.exports = Service;

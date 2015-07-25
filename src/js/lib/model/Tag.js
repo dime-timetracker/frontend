@@ -24,4 +24,8 @@ Tag.prototype = create(Model.prototype, {
   }
 });
 
+Tag.prototype.toString = function () {
+  return this.name;
+};
+
 module.exports = Tag;

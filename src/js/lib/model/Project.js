@@ -47,4 +47,8 @@ Project.prototype = create(Model.prototype, {
   }
 });
 
+Project.prototype.toString = function () {
+  return this.name;
+};
+
 module.exports = Project;

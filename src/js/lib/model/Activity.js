@@ -84,17 +84,15 @@ Activity.prototype.onSwitchRelation = function (relation, item) {
     case 'customer':
       if (this.project) {
         // reset project after selecting a different customer
-        if (this.project.customer
-                && this.project.customer.alias
-                && this.project.customer.alias !== relation.alias
-                ) {
+        if (this.project.customer &&
+            this.project.customer.alias &&
+            this.project.customer.alias !== relation.alias) {
           this.project = null;
         }
         // assign customer to project, if it has none
-        if (this.customer
-                && _.isObject(this.project.customer)
-                && '' == this.project.customer.alias
-                ) {
+        if (this.customer &&
+            _.isObject(this.project.customer) &&
+            '' === this.project.customer.alias) {
           this.project.customer = this.customer;
         }
       }
@@ -183,6 +181,10 @@ Activity.prototype.addTimeslice = function (timeslice) {
 Activity.prototype.removeTimeslice = function (timeslice) {
   this.timeslices.remove(timeslice);
   return timeslice;
+};
+
+Activity.prototype.toString = function () {
+  return this.description;
 };
 
 module.exports = Activity;
