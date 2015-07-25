@@ -3,17 +3,17 @@
 var m = require('mithril');
 var isFunction = require('lodash/lang/isFunction');
 
-var text = function (value, update) {
+var text = function (value, options) {
   var attr = {
     contenteditable: true
   };
 
-  if (isFunction(update)) {
+  if (isFunction(options.update)) {
     attr.oninput = function(e) {
-      update(e.target.textContent, e);
+      options.update(e.target.textContent, e);
     };
   }
-  return m('span.form-control', attr, value);
+  return m('span.form-control-static', attr, value);
 };
 
 module.exports = text;

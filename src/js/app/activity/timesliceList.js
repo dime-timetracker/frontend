@@ -26,17 +26,18 @@ function controller (args) {
 }
 
 function view (scope) {
-  return m('table.table.table-inline.table-bordered.table-hover', [
-    m('thead',
-      m('tr', [
-        m('th', t('Start')),
-        m('th', t('End')),
-        m('th', t('Duration')),
-        m('th.text-right', m('buttn.btn.btn-flat', { onclick: scope.add }, m('span.icon.icon-add')))
-      ])
-    ),
-    m('tbody', scope.items)
-  ]);
+  return m('.tiles', scope.items);
+  // return m('table.table.table-inline.table-bordered.table-hover', [
+  //   m('thead',
+  //     m('tr', [
+  //       m('th', t('Start')),
+  //       m('th', t('End')),
+  //       m('th', t('Duration')),
+  //       m('th.text-right', m('buttn.btn.btn-flat', { onclick: scope.add }, m('span.icon.icon-add')))
+  //     ])
+  //   ),
+  //   m('tbody', scope.items)
+  // ]);
 }
 
 module.exports = {

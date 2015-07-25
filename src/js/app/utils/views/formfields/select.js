@@ -8,24 +8,16 @@ var isPlainObject = require('lodash/lang/isPlainObject');
 /**
  * select - generate a select VirtualElement.
  * @param   {array} values must be an array with values or a key-value-object {key: '', value: ''}
- * @param   {function} onchange what should happen when option is changed
- * @param   {string} selected define the selected option
+ * @param   {Object} options { onchange: func, selected: String }
  * @returns {VirtualElement} select element
  */
-var select = function (values, onchange, selected) {
-  var options = [];
+var select = function (values, options) {
+  options = options || {};
+
   var attr = {};
-
-  if (isFunction(onchange)) {
-    attr.onchange = function (e) {
-      var idx = e.target.selectedIndex;
-      var value = e.target.options[idx].value;
-      onchange(value, e);
-    };
-  }
-
+  var optionList = [];
   if (isArray(values)) {
-    options = values.map(function buildOptions(item) {
+    optionList = values.map(function buildOptions(item) {
       var key = item;
       var value = item;
       if (isPlainObject(item)) {
@@ -34,12 +26,20 @@ var select = function (values, onchange, selected) {
       }
       return m('option', {
         'value': key,
-        'selected': (selected === key)
+        'selected': (options.selected === key)
       }, value);
     });
   }
 
-  return m('select.form-control', attr, options);
+  if (isFunction(options.onchange)) {
+    attr.onchange = function (e) {
+      var idx = e.target.selectedIndex;
+      var value = e.target.options[idx].value;
+      options.onchange(value, e);
+    };
+  }
+
+  return m('select.form-control', attr, optionList);
 };
 
 module.exports = select;

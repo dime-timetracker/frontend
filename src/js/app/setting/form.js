@@ -4,11 +4,11 @@ var m = require('mithril');
 var _ = require('lodash');
 var t = require('../../lib/translation');
 var configuration = require('../../lib/configuration');
-var inputs = {
-  input: require('../utils/views/form/input'),
-  text: require('../utils/views/form/text'),
-  select: require('../utils/views/form/select'),
-  boolean: require('../utils/views/form/selectBoolean')
+var fields = {
+  input: require('../utils/views/formfields/input'),
+  text: require('../utils/views/formfields/text'),
+  select: require('../utils/views/formfields/select'),
+  boolean: require('../utils/views/formfields/selectBoolean')
 };
 
 var component = {};
@@ -39,10 +39,13 @@ component.controller = function (scope) {
 
 component.view = function (scope) {
   var input = [];
-  if (inputs[scope.type]) {
-    input.push(inputs[scope.type](scope.value(), scope.update, scope.type));
+  if (fields[scope.type]) {
+    input.push(fields[scope.type](scope.value(), { update: scope.update() }));
   } else {
-    input.push(inputs.input(scope.value(), scope.update, scope.type));
+    input.push(fields.input(scope.value(), {
+      update: scope.update,
+      type: scope.type
+    }));
   }
 
   var description = t('config.' + scope.path + '.description');

@@ -4,7 +4,7 @@ var m = require('mithril');
 var t = require('../lib/translation');
 var authorize = require('../lib/authorize');
 var card = require('./utils/views/card/default');
-var formGroup = require('./utils/views/form/group');
+var formGroup = require('./utils/views/formfields/group');
 
 var component = {};
 

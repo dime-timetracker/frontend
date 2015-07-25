@@ -18,30 +18,32 @@ var forOwn = require('lodash/object/forOwn');
 var t = require('../../../lib/translation');
 var propertyModel = require('../../../lib/helper/propertyModel');
 
-var formGroup = require('../views/form/group');
-var inputField = require('../views/form/input');
-var selectField = require('../views/form/select');
-var selectBooleanField = require('../views/form/selectBoolean');
+var formGroup = require('../views/formfields/group');
+var inputField = require('../views/formfields/input');
+var selectField = require('../views/formfields/select');
+var selectBooleanField = require('../views/formfields/selectBoolean');
 
-function viewItem(property) {
+function propertyField(property) {
   var input;
+  var options = {
+    update: property.update
+  };
 
   switch (property.type) {
     case 'boolean':
-      input = selectBooleanField(property.value(), property.update);
+      input = selectBooleanField(property.value(), options);
       break;
     case 'select':
-      input = selectField(property.values(), property.update, property.value());
+      options.selected = property.value();
+      input = selectField(property.values(), options);
       break;
     case 'relation':
-      input = selectField(
-        property.values(),
-        property.update,
-        (property.value()) ? property.value().alias: ''
-      );
+      options.selected = (property.value()) ? property.value().alias: ''
+      input = selectField(property.values(), options);
       break;
     default:
-      input = inputField(property.value(), property.update, property.type);
+      options.type = property.type;
+      input = inputField(property.value(), options);
   }
 
   return formGroup(input, t(property.key));
@@ -75,7 +77,7 @@ function controller(args) {
 function view(scope) {
   var content = [];
 
-  content.push(scope.properties.map(viewItem));
+  content.push(scope.properties.map(propertyField));
 
   var actions = [
     m('button.btn.btn-green.pull-right', {

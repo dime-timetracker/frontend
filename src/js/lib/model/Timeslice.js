@@ -39,7 +39,7 @@ Timeslice.prototype.getDuration = function (precision) {
   var result = 0;
 
   if (isNull(this.duration) || this.duration === 0) {
-    result = this.end().diff(this.getStart(), 'seconds');
+    result = this.getEnd().diff(this.getStart(), 'seconds');
   } else {
     result = parseInt(this.duration);
   }
@@ -118,7 +118,7 @@ Timeslice.prototype.setStartTime = function (time) {
 };
 
 Timeslice.prototype.calculateDuration = function () {
-  return this.end().diff(this.getStart(), 'seconds');
+  return this.getEnd().diff(this.getStart(), 'seconds');
 };
 
 Timeslice.prototype.updateDuration = function () {
