@@ -8,7 +8,7 @@ var collections = {
   service: require('../lib/collection/services'),
   tag: require('../lib/collection/tags')
 };
-var itemComponent = require('./crud/item');
+var crudItem = require('./crud/item');
 var button = require('./utils/views/button');
 
 var component = {};
@@ -46,7 +46,11 @@ component.view = function(scope) {
   var collection = scope.collection.filter({ enabled: 1 });
   if (collection.length > 0) {
     collection.forEach(function(model) {
-      list.push(m.component(itemComponent, model, scope.collection));
+      list.push(m.component(crudItem, {
+        key: scope.type + '-' + model.uuid,
+        model: model,
+        collection: scope.collection
+      }));
     });
   } else {
     list.push('p', t('crud.empty'));
@@ -56,7 +60,11 @@ component.view = function(scope) {
   collection = scope.collection.filter({ enabled: 0 });
   if (collection.length > 0) {
     collection.forEach(function(model) {
-      list.push(m.component(itemComponent, model, scope.collection));
+      list.push(m.component(crudItem, {
+        key: scope.type + '-' + model.uuid,
+        model: model,
+        collection: scope.collection
+      }));
     });
   } else {
     list.push(m('p', t('crud.empty')));

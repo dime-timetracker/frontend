@@ -14,9 +14,11 @@ var formBuilder = require('../utils/components/formBuilder');
 var toggleButton = require('../utils/components/toggleButton');
 
 function controller (activityScope) {
-  var scope = {};
+  var scope = {
+    model: activityScope.activity,
+    showDetails: false
+  };
 
-  scope.model = activityScope.activity;
   scope.onSubmit = function (e) {
     if (e) {
       e.preventDefault();
@@ -35,16 +37,12 @@ function controller (activityScope) {
     }
   };
 
-  scope.toggle = {
-    timeslice: false,
-    edit: false
-  };
-
   return scope;
 }
 
 function view (scope) {
   var options = {
+    active: scope.showDetails,
     actions: [],
     subs: []
   };
@@ -53,18 +51,17 @@ function view (scope) {
     activity: scope.model
   }));
 
-  options.actions.push(m.component(
-    toggleButton,
-    '.icon-edit',
-    scope.toggle.edit,
-    function (state) {
-      scope.toggle.edit = state;
+  options.actions.push(m.component(toggleButton, {
+    iconName: '.icon-edit',
+    currentState: function() {
+      return scope.showDetails;
+    },
+    changeState: function (state) {
+      scope.showDetails = state;
     }
-  ));
+  }));
 
-  if (scope.toggle.edit) {
-    options.active = true;
-
+  if (scope.showDetails) {
     options.subs.push(grid(
       m.component(formBuilder, {
         key: 'form-' + scope.model.uuid,

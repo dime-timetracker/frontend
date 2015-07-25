@@ -1,61 +1,76 @@
 'use strict';
 
 var m = require('mithril');
-var buildForm = require('../../lib/helper/build/form');
-var formView = require('../utils/views/form');
+var t = require('../../lib/translation');
 var tile = require('../utils/views/tile');
+var formBuilder = require('../utils/components/formBuilder');
 var toggleButton = require('../utils/components/toggleButton');
 
-var component = {};
+function controller (args) {
+  var scope = {
+    model: args.model,
+    show: false
+  };
 
-component.controller = function(item, collection) {
-  return buildForm(item, collection);
-};
+  scope.onSubmit = function (e) {
+    if (e) {
+      e.preventDefault();
+    }
 
-component.view = function(form) {
+    args.collection.persist(scope.model);
+    scope.show = false;
+  };
+
+  scope.onDelete = function (e) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    var question = t('delete.confirm', { name: scope.model.toString() });
+    if (global.window.confirm(question)) {
+      args.collection.remove(scope.model);
+      scope.show = false;
+    }
+  };
+
+  return scope;
+}
+
+function view (scope) {
   var inner = [
-    form.model.name
+    scope.model.toString()
   ];
-  if (form.model.alias) {
-    inner.push(m('span.badge', form.model.shortcut + form.model.alias));
+  if (scope.model.alias) {
+    inner.push(m('span.badge', scope.model.shortcut + scope.model.alias));
   }
 
   var options = {
-    active: (form.show) ? true : false,
-    actions: [],
-    subs: []
+    active: (scope.show) ? true : false
   };
 
-  options.actions.push(m.component(toggleButton, '.icon-edit', form.show, function (state) {
-    form.show = state;
-  }));
-
-  if (form.show) {
-    options.subs.push(form.items.map(formView));
-
-    var subActions = [];
-    options.subs.push(subActions);
-
-    subActions.push(
-      m('a.btn.btn-flat', {
-        config: m.route,
-        href: m.route(),
-        onclick: form.remove
-      }, m('span.icon.icon-lg.icon-delete'))
-    );
-
-    if (form.changed) {
-      subActions.push(
-        m('a.btn.btn-green.pull-right', {
-          config: m.route,
-          href: m.route(),
-          onclick: form.save
-        }, m('span.icon.icon-lg.icon-done'))
-      );
+  options.actions = m.component(toggleButton, {
+    iconName: '.icon-edit',
+    currentState: function() {
+      return scope.show;
+    },
+    changeState: function (state) {
+      scope.show = state;
     }
+  });
+
+  if (scope.show) {
+    options.subs = m.component(formBuilder, {
+      key: 'form-' + scope.model.uuid,
+      model: scope.model,
+      onSubmit: scope.onSubmit,
+      onDelete: scope.onDelete
+    });
   }
 
   return tile(inner, options);
-};
+}
 
-module.exports = component;
+module.exports = {
+  controller: controller,
+  view: view
+};

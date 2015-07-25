@@ -1,36 +1,31 @@
 'use strict';
 
 var m = require('mithril');
-var isFunction = require('lodash/lang/isFunction');
 
-var toggleButton = {
-  controller: function(iconName, startState, action) {
-    var scope = {
-      state: startState,
-      iconName: iconName
-    };
+function controller(args) {
+  var scope = {
+    currentState: args.currentState,
+    iconName: args.iconName
+  };
 
-    scope.onclick = function(e) {
-      if (e) {
-        e.preventDefault();
-      }
-      scope.state = !scope.state;
-      if (isFunction(action)) {
-        action(scope.state);
-      }
-    };
-    return scope;
-  },
-  view: function(scope) {
-    var attr = {};
-    var icon = scope.iconName;
-    if (scope.state) {
-      icon = '.icon-close';
+  scope.onclick = function(e) {
+    if (e) {
+      e.preventDefault();
     }
-    attr.onclick = scope.onclick;
+    args.changeState(!args.currentState());
+  };
+  return scope;
+}
 
-    return m('a.btn.btn-flat', attr, m('span.icon.icon-lg' + icon));
+function view(scope) {
+  var icon = scope.iconName;
+  if (scope.currentState()) {
+    icon = '.icon-close';
   }
-};
+  return m('a.btn.btn-flat', { onclick: scope.onclick }, m('span.icon.icon-lg' + icon));
+}
 
-module.exports = toggleButton;
+module.exports = {
+  controller: controller,
+  view: view
+};

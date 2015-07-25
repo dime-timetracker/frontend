@@ -28,20 +28,20 @@ function viewItem(property) {
 
   switch (property.type) {
     case 'boolean':
-      input = selectBooleanField(property.value(), property.action);
+      input = selectBooleanField(property.value(), property.update);
       break;
     case 'select':
-      input = selectField(property.values(), property.action, property.value());
+      input = selectField(property.values(), property.update, property.value());
       break;
     case 'relation':
       input = selectField(
         property.values(),
-        property.action,
+        property.update,
         (property.value()) ? property.value().alias: ''
       );
       break;
     default:
-      input = inputField(property.value(), property.action, property.type);
+      input = inputField(property.value(), property.update, property.type);
   }
 
   return formGroup(input, t(property.key));
@@ -72,28 +72,30 @@ function controller(args) {
   return scope;
 }
 
-function view(ctrl) {
+function view(scope) {
   var content = [];
 
-  content.push(ctrl.properties.map(viewItem));
+  content.push(scope.properties.map(viewItem));
 
   var actions = [
-    m('button.btn-green.pull-right', {
-      type: 'submit',
-      title: t('Save')
+    m('button.btn.btn-green.pull-right', {
+      type: 'button',
+      title: t('Save'),
+      onclick: scope.onSubmit
     }, m('span.icon.icon-lg.icon-done'))
   ];
 
-  if (ctrl.onDelete) {
-    actions.push(m('button.btn-red', {
+  if (scope.onDelete) {
+    actions.push(m('button.btn.btn-red', {
       type: 'button',
-      title: t('Delete')
+      title: t('Delete'),
+      onclick: scope.onDelete
     }, m('span.icon.icon-lg.icon-delete')));
   }
 
   content.push(m('.form-group-btn', actions));
 
-  return m('form', { onSubmit: ctrl.onSubmit }, content);
+  return m('.form', content);
 }
 
 module.exports = {
