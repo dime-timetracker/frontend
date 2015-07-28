@@ -41,6 +41,7 @@ module.exports = {
     'shell.filter.placeholder': 'Liste filtern ({shortcut})',
     'yes': 'ja',
     'no': 'nein',
+    'crud.empty': 'Zur Zeit keine Einträge',
     'crud.enabled': 'Aktiv',
     'crud.disabled': 'Inaktiv',
     'description': 'Beschreibung',
@@ -117,5 +118,7 @@ module.exports = {
     'Username': 'Benutzername',
     'Password': 'Passwort',
     'Add Activity': 'Aktivität hinzufügen',
+    'Tags': 'Tags',
+    'tags': 'Tags'
   }
 };

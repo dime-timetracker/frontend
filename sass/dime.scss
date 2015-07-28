@@ -229,3 +229,8 @@
 .fbtn-container {
   bottom: 34px;
 }
+
+.tile.active {
+    margin-top: 0 !important;
+    margin-bottom: 24px !important;
+}
