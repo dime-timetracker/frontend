@@ -46,6 +46,8 @@ module.exports = {
     'description': 'Beschreibung',
     'project': 'Projekt',
     'service': 'Dienstleistung',
+    'report.table.header.startedAt': 'Beginn',
+    'report.table.header.stoppedAt': 'Ende',
 
     'Activity': 'Aktivität',
     'Activities': 'Aktivitäten',
