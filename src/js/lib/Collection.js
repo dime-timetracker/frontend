@@ -194,6 +194,15 @@ Collection.prototype.total = function () {
 };
 
 /**
+ * The api can offer more items then the collection contains.
+ *
+ * @return {Boolean} can fetch more
+ */
+Collection.prototype.hasMore = function () {
+  return this.length < this.total();
+};
+
+/**
  * Get the real data array without configuration.
  *
  * @returns {Array}
@@ -321,7 +330,8 @@ Collection.prototype.initialize = function (requestAttributes) {
 };
 
 /**
- * Fetch next set of data from api.
+ * Fetch next set of data from api. If no more data because of
+ * length >= total then an empty promise will deliver.
  *
  * Example:
  *   * collection.fetchNext() => m.request
@@ -330,6 +340,12 @@ Collection.prototype.initialize = function (requestAttributes) {
  */
 Collection.prototype.fetchNext = function () {
   var that = this;
+
+  if (!this.hasMore()) {
+    var deferred = m.deferred();
+    deferred.resolve({});
+    return deferred.promise;
+  }
 
   return m
     .request({
