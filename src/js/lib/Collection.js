@@ -1,6 +1,9 @@
 'use strict';
 
 var create = require('lodash/object/create');
+var extend = require('lodash/object/extend');
+var isArray = require('lodash/lang/isArray');
+
 var _ = require('lodash');
 var qsort = require('./helper/qsort');
 var naturalCompare = require('./helper/compare/natural');
@@ -54,15 +57,15 @@ var Collection = function (options, data) {
     return new Collection(options, data);
   }
 
-  this.config = _.extend({
+  this.config = extend({
     compare: naturalCompare,
     compareKey: objectKey,
     idAttribute: 'id',
     requestAttributes: {}
-  }, options || {});
+  }, options);
 
   // Convert data to models
-  if (data !== undefined && _.isArray(data)) {
+  if (isArray(data)) {
     data.forEach(function (item) {
       this.add(item);
     }, this);
@@ -90,7 +93,7 @@ Collection.prototype = create(Array.prototype, {
 Collection.prototype.configure = function (name, value) {
   if (!_.isUndefined(name)) {
     if (_.isPlainObject(name)) {
-      this.config = _.extend(this.config, name);
+      this.config = extend(this.config, name);
     } else {
       this.config[name] = value;
     }
@@ -133,14 +136,17 @@ Collection.prototype.filter = function (filter) {
  * @returns {object} model object
  */
 Collection.prototype.find = function (data) {
-  var filter;
+  var result;
   if (_.isPlainObject(data)) {
-    filter = data;
+    result = _.findWhere(this, data);
+  } if (_.isFunction(data)) {
+    result = _.find(this, data);
   } else {
-    filter = {};
+    var filter = {};
     filter[this.config.idAttribute] = data;
+    result = _.findWhere(this, filter);
   }
-  return _.findWhere(this, filter);
+  return result;
 };
 
 /**

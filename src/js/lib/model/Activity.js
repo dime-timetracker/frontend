@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var t = require('../../lib/translation');
 var moment = require('moment');
-var Collection = require('../Collection');
 var Model = require('../Model');
 var Customer = require('./Customer');
 var customers = require('../collection/customers');
@@ -11,8 +10,8 @@ var Project = require('./Project');
 var projects = require('../collection/projects');
 var Service = require('./Service');
 var services = require('../collection/services');
-var Timeslice = require('./Timeslice');
-var Tag = require('./Tag');
+var TimesliceCollection = require('../collection/Timeslices');
+var TagCollection = require('../collection/Tags');
 
 var Activity = function (data) {
   if (!(this instanceof Activity)) {
@@ -34,31 +33,9 @@ var Activity = function (data) {
     this.service = new Service(this.service);
   }
 
-  this.tags = new Collection({
-    resourceUrl: 'tag',
-    model: Tag
-  }, this.tags || []);
+  this.tags = new TagCollection(this.tags);
 
-  this.timeslices = new Collection({
-    resourceUrl: 'timeslice',
-    model: Timeslice,
-    compare: function (a,b) {
-      var result = 0;
-      if (a > b) {
-        result = -1;
-      } else if (a < b) {
-        result = 1;
-      }
-      return result;
-    },
-    compareKey: function (obj) {
-      return parseInt(moment(
-        obj.stoppedAt ||
-        obj.startedAt ||
-        obj.updatedAt ||
-        obj.createdAt).format('x'));
-    }
-  }, this.timeslices || []);
+  this.timeslices = new TimesliceCollection(this.timeslices);
 };
 Activity.prototype = _.create(Model.prototype, {
   constructor: Activity,
@@ -139,15 +116,11 @@ Activity.prototype.hasService = function () {
 };
 
 Activity.prototype.isRunning = function () {
-  return this.timeslices.some(function (timeslice) {
-    return timeslice.isRunning();
-  });
+  return this.timeslices.hasRunning();
 };
 
 Activity.prototype.findRunningTimeslice = function () {
-  return this.timeslices.find(function (timeslice) {
-    return timeslice.isRunning();
-  });
+  return this.timeslices.findRunningTimeslice();
 };
 
 Activity.prototype.totalDuration = function () {
@@ -164,7 +137,7 @@ Activity.prototype.start = function () {
 };
 
 Activity.prototype.stop = function () {
-  var timeslice = this.findRunningTimeslice();
+  var timeslice = this.timeslices.findRunningTimeslice();
   if (timeslice) {
     timeslice.setEnd();
     timeslice.updateDuration();

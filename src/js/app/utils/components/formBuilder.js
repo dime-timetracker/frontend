@@ -38,7 +38,7 @@ function propertyField(property) {
       input = selectField(property.values(), options);
       break;
     case 'relation':
-      options.selected = (property.value()) ? property.value().alias: ''
+      options.selected = (property.value()) ? property.value().alias: '';
       input = selectField(property.values(), options);
       break;
     default:

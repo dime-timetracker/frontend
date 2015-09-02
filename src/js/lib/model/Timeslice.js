@@ -126,5 +126,4 @@ Timeslice.prototype.updateDuration = function () {
   return this.duration;
 };
 
-
 module.exports = Timeslice;

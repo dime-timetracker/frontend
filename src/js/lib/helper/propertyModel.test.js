@@ -66,9 +66,6 @@ describe('propertyModel', function () {
     expect(item.key).to.be('customer');
     expect(item.type).to.be('relation');
     expect(item.value()).to.be(model.customer);
-
-    item.update('a1');
-    expect(item.value()).to.be(customer1);
   });
 
 });

@@ -1,11 +1,5 @@
 'use strict';
 
-var Collection = require('../Collection');
-var Model = require('../model/Tag');
+var Tags = require('./Tags');
 
-var tags = new Collection({
-  resourceUrl: "tag",
-  model: Model
-});
-
-module.exports = tags;
+module.exports = new Tags();
