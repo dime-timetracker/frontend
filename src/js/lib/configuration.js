@@ -1,100 +1,77 @@
 'use strict';
 
-var merge = require('lodash/object/merge');
+var extend = require('lodash/object/extend');
+var create = require('lodash/object/create');
+var get = require('lodash/object/get');
+var set = require('lodash/object/set');
+
 var settings = require('./collection/settings');
 var extractNamespace = require('./helper/extractNamespace');
 var extractName = require('./helper/extractName');
 var defaultDelimiter = '/';
 
-
-var configuration = {
-  sections: {
-    general: {},
-    activity: {},
-    shell: {}
-  }
-};
-
-/**
- * Retrieve configuration value.
- *
- * @param {string} name
- * @param {type} defaultValue
- * @returns {mixed}
- */
-configuration.get = function (name, defaultValue) {
-  var nameParts = name.split(defaultDelimiter);
-  var namespace = extractNamespace(name, defaultDelimiter);
-  name = extractName(name, defaultDelimiter);
-
-  var section = this.sections[nameParts[0]];
-  if (undefined === defaultValue && section) {
-    if (section[nameParts[1]] && section[nameParts[1]][nameParts[2]]) {
-      defaultValue = section[nameParts[1]][nameParts[2]].defaultValue;
-    }
-  }
-
-  var value = defaultValue;
+function findSetting(path) {
   var filter = {
-    name: name
+    name: extractName(path, defaultDelimiter)
   };
 
-  if (namespace && namespace !== name) {
+  var namespace = extractNamespace(path, defaultDelimiter);
+  if (namespace && namespace !== filter.name) {
     filter.namespace = namespace;
   }
 
-  if (settings) {
-    var setting = settings.find(filter);
-    if (setting && setting.value) {
-      value = setting.value;
-    }
+  var setting = settings.find(filter);
+  if (!setting) {
+    setting = settings.add(filter);
+  }
+
+  return setting;
+}
+
+var Configuration = function (data) {
+  if (!(this instanceof Configuration)) {
+    return new Configuration(data);
+  }
+};
+
+Configuration.prototype = create(Object.prototype, {
+  constructor: Configuration
+});
+
+Configuration.prototype.addSection = function (section) {
+  extend(this, section);
+};
+
+Configuration.prototype.get = function (name, defaultValue) {
+  var path = name.replace(new RegExp(defaultDelimiter, 'g'), '.');
+  var property = get(this, path);
+  var value = defaultValue;
+  if (property) {
+    value = property.value || defaultValue;
+  }
+
+  var setting = findSetting(name);
+  if (setting && setting.value) {
+    value = setting.value;
   }
 
   return value;
 };
 
-/**
- * Set a configuration value and save it to api.
- *
- * @param {String} name
- * @param {String} value
- * @returns {Configuration}
- */
-configuration.set = function (name, value) {
-  var namespace = extractNamespace(name, defaultDelimiter);
-  name = extractName(name, defaultDelimiter);
+Configuration.prototype.set = function (path, value) {
+  set(this, path.replace(new RegExp(defaultDelimiter, 'g'), '.'), value);
 
-  var filter = {
-    name: name
-  };
-
-  if (namespace && namespace !== name) {
-    filter.namespace = namespace;
+  var setting = findSetting(path);
+  if (setting) {
+    setting.value = value;
   }
-
-  if (settings) {
-    var setting = settings.find(filter);
-    if (setting) {
-      setting.value = value;
-    } else {
-      setting = settings.modelize({
-        name: name,
-        value: name
-      });
-
-      if (namespace && namespace !== name) {
-        setting.namespace = namespace;
-      }
-    }
-
-    settings.persist(setting);
-  }
+  settings.persist(setting);
 
   return this;
 };
 
-configuration.addSection = function (section) {
-  this.sections = merge(this.sections, section);
-};
-
-module.exports = configuration;
+module.exports = new Configuration({
+  general: {},
+  activity: {},
+  shell: {}
+});
