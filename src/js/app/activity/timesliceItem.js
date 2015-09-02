@@ -3,8 +3,6 @@
 var m = require('mithril');
 var t = require('../../lib/translation');
 
-var timeslices = require('../../lib/collection/timeslices');
-
 var input = require('../utils/views/formfields/input');
 var duration = require('../utils/views/duration');
 var tile = require('../utils/views/tile');
@@ -27,11 +25,15 @@ function controller (args) {
      return duration(scope.timeslice.getDuration());
   };
 
+  scope.isRunning = function () {
+    return scope.timeslice.isRunning();
+  };
+
   scope.save = function (e) {
     if (e) {
       e.preventDefault();
     }
-    timeslices.persist(scope.timeslice).then(function () {
+    args.activity.timeslices.persist(scope.timeslice).then(function () {
       scope.changed = false;
     });
   };
@@ -63,9 +65,10 @@ function view (scope) {
     }
   }));
 
-  inner.push(input(scope.formatEnd('HH:mm:ss'), {
+  inner.push(input(!scope.isRunning() ? scope.formatEnd('HH:mm:ss') : '', {
     type: 'time',
     inline: true,
+    placeholder: 'HH:mm:ss',
     update: function (value) {
       scope.timeslice.setEndTime(value);
       scope.timeslice.updateDuration();
@@ -85,9 +88,10 @@ function view (scope) {
     }
   }));
 
-  inner.push(input(scope.formatEnd('YYYY-MM-DD'), {
+  inner.push(input(!scope.isRunning() ? scope.formatEnd('YYYY-MM-DD') : '', {
     type: 'date',
     inline: true,
+    placeholder: 'YYYY-MM-DD',
     update: function (value) {
       scope.timeslice.setEndDate(value);
       scope.timeslice.updateDuration();
@@ -103,45 +107,6 @@ function view (scope) {
   }
 
   return tile(inner, { actions: actions });
-  // var start = [];
-  // var end = [];
-  //
-  // start.push(input(scope.formatStart('YYYY-MM-DD'), function (value) {
-  //   if (scope.timeslice.isSameDay()) {
-  //     scope.timeslice.setEndDate(value);
-  //   }
-  //   scope.timeslice.setStartDate(value);
-  //   scope.changed = true;
-  // }, 'date'));
-  // start.push(input(scope.formatStart('HH:mm:ss'), function (value) {
-  //   scope.timeslice.setStartTime(value);
-  //   scope.changed = true;
-  // }, 'time'));
-  //
-  // end.push(input(scope.formatEnd('HH:mm:ss'), function (value) {
-  //   scope.timeslice.setEndTime(value);
-  //   scope.changed = true;
-  // }, 'time'));
-  // end.push(input(scope.formatEnd('YYYY-MM-DD'), function (value) {
-  //   scope.timeslice.setEndDate(value);
-  //   scope.changed = true;
-  // }, 'date'));
-  //
-  // var tr = [];
-  //
-  // tr.push(m('td.start', start));
-  // tr.push(m('td.end', end));
-  // tr.push(m('td.duration', scope.formatDuration()));
-  //
-  // var actions = [];
-  // tr.push(m('td.actions.text-right', actions));
-  //
-  // if (scope.changed) {
-  //   actions.push(m('button.btn.btn-green', { onclick: scope.save }, m('span.icon.icon-done')));
-  // }
-  // actions.push(m('button.btn.btn-flat', { onclick: scope.remove }, m('span.icon.icon-delete')));
-  //
-  // return m('tr', tr);
 }
 
 module.exports = {

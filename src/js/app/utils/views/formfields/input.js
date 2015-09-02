@@ -37,6 +37,10 @@ var input = function (value, options) {
     attr.type = options.type;
   }
 
+  if (!isUndefined(options.placeholder)) {
+    attr.placeholder = options.placeholder;
+  }
+
   return m('input.form-control' + ((options.inline) ? '.form-control-inline' : ''), attr);
 };
 
