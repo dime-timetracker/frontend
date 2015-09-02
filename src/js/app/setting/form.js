@@ -6,20 +6,20 @@ var t = require('../../lib/translation');
 var configuration = require('../../lib/configuration');
 var fields = {
   input: require('../utils/views/formfields/input'),
-  text: require('../utils/views/formfields/text'),
   select: require('../utils/views/formfields/select'),
   boolean: require('../utils/views/formfields/selectBoolean')
 };
 
-var component = {};
-
-component.controller = function (scope) {
-  scope.type = scope.configItem.type || 'text';
+function controller(args) {
+  var scope = {
+    type: args.property.type || 'text',
+    path: args.path
+  };
 
   scope.value = function () {
-    var value = configuration.get(scope.path, scope.configItem.defaultValue);
-    if (_.isFunction(scope.configItem.onRead)) {
-      value = scope.configItem.onRead(value);
+    var value = configuration.get(args.path, args.property.value);
+    if (_.isFunction(args.property.onRead)) {
+      value = args.property.onRead(value);
     }
     return value;
   };
@@ -28,16 +28,18 @@ component.controller = function (scope) {
     if (e) {
       e.preventDefault();
     }
-    if (_.isFunction(scope.configItem.onWrite)) {
-      value = scope.configItem.onWrite(value);
+    if (_.isFunction(args.property.onWrite)) {
+      value = args.property.onWrite(value);
     }
-    configuration.set(scope.path, value);
+
+    // FIXME Runs on render
+    // configuration.set(args.path, value);
   };
 
   return scope;
-};
+}
 
-component.view = function (scope) {
+function view (scope) {
   var input = [];
   if (fields[scope.type]) {
     input.push(fields[scope.type](scope.value(), { update: scope.update() }));
@@ -57,6 +59,9 @@ component.view = function (scope) {
     m('.col-md-3', t('config.' + scope.path + '.title')),
     m('.col-md-9', input)
   ]);
-};
+}
 
-module.exports = component;
+module.exports = {
+  controller: controller,
+  view: view
+};

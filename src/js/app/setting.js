@@ -10,33 +10,35 @@ var headerWithDescription = require('./setting/headerWithDescription');
 var buttonView = require('../app/utils/views/button');
 var cardView = require('../app/utils/views/card/default');
 
-
-var component = {};
-
-component.controller = function () {
+function controller () {
   var scope = {};
 
-  scope.dirty = [];
   scope.save = function (e) {
-    scope.dirty.forEach(function (config) {
 
-    });
   };
 
   return scope;
-};
+}
 
-component.view = function (scope) {
+function view (scope) {
   var content = [];
 
-  forOwn(configuration.sections, function (section, key) {
+  // collection of sections
+  forOwn(configuration, function (sections, key) {
     var children = [];
-    forOwn(section, function (values, ckey) {
+
+    // section
+    forOwn(sections, function (properties, ckey) {
       var path = key + '/' + ckey;
       children.push(m('p.card-heading', headerWithDescription(path)));
 
-      forOwn(values, function (value, valueKey) {
-        children.push(m.component(form, {configItem: value, path: path + '/' + valueKey} ));
+      // properties in sections
+      forOwn(properties, function (property, propertyKey) {
+        children.push(m.component(form, {
+          key: 'form-' + path,
+          path: path + '/' + propertyKey,
+          property: property
+        }));
       });
     });
     if (children.length > 0) {
@@ -45,11 +47,14 @@ component.view = function (scope) {
     }
   });
 
-  if (scope.dirty.length > 0) {
-    content.push(buttonView('button.save', '/settings', undefined, '.icon-done', '.fbtn-green'));
+  if (configuration.isDirty()) {
+    content.push(buttonView('button.save', '/settings', scope.save, '.icon-done', '.fbtn-green'));
   }
 
   return m('div', content);
-};
+}
 
-module.exports = component;
+module.exports = {
+  controller: controller,
+  view: view
+};

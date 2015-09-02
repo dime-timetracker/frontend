@@ -10,7 +10,6 @@ configuration.addSection(require('./activity/config'));
 
 var buttonView = require('./utils/views/button');
 var card = require('./utils/views/card/default');
-var tile = require('./utils/views/tile');
 
 var shellActivities = require('./shell/activity');
 var shellFilter = require('./shell/filter');

@@ -140,7 +140,7 @@ Collection.prototype.find = function (data) {
   var result;
   if (_.isPlainObject(data)) {
     result = _.findWhere(this, data);
-  } if (_.isFunction(data)) {
+  } else if (_.isFunction(data)) {
     result = _.find(this, data);
   } else {
     var filter = {};

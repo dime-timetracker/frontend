@@ -9,6 +9,7 @@ var settings = require('./collection/settings');
 var extractNamespace = require('./helper/extractNamespace');
 var extractName = require('./helper/extractName');
 var defaultDelimiter = '/';
+var dirty = [];
 
 function findSetting(path) {
   var filter = {
@@ -60,16 +61,30 @@ Configuration.prototype.get = function (name, defaultValue) {
   return value;
 };
 
-Configuration.prototype.set = function (path, value) {
-  set(this, path.replace(new RegExp(defaultDelimiter, 'g'), '.'), value);
+Configuration.prototype.set = function (name, value) {
+  var path = name.replace(new RegExp(defaultDelimiter, 'g'), '.');
+  set(this, path, value);
 
-  var setting = findSetting(path);
-  if (setting) {
+  var setting = findSetting(name);
+  if (setting && setting.value !== value) {
     setting.value = value;
+    if (-1 === dirty.indexOf(setting)) {
+      dirty.push(setting);
+    }
   }
-  settings.persist(setting);
 
   return this;
+};
+
+Configuration.prototype.isDirty = function () {
+  return dirty.length > 0;
+};
+
+Configuration.prototype.save = function () {
+  dirty.forEach(function (setting) {
+    settings.persist(setting);
+  });
+  dirty = [];
 };
 
 module.exports = new Configuration({
