@@ -10,6 +10,7 @@ var naturalCompare = require('./helper/compare/natural');
 var objectKey = require('./helper/compare/objectKey');
 var baseUrl = require('./helper/baseUrl');
 var buildUrl = require('./helper/buildUrl');
+var extractXhrPagination = require('./helper/extractXhrPagination');
 var debug = global.window.dimeDebug('collection');
 
 var m = require('mithril');
@@ -258,77 +259,92 @@ Collection.prototype.reset = function () {
 // REST API functions
 
 /**
- * Fetch data from api.
+ * Initialize the collection and fetches the first set of data.
+ *
+ * requestAttributes:
+ *   page - Define the start page
+ *   with - Define the amount of result items
+ *   filter - Define a filter query
  *
  * Example:
- *   * collection.fetch() => m.request  // (will fetch the next from the api)
- *   * collection.fetch({
- *      requestAttributes: {
- *        page: 1,
- *        with: 50,
- *        filter: ...
- *      },
- *      reset: true
- *   }) => m.request  // (remove all items from collecten and fetch the first 50 items from the api)
+ *   // Response should have all items the api can deliver
+ *   Collection.initialize() => m.request
  *
- * @param {object} options
- * @returns {m.request} promise of the m.request
+ *   // Response should be the first 100 items
+ *   Collection.initialize({
+ *   	page: 1,
+ *   	with: 100
+ *   }) => m.request
+ *
+ * @param {Object} requestAttributes
+ * @return {m.request} promise of the m.request
  */
-Collection.prototype.fetch = function (options) {
+Collection.prototype.initialize = function (requestAttributes) {
   var that = this;
-  var reset = false;
 
-  // Request configuration
-  var configuration = {
-    method: 'GET',
-    url: baseUrl('api', this.config.resourceUrl),
-    initialValue: this,
-    config: function (xhr) {
-      authorize.setup(xhr);
-    },
-    extract: function (xhr, xhrOptions) {
-      that.pagination = {};
-
-      // extract total number
-      that.pagination.total = parseInt(xhr.getResponseHeader('X-Dime-Total') || 0);
-
-      // extract pagination links
-      if (xhr.getResponseHeader('Link')) {
-        var uri = xhr.getResponseHeader('Link').split(', ');
-        uri.forEach(function (link) {
-          var m = link.match(/<(.*)>; rel="(.*)"/);
-          that.pagination[m[2]] = m[1];
-        }, this);
-      }
-      return xhr.responseText;
-    }
-  };
-
-  // Configure the request via option parameter
-  if (_.isPlainObject(options)) {
-    if (!_.isUndefined(options.reset)) {
-      reset = options.reset;
-    }
-
-    // Modify resource url with pagination
-    var requestAttributes = _.extend({}, this.config.requestAttributes, options.requestAttributes || {});
-    if (!_.isEmpty(requestAttributes)) {
-      configuration.url = buildUrl(configuration.url, requestAttributes);
-    }
-  } else {
-    // If paginage exists and has next url, use it
-    if (this.pagination && this.pagination.next) {
-      configuration.url = baseUrl(this.pagination.next);
-    }
-  }
+  // Build request uri
+  var url = buildUrl(['api', this.config.resourceUrl], _.extend(
+    {},
+    this.config.requestAttributes,
+    requestAttributes
+  ));
 
   return m
-    .request(configuration)
-    .then(function success (list) {
-      if (reset) {
-        that.reset();
+    .request({
+      method: 'GET',
+      url: url,
+      initialValue: this,
+      config: function (xhr) {
+        authorize.setup(xhr);
+      },
+      extract: function (xhr) {
+        that.pagination = extractXhrPagination(xhr);
+        return xhr.responseText;
       }
+    })
+    .then(function success (list) {
+      that.reset();
 
+      list.forEach(function (item) {
+        that.add(item);
+      });
+
+      that.order();
+    }, function error(response) {
+      if (_.isPlainObject(response) && response.error) {
+        // TODO Notify
+        if (console) {
+          console.log(response);
+        }
+      }
+    });
+};
+
+/**
+ * Fetch next set of data from api.
+ *
+ * Example:
+ *   * collection.fetchNext() => m.request
+ *
+ * @returns {m.request} promise of the m.request
+ */
+Collection.prototype.fetchNext = function () {
+  var that = this;
+
+  return m
+    .request({
+      method: 'GET',
+      url: baseUrl(this.pagination.next),
+      initialValue: this,
+      config: function (xhr) {
+        authorize.setup(xhr);
+      },
+      extract: function (xhr) {
+        that.pagination = extractXhrPagination(xhr);
+        return xhr.responseText;
+      }
+    })
+    .then(function success (list) {
       list.forEach(function (item) {
         that.add(item);
       });
@@ -415,7 +431,7 @@ Collection.prototype.remove = function (data) {
     configuration.url = baseUrl(configuration.url, data[this.config.idAttribute]);
     return m
       .request(configuration)
-      .then(function success(response) {
+      .then(function success() {
         return that.removeFromCollection(data);
       }, function error(response) {
         if (_.isPlainObject(response) && response.error) {
@@ -425,7 +441,7 @@ Collection.prototype.remove = function (data) {
         }
       });
   } else {
-    this.removeFromCollection(data)
+    this.removeFromCollection(data);
   }
 };
 

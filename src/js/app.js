@@ -13,13 +13,13 @@ var routes = {
  };
 
 function prefetchData () {
-  require('./lib/collection/activities').fetch();
-  require('./lib/collection/customers').fetch();
-  require('./lib/collection/projects').fetch();
-  require('./lib/collection/services').fetch();
-  require('./lib/collection/tags').fetch();
+  require('./lib/collection/activities').initialize();
+  require('./lib/collection/customers').initialize();
+  require('./lib/collection/projects').initialize();
+  require('./lib/collection/services').initialize();
+  require('./lib/collection/tags').initialize();
 }
-require('./lib/collection/settings').fetch().then(function () {
+require('./lib/collection/settings').initialize().then(function () {
   prefetchData();
 
   m.route.mode = 'hash';

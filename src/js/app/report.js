@@ -30,10 +30,8 @@ function controller () {
   var scope = {
     collection: timesliceCollection
   };
-  scope.collection.fetch({
-    requestAttributes: {
-      filter: m.route.param('query')
-    }
+  scope.collection.initialize({
+    filter: m.route.param('query')
   });
 
   return scope;
