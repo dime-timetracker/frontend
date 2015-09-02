@@ -32,6 +32,8 @@ var Configuration = function (data) {
   if (!(this instanceof Configuration)) {
     return new Configuration(data);
   }
+
+  extend(this, data);
 };
 
 Configuration.prototype = create(Object.prototype, {
