@@ -8,7 +8,7 @@ var isPlainObject = require('lodash/lang/isPlainObject');
 /**
  * select - generate a select VirtualElement.
  * @param   {array} values must be an array with values or a key-value-object {key: '', value: ''}
- * @param   {Object} options { onchange: func, selected: String }
+ * @param   {Object} options { update: func, selected: String }
  * @returns {VirtualElement} select element
  */
 var select = function (values, options) {
@@ -31,11 +31,11 @@ var select = function (values, options) {
     });
   }
 
-  if (isFunction(options.onchange)) {
+  if (isFunction(options.update)) {
     attr.onchange = function (e) {
       var idx = e.target.selectedIndex;
       var value = e.target.options[idx].value;
-      options.onchange(value, e);
+      options.update(value, e);
     };
   }
 
