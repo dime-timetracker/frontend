@@ -10,7 +10,8 @@ var urlParameters = require('./urlParameters');
  *
  * Example:
  *
- * buildUrl(['api', 'activity'], {filer: '@customer'}) => http://base/url/api/activity?filter=@customer
+ * buildUrl(['api', 'activity'], {filer: '@customer'})
+ * 	=> http://base/url/api/activity?filter=@customer
  *
  * @param {String|Array} path
  * @param {Object} parameters

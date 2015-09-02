@@ -18,9 +18,9 @@ var baseUrl = function () {
   var contain = false;
 
   for (var i = 0; i < arguments.length; i++) {
-    if (env.baseUrl
-            && isString(arguments[i])
-            && arguments[i].indexOf(env.baseUrl) !== -1) {
+    if (env.baseUrl &&
+            isString(arguments[i]) &&
+            arguments[i].indexOf(env.baseUrl) !== -1) {
       contain = true;
     }
     uri.push(arguments[i]);
