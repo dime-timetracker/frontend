@@ -59,7 +59,7 @@ function controller (listScope) {
     inputView: inputView,
     icon: 'icon-filter-list',
     htmlId: 'filter',
-    query: null,
+    query: listScope.query || null,
   };
   scope.onSubmit = function (e) {onSubmitFilter(e, scope);};
   scope.blur = function (e) {shell.blur(e, scope);};

@@ -2,6 +2,8 @@
 
 var m = require('mithril');
 var t = require('../lib/translation');
+var cardView = require('./utils/views/card/default');
+var shellFilter = require('./shell/filter');
 var timesliceCollection = require('../lib/collection/timeslices');
 
 function itemView (scope, timeslice) {
@@ -28,10 +30,11 @@ function headerView (scope) {
 
 function controller () {
   var scope = {
-    collection: timesliceCollection
+    collection: timesliceCollection,
+    query: decodeURIComponent((m.route.param('query')+'').replace(/\+/g, '%20'))
   };
   scope.collection.initialize({
-    filter: m.route.param('query')
+    filter: scope.query
   });
 
   return scope;
@@ -39,7 +42,7 @@ function controller () {
 
 function view (scope) {
   return m('.report', [
-    m('.query', scope.query),
+    m('.query', cardView(m.component(shellFilter, scope))),
     m('.table-responsive',
       m('table.table', [
         headerView(scope),
