@@ -13,9 +13,7 @@ var cardView = require('../app/utils/views/card/default');
 function controller () {
   var scope = {};
 
-  scope.save = function (e) {
-
-  };
+  scope.configuration = configuration;
 
   return scope;
 }
@@ -24,7 +22,7 @@ function view (scope) {
   var content = [];
 
   // collection of sections
-  forOwn(configuration, function (sections, key) {
+  forOwn(scope.configuration, function (sections, key) {
     var children = [];
 
     // section
