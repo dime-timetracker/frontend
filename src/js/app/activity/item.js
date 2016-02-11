@@ -1,43 +1,46 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var t = require('../../lib/translation');
+var m = require('mithril')
+var t = require('../../lib/translation')
 
-var grid = require('../utils/views/grid');
-var tile = require('../utils/views/tile');
+var activityApi = require('../../api/activity')
 
-var timesliceList = require('./timesliceList');
+var grid = require('../utils/views/grid')
+var tile = require('../utils/views/tile')
+var configuration = require('../../lib/configuration')
 
-var btnStartStop = require('./btnStartStop');
+var timesliceList = require('./timesliceList')
 
-var formBuilder = require('../utils/components/formBuilder');
-var toggleButton = require('../utils/components/toggleButton');
+var btnStartStop = require('./btnStartStop')
+
+var formBuilder = require('../utils/components/formBuilder')
+var toggleButton = require('../utils/components/toggleButton')
 
 function controller (activityScope) {
   var scope = {
-    model: activityScope.activity,
+    activity: activityScope.activity,
     showDetails: false
-  };
+  }
 
   scope.onSubmit = function (e) {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
 
-    activityScope.collection.persist(scope.model);
-  };
+    activityApi.persist(scope.activity)
+  }
   scope.onDelete = function (e) {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
 
-    var question = t('delete.confirm', { name: scope.model.toString() });
+    var question = t('delete.confirm', { activity: scope.activity.description })
     if (global.window.confirm(question)) {
-      activityScope.collection.remove(scope.model);
+      activityApi.delete(scope.activity)
     }
-  };
+  }
 
-  return scope;
+  return scope
 }
 
 function view (scope) {
@@ -45,49 +48,46 @@ function view (scope) {
     active: scope.showDetails,
     actions: [],
     subs: []
-  };
+  }
   options.actions.push(m.component(btnStartStop, {
-    key: 'startstop-' + scope.model.uuid,
-    activity: scope.model
-  }));
+    key: 'startstop-' + scope.activity.uuid,
+    activity: scope.activity
+  }))
 
   options.actions.push(m.component(toggleButton, {
     iconName: '.icon-edit',
-    currentState: function() {
-      return scope.showDetails;
-    },
-    changeState: function (state) {
-      scope.showDetails = state;
-    }
-  }));
+    currentState: () => { return scope.showDetails },
+    changeState: (state) => { scope.showDetails = state }
+  }))
 
   if (scope.showDetails) {
     options.subs.push(grid(
       m.component(formBuilder, {
-        key: 'form-' + scope.model.uuid,
-        model: scope.model,
+        key: 'form-' + scope.activity.uuid,
+        model: scope.activity,
         onSubmit: scope.onSubmit,
         onDelete: scope.onDelete
       }),
       m.component(timesliceList, {
-        key: 'timeslices-' + scope.model.uuid,
-        activity: scope.model
+        key: 'timeslices-' + scope.activity.uuid,
+        activity: scope.activity
       })
-    ));
+    ))
   }
 
-  var inner = [];
-  inner.push(m('span', scope.model.description));
-  ['customer', 'project', 'service'].forEach(function (relation) {
-    if (scope.model[relation]) {
-      inner.push(m('span.badge', scope.model[relation].shortcut + scope.model[relation].alias));
+  var inner = []
+  inner.push(m('span', scope.activity.description));
+  ['customer', 'project', 'service'].forEach((relation) => {
+    if (scope.activity[relation]) {
+      let shortcut = configuration.activity.shortcuts[relation].value
+      inner.push(m('span.badge', shortcut + scope.activity[relation].alias))
     }
-  });
+  })
 
-  return tile(inner, options);
+  return tile(inner, options)
 }
 
 module.exports = {
   controller: controller,
   view: view
-};
+}

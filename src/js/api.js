@@ -1,41 +1,49 @@
-'use strict';
+'use strict'
 
-function fetchFirstBunch (url) {
+const m = require('mithril')
 
-  return m
-    .request({
-      method: 'GET',
-      url: url,
-      initialValue: this,
-      config: function (xhr) {
-        authorize.setup(xhr);
-      },
-      extract: function (xhr) {
-        that.pagination = extractXhrPagination(xhr);
-        return xhr.responseText;
+const authorize = require('./lib/authorize')
+const baseUrl = require('./lib/helper/baseUrl')()
+const extractXhrPagination = require('./lib/helper/extractXhrPagination')
+
+function persist (resource, data, options) {
+  options = options || {}
+  // Request configuration
+  var configuration = {
+    method: 'POST',
+    url: baseUrl + '/api/' + resource,
+    initialValue: data,
+    data: data,
+    config: function (xhr) {
+      authorize.setup(xhr)
+    }
+  }
+  if (data[options.idAttribute || 'id']) {
+    configuration.url += '/' + data[options.idAttribute || 'id']
+    configuration.method = 'PUT'
+  }
+
+  return m.request(configuration)
+}
+
+function fetchBunch (resource, options) {
+  return m.request({
+    method: 'GET',
+    url: baseUrl + '/api/' + resource,
+    config: function (xhr) {
+      authorize.setup(xhr)
+    },
+    extract: function (xhr) {
+      if (xhr.status === 401) {
+        m.route('/login')
       }
-    })
-    .then(function success (list) {
-      that.reset();
-
-      list.forEach(function (item) {
-        that.add(item);
-      });
-
-      that.order();
-    }, function error(response) {
-      if (_.isPlainObject(response) && response.error) {
-        // TODO Notify
-        if (console) {
-          console.log(response);
-        }
-      }
-    });
+      options.pagination = extractXhrPagination(xhr)
+      return xhr.responseText
+    }
+  })
 }
 
 module.exports = {
-  fetchFirstBunch: fetchFirstBunch,
-  fetchNextBunch: fetchNextBunch,
-  post: post,
-  remove: remove
+  persist: persist,
+  fetchBunch: fetchBunch
 }

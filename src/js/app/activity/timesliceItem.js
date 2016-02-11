@@ -1,33 +1,26 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var t = require('../../lib/translation');
+const m = require('mithril')
+const t = require('../../lib/translation')
 
-var input = require('../utils/views/formfields/input');
-var duration = require('../utils/views/duration');
-var tile = require('../utils/views/tile');
+const input = require('../utils/views/formfields/input')
+const duration = require('../utils/views/duration')
+const tile = require('../utils/views/tile')
+
+const getStart = require('../timeslice').getStart
+const getEnd = require('../timeslice').getEnd
+const running = require('../timeslice').running
+const getDuration = require('../timeslice').duration
 
 function controller (args) {
   var scope = {
     timeslice: args.timeslice,
-    changed: false
-  };
-
-  scope.formatStart = function (format) {
-    return scope.timeslice.getStart().format(format);
-  };
-
-  scope.formatEnd = function (format) {
-    return scope.timeslice.getEnd().format(format);
-  };
-
-  scope.formatDuration = function () {
-     return duration(scope.timeslice.getDuration());
-  };
-
-  scope.isRunning = function () {
-    return scope.timeslice.isRunning();
-  };
+    changed: false,
+    formatStart: (format) => { return getStart(args.timeslice).format(format) },
+    formatEnd: (format) => { return getEnd(args.timeslice).format(format) },
+    formatDuration: () => { return duration(getDuration(args.timeslice)) },
+    isRunning: () => { return running(args.timeslice) },
+  }
 
   scope.save = function (e) {
     if (e) {

@@ -36,7 +36,7 @@ module.exports = {
     'config.shell/shortcuts/cycleSuggestionsLeft.title': 'springe zum vorherigen Ergebnis der Autovervollständigung wechseln',
     'config.shell/shortcuts/cycleSuggestionsRight.title': 'springe zum nächsten Ergebnis der Autovervollständigung wechseln',
     'default.currency': 'EUR',
-    'delete.confirm': 'Do you really want to delete "{activity}"?',
+    'delete.confirm': 'Soll "{activity}" wirklich gelöscht werden?',
     'shell.activity.placeholder': 'Eine Aktivität hinzufügen ({shortcut})',
     'shell.filter.placeholder': 'Liste filtern ({shortcut})',
     'yes': 'ja',
@@ -52,7 +52,6 @@ module.exports = {
 
     'Activity': 'Aktivität',
     'Activities': 'Aktivitäten',
-    'Do you really want to delete "[activity]"?': 'Soll "[activity]" wirklich gelöscht werden?',
     'Activity settings': 'Aktivitäten-Einstellungen',
     'Display settings': 'Anzeigeeinstellungen',
     'Income': 'Einkommen',
