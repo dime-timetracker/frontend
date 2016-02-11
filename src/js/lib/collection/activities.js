@@ -1,15 +1,13 @@
 'use strict';
 
-var Collection = require('../Collection');
-var Model = require('../model/Activity');
 var lastUpdate = require('../helper/compare/activityLastUpdate');
 
-var activities = new Collection({
-  resourceUrl: 'activity',
+module.exports = {
+  collection: [],
   requestAttributes: {
     with: 100
   },
-  model: Model,
+  resourceUrl: 'activity',
   compare: function (a, b) {
     var result = 0;
     if (a > b) {
@@ -20,6 +18,4 @@ var activities = new Collection({
     return result;
   },
   compareKey: lastUpdate
-});
-
-module.exports = activities;
+};

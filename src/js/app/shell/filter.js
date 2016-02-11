@@ -11,7 +11,8 @@ configuration.addSection(require('./config'));
 
 function onSubmitFilter (e, scope) {
   scope.query = e.target.value;
-  scope.collection.fetch({
+  scope.collection.reset();
+  scope.collection.initialize({
     requestAttributes: {
       filter: scope.query
     },
