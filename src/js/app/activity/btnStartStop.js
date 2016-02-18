@@ -1,27 +1,24 @@
 'use strict'
 
-var m = require('mithril')
-var t = require('../../lib/translation')
-var duration = require('../utils/views/duration')
-var running = require('./index').running
-var totalDuration = require('./index').totalDuration
-var start = require('./index').start
-var stop = require('./index').stop
+const m = require('mithril')
+const t = require('../../lib/translation')
+const duration = require('../utils/views/duration')
 
 function controller (context) {
   var scope = {
     activity: context.activity,
-    totalDuration: totalDuration(context.activity)
+    totalDuration: context.totalDuration,
+    running: context.running
   }
 
   scope.action = function (e) {
     if (e) {
       e.preventDefault()
     }
-    if (running(scope.activity)) {
-      stop(scope.activity)
+    if (context.running) {
+      context.stop(scope.activity)
     } else {
-      start(scope.activity)
+      context.start(scope.activity)
     }
   }
 
@@ -29,10 +26,9 @@ function controller (context) {
 };
 
 function view (scope) {
-  var runs = running(scope.activity)
-  var icon = runs ? '.icon.icon-stop' : '.icon.icon-play-arrow'
-  var color = runs ? '.orange-text' : ''
-  var title = runs ? 'Stop activity' : 'Start activity'
+  var icon = scope.running ? '.icon.icon-stop' : '.icon.icon-play-arrow'
+  var color = scope.running ? '.orange-text' : ''
+  var title = scope.running ? 'Stop activity' : 'Start activity'
 
   var content = [
     m('span' + icon),

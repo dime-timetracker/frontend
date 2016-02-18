@@ -7,12 +7,11 @@ const t = require('../../lib/translation')
 const api = require('../../api/activity')
 const timesliceApi = require('../../api/timeslice')
 const timesliceDuration = require('../timeslice').duration
+const customerApi = require('../../api/customer')
+const projectApi = require('../../api/project')
+const serviceApi = require('../../api/service')
 
-const debug = require('debug')('app.activities')
-
-const configuration = require('../../lib/configuration')
-configuration.addSection(require('../shell/config'))
-configuration.addSection(require('./config'))
+const debug = require('debug')('app.activity')
 
 const buttonView = require('../utils/views/button')
 const card = require('../utils/views/card/default')
@@ -22,33 +21,9 @@ const shellActivities = require('../shell/activity')
 const shellFilter = require('../shell/filter')
 const itemView = require('./item')
 
-const timestampFormat = 'YYYY-MM-DD HH:mm:ss';
+const timestampFormat = 'YYYY-MM-DD HH:mm:ss'
 
-function activityListView (scope) {
-  var container = []
-
-  debug('view list', scope.activities)
-  container.push(scope.activities.map(function (activity) {
-    return m.component(itemView, {
-      activity: activity,
-      key: activity.uuid,
-      collection: scope.activities
-    })
-  }, scope))
-
-  if (scope.activities.length < scope.total) {
-    container.push(m('a.margin-top.btn.btn-block[href=#]', { onclick: function (e) {
-      if (e) {
-        e.preventDefault()
-      }
-      scope.activities.fetchNext()
-    } }, t('Show more')))
-  }
-
-  container.push(buttonView('Add Activity', '/', scope.add))
-
-  return m('.tile-wrap', container)
-}
+require('../setting').sections.activity = require('./settings')
 
 function running (activity) {
   return activity.timeslices.reduce((running, timeslice) => {
@@ -82,16 +57,51 @@ function stop (activity) {
   })
 }
 
-function controller () {
-  debug('Running action controller')
-  var scope = {
-    activities: []
+function activityListView (scope) {
+  var container = []
+
+  debug('view list', scope.activities)
+  container.push(scope.activities.map(function (activity) {
+    return m.component(itemView, {
+      activity: activity,
+      key: activity.uuid,
+      collection: scope.activities,
+      running: running,
+      totalDuration: totalDuration,
+      start: start,
+      stop: stop
+    })
+  }, scope))
+
+  if (scope.activities.length < scope.total) {
+    container.push(m('a.margin-top.btn.btn-block[href=#]', { onclick: function (e) {
+      if (e) {
+        e.preventDefault()
+      }
+      scope.activities.fetchNext()
+    } }, t('Show more')))
   }
-  api.fetchBunch().then((list, foo) => {
-    debug('Fetched bunch', list, foo)
+
+  container.push(buttonView('Add Activity', '/', scope.add))
+
+  return m('.tile-wrap', container)
+}
+
+function controller () {
+  debug('Running activity index controller')
+  var scope = {
+    activities: [],
+    customers: [],
+    projects: [],
+    services: []
+  }
+  api.fetchBunch().then((list) => {
     scope.activities = list
     scope.total = api.total()
   })
+  customerApi.fetchAll().then((customers) => { scope.customers = customers })
+  projectApi.fetchAll().then((projects) => { scope.projects = projects })
+  serviceApi.fetchAll().then((services) => { scope.services = services })
 
   scope.add = function (e) {
     if (e) {
