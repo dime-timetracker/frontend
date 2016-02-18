@@ -1,45 +1,38 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var isArray = require('lodash/lang/isArray');
-var isFunction = require('lodash/lang/isFunction');
-var isPlainObject = require('lodash/lang/isPlainObject');
+const m = require('mithril')
+const isArray = require('lodash/lang/isArray')
+const isFunction = require('lodash/lang/isFunction')
 
 /**
  * select - generate a select VirtualElement.
- * @param   {array} values must be an array with values or a key-value-object {key: '', value: ''}
- * @param   {Object} options { update: func, selected: String }
+ * @param   {Object} options { update: func, selected: String, options: Array of Objects containing value and label }
+ * @param   {string} value of selected option
  * @returns {VirtualElement} select element
  */
-var select = function (values, options) {
-  options = options || {};
+module.exports = function (options, value) {
+  options = options || {}
 
-  var attr = {};
-  var optionList = [];
-  if (isArray(values)) {
-    optionList = values.map(function buildOptions(item) {
-      var key = item;
-      var value = item;
-      if (isPlainObject(item)) {
-        key = item.key;
-        value = item.value;
-      }
-      return m('option', {
-        'value': key,
-        'selected': (options.selected === key)
-      }, value);
-    });
+  var optionList = []
+  if (isArray(options.options)) {
+    options.options.map((option) => {
+      optionList.push(m('option', {
+        selected: option.value === value,
+        value: option.value
+      }, option.label))
+    })
   }
 
+  const attributes = {
+    name: options.name
+  }
   if (isFunction(options.update)) {
-    attr.onchange = function (e) {
-      var idx = e.target.selectedIndex;
-      var value = e.target.options[idx].value;
-      options.update(value, e);
-    };
+    attributes.onchange = (e) => {
+      var idx = e.target.selectedIndex
+      var value = e.target.options[idx].value
+      options.update(value, e)
+    }
   }
 
-  return m('select.form-control', attr, optionList);
-};
-
-module.exports = select;
+  return m('select.form-control', attributes, optionList)
+}

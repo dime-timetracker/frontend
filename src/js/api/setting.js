@@ -3,9 +3,28 @@
 const api = require('../api')
 
 const options = {}
+const defaultSettings = require('../app/setting').sections
+const userSettings = require('../app/setting').userSettings
+
+function findByName (name) {
+  return userSettings().find((setting) => {
+    return setting.name === name || setting.namespace + '.' + setting.name === name
+  })
+}
 
 function fetchAll () {
   return api.fetchBunch('setting', { with: 100000 })
+}
+
+function find (name) {
+  const setting = findByName(name)
+  return setting ? setting.value : defaultSettings.find(name)
+}
+
+function persistConfig (name, value) {
+  const setting = findByName(name) || { name: name }
+  setting.value = value
+  api.persist('setting', setting)
 }
 
 function total () {
@@ -17,5 +36,7 @@ function total () {
 
 module.exports = {
   fetchAll: fetchAll,
+  find: find,
+  persistConfig: persistConfig,
   total: total
 }

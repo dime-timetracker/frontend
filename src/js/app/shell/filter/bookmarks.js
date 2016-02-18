@@ -1,54 +1,52 @@
-'use strict';
+'use strict'
 
-var configuration = require('../../../lib/configuration');
-var find = require('lodash/collection/find');
-var isEqual = require('lodash/lang/isEqual');
+const settingsApi = require('../../../api/setting')
+const find = require('lodash/collection/find')
+const isEqual = require('lodash/lang/isEqual')
 
-var configPath = 'filter/bookmarks';
-var bookmarks;
+const configPath = 'filter/bookmarks'
 
 function getList () {
-  return bookmarks || JSON.parse(configuration.get(configPath, '[]'));
+  return settingsApi.find(configPath)
 }
 
 function getQueryParts (query) {
-  return query && query.replace(/\s+/, ' ').trim().split(' ').sort();
+  return query && query.replace(/\s+/, ' ').trim().split(' ').sort()
 }
 
 function isKnownQuery (query) {
-  return (undefined !== find(getList(), function (candidate) {
-    return isEqual(getQueryParts(candidate.query), getQueryParts(query));
-  }));
-}
-
-function persist (bookmarks) {
-  configuration.set(configPath, JSON.stringify(bookmarks));
+  return (undefined !== find(settingsApi.collection || [], function (candidate) {
+    return isEqual(getQueryParts(candidate.query), getQueryParts(query))
+  }))
 }
 
 function add (name, query) {
-  var bookmarks = getList();
-  bookmarks.push({name: name, query: query});
-  persist(bookmarks);
+  getList().then((bookmarks) => {
+    bookmarks.push({name: name, query: query})
+    settingsApi.persist(bookmarks)
+  })
 }
 
 function update (oldName, newName, newQuery) {
-  find(getList(), function (bookmark, index, bookmarks) {
-    if (bookmark.name === oldName) {
-      bookmarks[index] = {name: newName, query: newQuery};
-      persist(bookmarks);
-      return true;
-    }
-  });
+  getList().then((bookmarks) => {
+    bookmarks.find((bookmark, index, bookmarks) => {
+      bookmarks[index] = {name: newName, query: newQuery}
+      settingsApi.persist(bookmarks)
+      return true
+    })
+  })
 }
 
 function remove (name) {
-  find(getList(), function (bookmark, index, bookmarks) {
-    if (bookmark.name === name) {
-      delete bookmarks[index];
-      persist(bookmarks);
-      return true;
-    }
-  });
+  getList().then((bookmarks) => {
+    bookmarks.find((bookmark, index, bookmarks) => {
+      if (bookmark.name === name) {
+        delete bookmarks[index]
+        settingsApi.persist(bookmarks)
+        return true
+      }
+    })
+  })
 }
 
 module.exports = {

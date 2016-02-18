@@ -1,33 +1,34 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var mousetrap = require('mousetrap-pause')(require('mousetrap'));
-var configuration = require('../lib/configuration');
-configuration.addSection(require('./shell/config'));
+const m = require('mithril')
+const mousetrap = require('mousetrap-pause')(require('mousetrap'))
+const settingsApi = require('../api/setting')
 
 function registerMouseEvents (scope) {
   if (scope.shortcut) {
-    mousetrap(global.window).bind(scope.shortcut, function() {
-      global.window.document.getElementById(scope.htmlId).focus();
-      return false;
-    });
+    mousetrap(global.window).bind(scope.shortcut, () => {
+      global.window.document.getElementById(scope.htmlId).focus()
+      return false
+    })
   }
 }
 
 function blur (e) {
-  mousetrap(global.window).unpause();
-  e.target.blur();
+  mousetrap(global.window).unpause()
+  e.target.blur()
 }
 
 function focus (e, scope) {
-  mousetrap(global.window).pause();
+  mousetrap(global.window).pause()
 
-  if (configuration.get('shell/shortcuts/blurShell')) {
-    mousetrap(e.target).bind(configuration.get('shell/shortcuts/blurShell'), function () {
-      e.target.value = '';
-      blur(e, scope);
-    });
-  }
+  settingsApi.find('shell/shortcuts/blurShell').then((shortcut) => {
+    if (shortcut) {
+      mousetrap(e.target).bind(shortcut, () => {
+        e.target.value = ''
+        blur(e, scope)
+      })
+    }
+  })
 
   /*
   mousetrap(e.target).bind(configuration.get('shell/shortcuts/triggerAutocompletion'), function (triggerEvent) {
@@ -46,12 +47,11 @@ function focus (e, scope) {
     scope.module.clearSuggestions(e, scope);
   });
   */
-
-  if (configuration.get('shell/shortcuts/submitShell')) {
-    mousetrap(e.target).bind(configuration.get('shell/shortcuts/submitShell'), function () {
-      scope.onSubmit(e, scope);
-    });
-  }
+  settingsApi.find('shell/shortcuts/submit').then((shortcut) => {
+    if (shortcut) {
+      mousetrap(e.target).bind(shortcut, () => { scope.onSubmit(e, scope) })
+    }
+  })
 }
 
 function controller (parentScope) {
@@ -60,26 +60,26 @@ function controller (parentScope) {
     icon: parentScope.icon,
     iconViews: parentScope.iconViews || [],
     inputView: parentScope.inputView,
-    shortcut: parentScope.shortcut,
-  };
-  scope.focus = function (e) {focus(e, scope);};
-  scope.blur = function (e) {blur(e, scope);};
-  return scope;
+    shortcut: parentScope.shortcut
+  }
+  scope.focus = (e) => { focus(e, scope) }
+  scope.blur = (e) => { blur(e, scope) }
+  return scope
 }
 
 function view (scope) {
   var parts = scope.iconViews.map(function (view) {
-    return view();
-  });
+    return view()
+  })
   parts.unshift(
-      m('.media-object.pull-left',
-        m('label.form-icon-label', {
-          for: scope.htmlId
-        }, m('span.icon.' + scope.icon))
-       )
-      );
-  parts.push(m('.media-inner', scope.inputView()));
-  return m('.media', parts);
+    m('.media-object.pull-left',
+      m('label.form-icon-label', {
+        for: scope.htmlId
+      }, m('span.icon.' + scope.icon))
+    )
+  )
+  parts.push(m('.media-inner', scope.inputView()))
+  return m('.media', parts)
 }
 
 module.exports = {
@@ -88,4 +88,4 @@ module.exports = {
   focus: focus,
   blur: blur,
   registerMouseEvents: registerMouseEvents
-};
+}

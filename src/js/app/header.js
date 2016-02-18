@@ -1,28 +1,26 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var menu = require('./menu');
+const m = require('mithril')
+const menu = require('./menu')
 
-var configuration = require('../lib/configuration');
-configuration.addSection(require('./header/config'));
+const settings = require('../api/setting')
 
 function logoView (scope) {
   return m('a[href="#/"].header-logo', [
     m('span.icon.' + scope.icon), ' ', scope.name]
-  );
+  )
 }
 
-var component = {};
+function controller () {
+  const scope = {
+    icon: settings.find('global.header.icon'),
+    name: settings.find('global.header.name'),
+    color: settings.find('global.header.color')
+  }
+  return scope
+}
 
-component.controller = function () {
-  var scope = {
-    icon: configuration.get('general/header/icon'),
-    name: configuration.get('general/header/name'),
-  };
-  return scope;
-};
-
-component.view = function (scope) {
+function view (scope) {
   var content = [
     m('ul.nav.nav-list.pull-left',
       m('li', m('a[href=#]', {
@@ -33,13 +31,12 @@ component.view = function (scope) {
       ]))
     ),
     logoView(scope)
-  ];
-  var color = configuration.get('general/header/color');
-  if (color) {
-    color = '.' + color.split(' ').join('.');
-  }
+  ]
 
-  return m('header.header.fixed' + color, content);
-};
+  return m('header.header.fixed.' + scope.color, content)
+}
 
-module.exports = component;
+module.exports = {
+  controller: controller,
+  view: view
+}

@@ -4,7 +4,6 @@ var m = require('mithril');
 var t = require('../lib/translation');
 var cardView = require('./utils/views/card/default');
 var shellFilter = require('./shell/filter');
-var timesliceCollection = require('../lib/collection/timeslices');
 
 function itemView (scope, timeslice) {
   return m('tr.timeslice', [

@@ -35,9 +35,10 @@ function fetchBunch (resource, options) {
     },
     extract: function (xhr) {
       if (xhr.status === 401) {
-        return m.route('/login')
+        m.route('/login')
+      } else {
+        options.pagination = extractXhrPagination(xhr)
       }
-      options.pagination = extractXhrPagination(xhr)
       return xhr.responseText
     }
   })

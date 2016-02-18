@@ -26,7 +26,12 @@ function controller (activityScope) {
     totalDuration: activityScope.totalDuration(activityScope.activity),
     start: activityScope.start,
     stop: activityScope.stop,
-    showDetails: false
+    showDetails: false,
+    shortcuts: {
+      'customer': settingsApi.find('global.shortcuts.customer'),
+      'project': settingsApi.find('global.shortcuts.project'),
+      'service': settingsApi.find('global.shortcuts.service')
+    }
   }
 
   scope.onSubmit = function (e) {
@@ -92,9 +97,7 @@ function view (scope) {
   inner.push(m('span', scope.activity.description));
   ['customer', 'project', 'service'].forEach((relation) => {
     if (scope.activity[relation]) {
-      settingsApi.find('activity.shortcuts.' + relation).then((shortcut) => {
-        inner.push(m('span.badge', shortcut + scope.activity[relation].alias))
-      })
+      inner.push(m('span.badge', scope.shortcuts[relation] + scope.activity[relation].alias))
     }
   })
 
