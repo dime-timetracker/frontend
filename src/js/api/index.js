@@ -2,9 +2,9 @@
 
 const m = require('mithril')
 
-const authorize = require('./lib/authorize')
-const baseUrl = require('./lib/helper/baseUrl')()
-const extractXhrPagination = require('./lib/helper/extractXhrPagination')
+const authorize = require('../lib/authorize')
+const baseUrl = require('../lib/helper/baseUrl')()
+const extractXhrPagination = require('../lib/helper/extractXhrPagination')
 
 function persist (resource, data, options) {
   options = options || {}
@@ -35,7 +35,7 @@ function fetchBunch (resource, options) {
     },
     extract: function (xhr) {
       if (xhr.status === 401) {
-        m.route('/login')
+        return m.route('/login')
       }
       options.pagination = extractXhrPagination(xhr)
       return xhr.responseText
