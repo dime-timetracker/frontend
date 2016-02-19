@@ -1,29 +1,29 @@
 'use strict'
 
-var m = require('mithril')
-var t = require('../../lib/translation')
+const m = require('mithril')
+const t = require('../../lib/translation')
 
-var activityApi = require('../../api/activity')
+const activityApi = require('../../api/activity')
 
-var activityForm = require('./form')
-var grid = require('../utils/views/grid')
-var tile = require('../utils/views/tile')
-var settingsApi = require('../../api/setting')
+const activityForm = require('./form')
+const grid = require('../utils/views/grid')
+const tile = require('../utils/views/tile')
+const settingsApi = require('../../api/setting')
 
-var timesliceList = require('./timesliceList')
+const timesliceList = require('./timesliceList')
 
-var btnStartStop = require('./btnStartStop')
+const btnStartStop = require('./btnStartStop')
 
-var toggleButton = require('../utils/components/toggleButton')
+const toggleButton = require('../utils/components/toggleButton')
 
 function controller (activityScope) {
-  var scope = {
+  const scope = {
     activity: activityScope.activity,
     customers: activityScope.customers,
     projects: activityScope.projects,
     services: activityScope.services,
-    running: activityScope.running(activityScope.activity),
-    totalDuration: activityScope.totalDuration(activityScope.activity),
+    running: activityScope.running,
+    totalDuration: activityScope.totalDuration,
     start: activityScope.start,
     stop: activityScope.stop,
     showDetails: false,
@@ -34,19 +34,17 @@ function controller (activityScope) {
     }
   }
 
-  scope.onSubmit = function (e) {
+  scope.onSubmit = (e) => {
     if (e) {
       e.preventDefault()
     }
-
     activityApi.persist(scope.activity)
   }
-  scope.onDelete = function (e) {
+  scope.onDelete = (e) => {
     if (e) {
       e.preventDefault()
     }
-
-    var question = t('delete.confirm', { activity: scope.activity.description })
+    const question = t('delete.confirm', { activity: scope.activity.description })
     if (global.window.confirm(question)) {
       activityApi.delete(scope.activity)
     }
@@ -56,7 +54,7 @@ function controller (activityScope) {
 }
 
 function view (scope) {
-  var options = {
+  const options = {
     active: scope.showDetails,
     actions: [],
     subs: []
@@ -93,7 +91,7 @@ function view (scope) {
     ))
   }
 
-  var inner = []
+  const inner = []
   inner.push(m('span', scope.activity.description));
   ['customer', 'project', 'service'].forEach((relation) => {
     if (scope.activity[relation]) {

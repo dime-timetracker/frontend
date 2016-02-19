@@ -1,12 +1,21 @@
 'use strict'
 
-var isNull = require('lodash/lang/isNull')
-var isNumber = require('lodash/lang/isNumber')
-var isUndefined = require('lodash/lang/isUndefined')
-var moment = require('moment')
+const m = require('mithril')
+const isNumber = require('lodash/lang/isNumber')
+const isUndefined = require('lodash/lang/isUndefined')
+const moment = require('moment')
+
+const currently = m.prop()
+
+function now (time) {
+  if (time) {
+    currently(moment(time))
+  }
+  return currently() || moment()
+}
 
 function getEnd (timeslice) {
-  return timeslice.stoppedAt ? moment(timeslice.stoppedAt) : moment()
+  return timeslice.stoppedAt ? moment(timeslice.stoppedAt) : now()
 }
 
 function getStart (timeslice) {
@@ -14,13 +23,9 @@ function getStart (timeslice) {
 }
 
 function duration (timeslice, precision) {
-  let result = 0
-
-  if (isNull(timeslice.duration) || timeslice.duration === 0) {
-    result = getEnd(timeslice).diff(getStart(timeslice), 'seconds')
-  } else {
-    result = parseInt(timeslice.duration)
-  }
+  let result = timeslice.duration
+    ? parseInt(timeslice.duration)
+    : getEnd(timeslice).diff(getStart(timeslice), 'seconds')
 
   if (!isUndefined(precision)) {
     precision = parseInt(precision)
@@ -33,6 +38,7 @@ function duration (timeslice, precision) {
 }
 
 module.exports = {
+  now: now,
   getStart: getStart,
   getEnd: getEnd,
   duration: duration,

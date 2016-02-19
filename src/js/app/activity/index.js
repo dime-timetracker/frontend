@@ -42,9 +42,11 @@ function start (activity) {
     activity: parseInt(activity.id),
     startedAt: moment()
   }
+  m.startComputation()
   timesliceApi.persist(timeslice).then(() => {
     activity.timeslices.push(timeslice)
-  })
+    m.endComputation()
+  }, m.endComputation)
 }
 
 function stop (activity) {
@@ -52,7 +54,10 @@ function stop (activity) {
     if (!t.stoppedAt) {
       t.stoppedAt = moment().format(timestampFormat)
       t.duration = moment(t.stoppedAt).diff(moment(t.startedAt))
-      timesliceApi.persist(t)
+      m.startComputation()
+      timesliceApi.persist(t).then(() => {
+        m.endComputation()
+      }, m.endComputation)
     }
   })
 }
@@ -64,7 +69,7 @@ function activityListView (scope) {
   container.push(scope.activities.map(function (activity) {
     return m.component(itemView, {
       activity: activity,
-      key: activity.uuid,
+      key: activity.id,
       collection: scope.activities,
       running: running,
       totalDuration: totalDuration,
