@@ -1,22 +1,22 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var t = require('../../lib/translation');
-var formatShortcut = require('../../lib/helper/mousetrapCommand');
-var debug = global.window.dimeDebug('shell.activity');
-var parse = require('../../lib/parser').parse;
-var shell = require('../shell');
+const m = require('mithril')
+const t = require('../../lib/translation')
+const formatShortcut = require('../../lib/helper/mousetrapCommand')
+const debug = global.window.dimeDebug('shell.activity')
+const parse = require('../../lib/parser').parse
+const shell = require('../shell')
 
 function createActivity (e, scope) {
-  var string = e.target.value;
+  const string = e.target.value
   if (string) {
-    var parsers = ['customer', 'project', 'service', 'tags', 'times', 'description'];
-    debug('Creating activity by ' + string);
-    var activity = parse(string, parsers);
-    scope.addActivity(activity);
+    const parsers = ['customer', 'project', 'service', 'tags', 'times', 'description']
+    debug('Creating activity by ' + string)
+    const activity = parse(string, parsers)
+    scope.addActivity(activity)
   }
-  e.target.value = '';
-  e.target.blur();
+  e.target.value = ''
+  e.target.blur()
 }
 
 function inputView (scope) {
@@ -25,38 +25,38 @@ function inputView (scope) {
     placeholder: scope.placeholder,
     onfocus: scope.focus,
     onblur: scope.blur,
-    onkeydown: scope.keydown,
-  });
+    onkeydown: scope.keydown
+  })
 }
 
 function controller (listScope) {
-  var scope = {
+  const scope = {
     shortcut: 'd a',
     icon: 'icon-play-arrow',
     htmlId: 'shell',
-    addActivity: function (activity) {
-      listScope.collection.persist(activity);
+    addActivity: (activity) => {
+      listScope.collection.persist(activity)
     }
-  };
+  }
   scope.placeholder = ' ' + t('shell.activity.placeholder', {
     shortcut: formatShortcut(scope.shortcut)
-  });
-  scope.inputView = function () {
-    return inputView(scope);
-  };
-  scope.onSubmit = function (e) {createActivity(e, scope);};
-  scope.blur = function (e) {shell.blur(e, scope);};
-  scope.focus = function (e) {shell.focus(e, scope);};
-  shell.registerMouseEvents(scope);
+  })
+  scope.inputView = () => {
+    return inputView(scope)
+  }
+  scope.onSubmit = (e) => { createActivity(e, scope) }
+  scope.blur = (e) => { shell.blur(e, scope) }
+  scope.focus = (e) => { shell.focus(e, scope) }
+  shell.registerMouseEvents(scope)
 
-  return scope;
+  return scope
 }
 
 function view (scope) {
-  return m.component(shell, scope);
+  return m.component(shell, scope)
 }
 
 module.exports = {
   controller: controller,
   view: view
-};
+}
