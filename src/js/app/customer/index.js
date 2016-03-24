@@ -32,7 +32,7 @@ function view (scope) {
 
   list.push(m('h3.content-sub-heading', t('customer.list.enabled.headline')))
 
-  let collection = filter(scope.collection, { enabled: 1 })
+  let collection = filter(scope.collection, { enabled: true })
   if (collection.length > 0) {
     collection.forEach((customer) => {
       list.push(m.component(item, {
@@ -46,7 +46,7 @@ function view (scope) {
   }
 
   list.push(m('h3.content-sub-heading', t('customer.list.disabled.headline')))
-  collection = filter(scope.collection, { enabled: 0 })
+  collection = filter(scope.collection, { enabled: false })
   if (collection.length > 0) {
     collection.forEach((customer) => {
       list.push(m.component(item, {

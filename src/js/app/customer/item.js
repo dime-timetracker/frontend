@@ -6,6 +6,7 @@ const tile = require('../utils/views/tile')
 const formBuilder = require('../utils/components/formBuilder')
 const toggleButton = require('../utils/components/toggleButton')
 const api = require('../../api/customer')
+const userSettings = require('../setting').sections
 
 function controller (args) {
   var scope = {
@@ -38,10 +39,10 @@ function controller (args) {
 
 function view (scope) {
   var inner = [
-    scope.customer.toString()
+    scope.customer.name
   ]
   if (scope.customer.alias) {
-    inner.push(m('span.badge', scope.customer.shortcut + scope.customer.alias))
+    inner.push(m('span.badge', userSettings.find('global.shortcuts.customer') + scope.customer.alias))
   }
 
   var options = { active: scope.show }
