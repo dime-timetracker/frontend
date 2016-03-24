@@ -76,7 +76,7 @@ function view (scope) {
 
   if (scope.showDetails) {
     options.subs.push(grid(
-      activityForm({
+      m.component(activityForm, {
         activity: scope.activity,
         onSubmit: scope.onSubmit,
         onDelete: scope.onDelete,

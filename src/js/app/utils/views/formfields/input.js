@@ -23,6 +23,7 @@ module.exports = function (options, value) {
     value = options.value
   }
   const attributes = {
+    id: options.id,
     name: options.name,
     type: options.type || 'text',
     value: value

@@ -2,6 +2,7 @@
 
 module.exports = {
   translation: {
+    'activity.description': 'Beschreibung',
     'activity.startstopbutton.start.title': 'Starte Aktivität',
     'activity.startstopbutton.stop.title': 'Stoppe Aktivität',
     'button.save': 'Speichern',
