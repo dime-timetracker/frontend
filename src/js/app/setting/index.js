@@ -22,7 +22,8 @@ const sections = {
     'global.header.color': { type: 'text', value: 'green' },
     'global.shortcuts.customer': { type: 'text', value: '@' },
     'global.shortcuts.project': { type: 'text', value: '/' },
-    'global.shortcuts.service': { type: 'text', value: ':' }
+    'global.shortcuts.service': { type: 'text', value: ':' },
+    'global.timestamp.format': { type: 'text', value: 'X' }
   }
 }
 sections.find = (name) => {

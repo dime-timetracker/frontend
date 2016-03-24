@@ -21,9 +21,10 @@ const shellActivities = require('../shell/activity')
 const shellFilter = require('../shell/filter')
 const itemView = require('./item')
 
-const timestampFormat = 'YYYY-MM-DD HH:mm:ss'
+const userSettings = require('../setting').sections
+const timestampFormat = userSettings.find('global.timestamp.format')
 
-require('../setting').sections.activity = require('./settings')
+userSettings.activity = require('./settings')
 
 function running (activity) {
   return activity.timeslices.reduce((running, timeslice) => {
@@ -39,8 +40,8 @@ function totalDuration (activity) {
 
 function start (activity) {
   let timeslice = {
-    activity: parseInt(activity.id),
-    startedAt: moment()
+    activity_id: parseInt(activity.id),
+    started_at: moment().format(timestampFormat)
   }
   m.startComputation()
   timesliceApi.persist(timeslice).then(() => {
@@ -51,9 +52,9 @@ function start (activity) {
 
 function stop (activity) {
   activity.timeslices.forEach((t) => {
-    if (!t.stoppedAt) {
-      t.stoppedAt = moment().format(timestampFormat)
-      t.duration = moment(t.stoppedAt).diff(moment(t.startedAt))
+    if (!t.stopped_at) {
+      t.stopped_at = moment().format(timestampFormat)
+      t.duration = moment(t.stopped_at, timestampFormat).diff(moment(t.started_at, timestampFormat))
       m.startComputation()
       timesliceApi.persist(t).then(() => {
         m.endComputation()
@@ -67,6 +68,9 @@ function activityListView (scope) {
 
   debug('view list', scope.activities)
   container.push(scope.activities.map(function (activity) {
+    if (!activity.timeslices) {
+      activity.timeslices = []
+    }
     return m.component(itemView, {
       activity: activity,
       key: activity.id,

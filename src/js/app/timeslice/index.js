@@ -4,22 +4,24 @@ const m = require('mithril')
 const isNumber = require('lodash/lang/isNumber')
 const isUndefined = require('lodash/lang/isUndefined')
 const moment = require('moment')
+const userSettings = require('../setting').sections
+const timestampFormat = userSettings.find('global.timestamp.format')
 
 const currently = m.prop()
 
 function now (time) {
   if (time) {
-    currently(moment(time))
+    currently(moment(time, timestampFormat))
   }
   return currently() || moment()
 }
 
 function getEnd (timeslice) {
-  return timeslice.stoppedAt ? moment(timeslice.stoppedAt) : now()
+  return timeslice.stopped_at ? moment(timeslice.stopped_at, timestampFormat) : now()
 }
 
 function getStart (timeslice) {
-  return moment(timeslice.startedAt)
+  return moment(timeslice.started_at, timestampFormat)
 }
 
 function duration (timeslice, precision) {
@@ -42,5 +44,5 @@ module.exports = {
   getStart: getStart,
   getEnd: getEnd,
   duration: duration,
-  running: (t) => { return !t.stoppedAt }
+  running: (t) => { return !t.stopped_at }
 }
