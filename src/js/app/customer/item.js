@@ -3,7 +3,7 @@
 const m = require('mithril')
 const t = require('../../lib/translation')
 const tile = require('../utils/views/tile')
-const formBuilder = require('../utils/components/formBuilder')
+const form = require('./form')
 const toggleButton = require('../utils/components/toggleButton')
 const api = require('../../api/customer')
 const userSettings = require('../setting').sections
@@ -58,7 +58,7 @@ function view (scope) {
   })
 
   if (scope.show) {
-    options.subs = m.component(formBuilder, {
+    options.subs = m.component(form, {
       key: 'form-' + scope.customer.uuid,
       customer: scope.customer,
       onSubmit: scope.onSubmit,
