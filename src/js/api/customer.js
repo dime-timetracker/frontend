@@ -6,6 +6,12 @@ const options = {}
 
 let collection
 
+function persist (customer, options) {
+  return api.persist('customer', customer, options).then((customer) => {
+    collection.push(customer)
+  })
+}
+
 function fetchAll () {
   return api.fetchBunch('customer', { with: 100000 }).then((customers) => {
     collection = customers
@@ -27,5 +33,6 @@ module.exports = {
   collection: collection,
   fetchAll: fetchAll,
   fetchBunch: fetchBunch,
+  persist: persist,
   total: total
 }
