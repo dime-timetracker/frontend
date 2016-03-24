@@ -6,6 +6,7 @@ const formatShortcut = require('../../lib/helper/mousetrapCommand')
 const debug = global.window.dimeDebug('shell.activity')
 const parse = require('../../lib/parser').parse
 const shell = require('../shell')
+const api = require('../../api/activity')
 
 function createActivity (e, scope) {
   const string = e.target.value
@@ -35,7 +36,7 @@ function controller (listScope) {
     icon: 'icon-play-arrow',
     htmlId: 'shell',
     addActivity: (activity) => {
-      listScope.collection.persist(activity)
+      api.persist(activity)
     }
   }
   scope.placeholder = ' ' + t('shell.activity.placeholder', {
