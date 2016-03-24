@@ -2,15 +2,12 @@
 
 const m = require('mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
-const settingsApi = require('../api/setting')
-const userSettings = require('../app/setting')
+const settingsApi = require('../../api/setting')
+const userSettings = require('../setting').sections
 
 const debug = require('debug')('app.shell')
 
-userSettings.sections.shell = {
-  'shell.shortcuts.blur': { type: 'text', value: 'esc' },
-  'shell.shortcuts.submit': { type: 'text', value: 'enter' }
-}
+userSettings.shell = require('./settings')
 
 function registerMouseEvents (scope) {
   if (scope.shortcut) {
