@@ -51,9 +51,6 @@ function controller () {
   api.fetchAll().then((settings) => {
     settings.map((setting) => {
       let name = setting.name
-      if (setting.namespace) {
-        name = setting.namespace + '.' + setting.name
-      }
       scope.settings[name] = setting.value
     })
   })

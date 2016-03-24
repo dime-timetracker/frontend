@@ -3,6 +3,14 @@
 const m = require('mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
 const settingsApi = require('../api/setting')
+const userSettings = require('../app/setting')
+
+const debug = require('debug')('app.shell')
+
+userSettings.sections.shell = {
+  'shell.shortcuts.blur': { type: 'text', value: 'esc' },
+  'shell.shortcuts.submit': { type: 'text', value: 'enter' }
+}
 
 function registerMouseEvents (scope) {
   if (scope.shortcut) {
@@ -18,16 +26,30 @@ function blur (e) {
   e.target.blur()
 }
 
+function applySetting (name, action) {
+  const setting = settingsApi.find(name)
+  if (setting) {
+    return action(setting)
+  }
+  debug('Could not apply setting', name, setting)
+}
+
 function focus (e, scope) {
   mousetrap(global.window).pause()
 
-  settingsApi.find('shell/shortcuts/blurShell').then((shortcut) => {
-    if (shortcut) {
-      mousetrap(e.target).bind(shortcut, () => {
-        e.target.value = ''
-        blur(e, scope)
-      })
-    }
+  applySetting('shell.shortcuts.blur', (shortcut) => {
+    debug('Register shortcut to blur shell', shortcut)
+    mousetrap(e.target).bind(shortcut, () => {
+      e.target.value = ''
+      blur(e, scope)
+    })
+  })
+
+  applySetting('shell.shortcuts.submit', (shortcut) => {
+    debug('Register shortcut to submit shell', shortcut)
+    mousetrap(e.target).bind(shortcut, () => {
+      mousetrap(e.target).bind(shortcut, () => { scope.onSubmit(e, scope) })
+    })
   })
 
   /*
@@ -47,11 +69,6 @@ function focus (e, scope) {
     scope.module.clearSuggestions(e, scope);
   });
   */
-  settingsApi.find('shell/shortcuts/submit').then((shortcut) => {
-    if (shortcut) {
-      mousetrap(e.target).bind(shortcut, () => { scope.onSubmit(e, scope) })
-    }
-  })
 }
 
 function controller (parentScope) {

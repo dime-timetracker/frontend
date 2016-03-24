@@ -8,7 +8,7 @@ const userSettings = require('../app/setting').userSettings
 
 function findByName (name) {
   return userSettings().find((setting) => {
-    return setting.name === name || setting.namespace + '.' + setting.name === name
+    return setting.name === name
   })
 }
 
