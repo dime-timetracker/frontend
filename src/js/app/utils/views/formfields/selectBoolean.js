@@ -1,20 +1,19 @@
-'use strict';
+'use strict'
 
-var t = require('../../../../lib/translation');
-var select = require('./select');
+const t = require('../../../../lib/translation')
+const select = require('./select')
 
-var selectBoolean = function (value, options) {
-  options = options || {};
+module.exports = (options, value) => {
+  options = options || {}
 
   var values = [
-    { 'key': 1, 'value': t('yes') },
-    { 'key': 0, 'value': t('no') }
-  ];
+    { value: true, htmlValue: 1, label: t('yes') },
+    { value: false, htmlValue: 0, label: t('no') }
+  ]
 
-  return select(values, {
-    update: options.update,
+  return select({
+    options: values,
+    change: options.change,
     selected: (value === true) ? 1 : 0
-  });
-};
-
-module.exports = selectBoolean;
+  }, value)
+}

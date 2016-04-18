@@ -16,6 +16,12 @@ function fetchBunch () {
   return api.fetchBunch('project', options)
 }
 
+function persist (project, options) {
+  return api.persist('project', project, options).then((project) => {
+    collection.push(project)
+  })
+}
+
 function total () {
   if (!options.pagination) {
     fetchBunch()
@@ -27,5 +33,6 @@ module.exports = {
   collection: collection,
   fetchAll: fetchAll,
   fetchBunch: fetchBunch,
+  persist: persist,
   total: total
 }

@@ -18,7 +18,7 @@ module.exports = function (options, value) {
     options.options.map((option) => {
       optionList.push(m('option', {
         selected: option.value === value,
-        value: option.value
+        value: option.htmlValue !== undefined ? option.htmlValue : option.value
       }, option.label))
     })
   }
@@ -26,11 +26,11 @@ module.exports = function (options, value) {
   const attributes = {
     name: options.name
   }
-  if (isFunction(options.update)) {
+  if (isFunction(options.change)) {
     attributes.onchange = (e) => {
       var idx = e.target.selectedIndex
       var value = e.target.options[idx].value
-      options.update(value, e)
+      options.change(value, e)
     }
   }
 

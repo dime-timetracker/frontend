@@ -16,6 +16,12 @@ function fetchBunch () {
   return api.fetchBunch('service', options)
 }
 
+function persist (service, options) {
+  return api.persist('service', service, options).then((service) => {
+    collection.push(service)
+  })
+}
+
 function total () {
   if (!options.pagination) {
     fetchBunch()
@@ -27,5 +33,6 @@ module.exports = {
   collection: collection,
   fetchAll: fetchAll,
   fetchBunch: fetchBunch,
+  persist: persist,
   total: total
 }

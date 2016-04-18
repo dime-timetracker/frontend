@@ -11,6 +11,9 @@ const routes = {
   '/': require('./app/activity'),
   '/customer': require('./app/customer'),
   '/login': require('./app/login'),
+  '/project': require('./app/project'),
+  '/service': require('./app/service'),
+  '/tag': require('./app/tag'),
   '/settings': require('./app/setting'),
   '/report/:query': require('./app/report')
 }

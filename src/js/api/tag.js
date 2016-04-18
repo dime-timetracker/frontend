@@ -4,8 +4,18 @@ const api = require('../api')
 
 const options = {}
 
+let collection
+
 function fetchBunch () {
-  return api.fetchBunch('tag', options)
+  return api.fetchBunch('tag', { with: 100000 }).then((tags) => {
+    collection = tags
+  })
+}
+
+function persist (tag, options) {
+  return api.persist('tag', tag, options).then((tag) => {
+    collection.push(tag)
+  })
 }
 
 function total () {
@@ -15,6 +25,8 @@ function total () {
   return options.total
 }
 module.exports = {
+  collection: collection,
   fetchBunch: fetchBunch,
+  persist: persist,
   total: total
 }

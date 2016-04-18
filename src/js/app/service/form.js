@@ -2,7 +2,7 @@
 
 const m = require('mithril')
 const t = require('../../lib/translation')
-const api = require('../../api/customer')
+const api = require('../../api/service')
 const fieldViews = {
   input: require('../utils/views/formfields/input'),
   select: require('../utils/views/formfields/select'),
@@ -11,41 +11,41 @@ const fieldViews = {
 
 function controller (context) {
   const scope = {
-    customer: context.customer
+    service: context.service
   }
 
-  scope.update = function (customer, e) {
+  scope.update = function (service, e) {
     if (e) {
       e.preventDefault()
     }
-    api.persist(customer)
+    api.persist(service)
   }
 
   return scope
 }
 
 function view (scope) {
-  return m('.customer.' + scope.customer.alias, [
+  return m('.service.' + scope.service.alias, [
     m('p.row.form-group', [
-      m('.col-md-3', t('customer.property.name')),
+      m('.col-md-3', t('service.property.name')),
       m('.col-md-9', fieldViews.input({ name: 'name', change: (name) => {
-        scope.customer.name = name
-        scope.update(scope.customer)
-      }}, scope.customer.name))
+        scope.service.name = name
+        scope.update(scope.service)
+      }}, scope.service.name))
     ]),
     m('p.row.form-group', [
-      m('.col-md-3', t('customer.property.alias')),
+      m('.col-md-3', t('service.property.alias')),
       m('.col-md-9', fieldViews.input({ name: 'alias', change: (alias) => {
-        scope.customer.alias = alias
-        scope.update(scope.customer)
-      }}, scope.customer.alias))
+        scope.service.alias = alias
+        scope.update(scope.service)
+      }}, scope.service.alias))
     ]),
     m('p.row.form-group', [
-      m('.col-md-3', t('customer.property.enabled')),
+      m('.col-md-3', t('service.property.enabled')),
       m('.col-md-9', fieldViews.boolean({ name: 'alias', change: (enabled) => {
-        scope.customer.enabled = (enabled === '1')
-        scope.update(scope.customer)
-      }}, scope.customer.enabled))
+        scope.service.enabled = (enabled === '1')
+        scope.update(scope.service)
+      }}, scope.service.enabled))
     ])
   ])
 }

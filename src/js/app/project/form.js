@@ -2,7 +2,7 @@
 
 const m = require('mithril')
 const t = require('../../lib/translation')
-const api = require('../../api/customer')
+const api = require('../../api/project')
 const fieldViews = {
   input: require('../utils/views/formfields/input'),
   select: require('../utils/views/formfields/select'),
@@ -11,41 +11,41 @@ const fieldViews = {
 
 function controller (context) {
   const scope = {
-    customer: context.customer
+    project: context.project
   }
 
-  scope.update = function (customer, e) {
+  scope.update = function (project, e) {
     if (e) {
       e.preventDefault()
     }
-    api.persist(customer)
+    api.persist(project)
   }
 
   return scope
 }
 
 function view (scope) {
-  return m('.customer.' + scope.customer.alias, [
+  return m('.project.' + scope.project.alias, [
     m('p.row.form-group', [
-      m('.col-md-3', t('customer.property.name')),
+      m('.col-md-3', t('project.property.name')),
       m('.col-md-9', fieldViews.input({ name: 'name', change: (name) => {
-        scope.customer.name = name
-        scope.update(scope.customer)
-      }}, scope.customer.name))
+        scope.project.name = name
+        scope.update(scope.project)
+      }}, scope.project.name))
     ]),
     m('p.row.form-group', [
-      m('.col-md-3', t('customer.property.alias')),
+      m('.col-md-3', t('project.property.alias')),
       m('.col-md-9', fieldViews.input({ name: 'alias', change: (alias) => {
-        scope.customer.alias = alias
-        scope.update(scope.customer)
-      }}, scope.customer.alias))
+        scope.project.alias = alias
+        scope.update(scope.project)
+      }}, scope.project.alias))
     ]),
     m('p.row.form-group', [
-      m('.col-md-3', t('customer.property.enabled')),
+      m('.col-md-3', t('project.property.enabled')),
       m('.col-md-9', fieldViews.boolean({ name: 'alias', change: (enabled) => {
-        scope.customer.enabled = (enabled === '1')
-        scope.update(scope.customer)
-      }}, scope.customer.enabled))
+        scope.project.enabled = (enabled === '1')
+        scope.update(scope.project)
+      }}, scope.project.enabled))
     ])
   ])
 }
