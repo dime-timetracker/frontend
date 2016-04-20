@@ -5,11 +5,15 @@ const api = require('../api')
 const options = {}
 
 function persist (timeslice, options) {
-  return api.persist('timeslice', timeslice, options)
+  return api.persist('timeslices', timeslice, options)
+}
+
+function fetchAll (options) {
+  return api.fetchBunch('timeslices', Object.assign(options, { with: 1000000 }))
 }
 
 function fetchBunch () {
-  return api.fetchBunch('timeslice', options)
+  return api.fetchBunch('timeslices', options)
 }
 
 function total () {
@@ -20,6 +24,7 @@ function total () {
 }
 
 module.exports = {
+  fetchAll: fetchAll,
   fetchBunch: fetchBunch,
   persist: persist,
   total: total

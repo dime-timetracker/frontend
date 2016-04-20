@@ -7,17 +7,17 @@ const options = {}
 let collection
 
 function fetchAll () {
-  return api.fetchBunch('service', { with: 100000 }).then((services) => {
+  return api.fetchBunch('services', { with: 100000 }).then((services) => {
     collection = services
   })
 }
 
 function fetchBunch () {
-  return api.fetchBunch('service', options)
+  return api.fetchBunch('services', options)
 }
 
 function persist (service, options) {
-  return api.persist('service', service, options).then((service) => {
+  return api.persist('services', service, options).then((service) => {
     collection.push(service)
   })
 }

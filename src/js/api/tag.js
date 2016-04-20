@@ -7,13 +7,13 @@ const options = {}
 let collection
 
 function fetchBunch () {
-  return api.fetchBunch('tag', { with: 100000 }).then((tags) => {
+  return api.fetchBunch('tags', { with: 100000 }).then((tags) => {
     collection = tags
   })
 }
 
 function persist (tag, options) {
-  return api.persist('tag', tag, options).then((tag) => {
+  return api.persist('tags', tag, options).then((tag) => {
     collection.push(tag)
   })
 }

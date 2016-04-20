@@ -13,7 +13,7 @@ function findByName (name) {
 }
 
 function fetchAll () {
-  return api.fetchBunch('setting', { with: 100000 })
+  return api.fetchBunch('settings', { with: 100000 })
 }
 
 function find (name) {
@@ -24,7 +24,7 @@ function find (name) {
 function persistConfig (name, value) {
   const setting = findByName(name) || { name: name }
   setting.value = value
-  api.persist('setting', setting)
+  api.persist('settings', setting)
 }
 
 function total () {

@@ -7,19 +7,19 @@ const options = {}
 let collection
 
 function persist (customer, options) {
-  return api.persist('customer', customer, options).then((customer) => {
+  return api.persist('customers', customer, options).then((customer) => {
     collection.push(customer)
   })
 }
 
 function fetchAll () {
-  return api.fetchBunch('customer', { with: 100000 }).then((customers) => {
+  return api.fetchBunch('customers', { with: 100000 }).then((customers) => {
     collection = customers
   })
 }
 
 function fetchBunch () {
-  return api.fetchBunch('customer', options)
+  return api.fetchBunch('customers', options)
 }
 
 function total () {

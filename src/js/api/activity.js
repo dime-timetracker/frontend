@@ -6,12 +6,12 @@ const debug = require('debug')('api.activities')
 const options = {}
 
 function persist (activity, options) {
-  return api.persist('activity', activity, options)
+  return api.persist('activities', activity, options)
 }
 
 function fetchBunch () {
   debug('fetching activities')
-  let result = api.fetchBunch('activity', options)
+  let result = api.fetchBunch('activities', options)
   debug(result)
   return result
 }
