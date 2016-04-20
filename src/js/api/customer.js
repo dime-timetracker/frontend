@@ -4,7 +4,7 @@ const api = require('../api')
 
 const options = {}
 
-let collection
+let collection = []
 
 function persist (customer, options) {
   return api.persist('customers', customer, options).then((customer) => {

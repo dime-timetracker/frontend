@@ -26,43 +26,36 @@ function controller () {
 };
 
 function view (scope) {
-  var list = []
+  const enabledCustomers = filter(scope.collection, { enabled: true })
+  const disabledCustomers = filter(scope.collection, { enabled: false })
 
-  list.push(m('h2', t('customers')))
-
-  list.push(m('h3.content-sub-heading', t('customer.list.enabled.headline')))
-
-  let collection = filter(scope.collection, { enabled: true })
-  if (collection.length > 0) {
-    collection.forEach((customer) => {
-      list.push(m.component(item, {
-        key: 'customer-' + customer.uuid,
-        customer: customer,
-        collection: scope.collection
-      }))
-    })
-  } else {
-    list.push(m('p', t('customer.list.enabled.empty')))
-  }
-
-  list.push(m('h3.content-sub-heading', t('customer.list.disabled.headline')))
-  collection = filter(scope.collection, { enabled: false })
-  if (collection.length > 0) {
-    collection.forEach((customer) => {
-      list.push(m.component(item, {
-        key: scope.type + '-' + customer.uuid,
-        customer: customer,
-        collection: scope.collection
-      }))
-    })
-  } else {
-    list.push(m('p', t('customer.list.disabled.empty')))
-  }
-
-  list.push(button('customer.add', '/customer', scope.add))
-
-  return m('div.list-customer', list)
-};
+  return m('div.list-customer', [
+    m('h2', t('customers')),
+    m('.enabled', [
+      m('h3.content-sub-heading', t('customer.list.enabled.headline')),
+      enabledCustomers.length > 0
+      ? enabledCustomers.map((customer) => {
+        return m.component(item, {
+          key: 'customer-' + customer.uuid,
+          customer: customer,
+          collection: scope.collection
+        })
+      }) : m('p', t('customer.list.enabled.empty'))
+    ]),
+    m('.disabled', [
+      m('h3.content-sub-heading', t('customer.list.disabled.headline')),
+      disabledCustomers.length > 0
+      ? disabledCustomers.map((customer) => {
+        return m.component(item, {
+          key: 'customer-' + customer.uuid,
+          customer: customer,
+          collection: scope.collection
+        })
+      }) : m('p', t('customer.list.disabled.empty'))
+    ]),
+    button('customer.add', '/customer', scope.add)
+  ])
+}
 
 module.exports = {
   controller: controller,
