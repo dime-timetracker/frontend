@@ -73,12 +73,15 @@ function activityListView (scope) {
     }
     return m.component(itemView, {
       activity: activity,
-      key: activity.id,
       collection: scope.activities,
+      customers: scope.customers,
+      key: activity.id,
+      projects: scope.projects,
       running: running,
-      totalDuration: totalDuration,
+      services: scope.services,
       start: start,
-      stop: stop
+      stop: stop,
+      totalDuration: totalDuration
     })
   }, scope))
 
@@ -108,9 +111,30 @@ function controller () {
     scope.activities = list
     scope.total = api.total()
   })
-  customerApi.fetchAll().then((customers) => { scope.customers = customers })
-  projectApi.fetchAll().then((projects) => { scope.projects = projects })
-  serviceApi.fetchAll().then((services) => { scope.services = services })
+  customerApi.fetchAll().then((customers) => {
+    scope.customers = customers
+    scope.activities.forEach((activity) => {
+      activity.customer = customers.find((customer) => {
+        return customer.id === activity.customer_id
+      })
+    })
+  })
+  projectApi.fetchAll().then((projects) => {
+    scope.projects = projects
+    scope.activities.forEach((activity) => {
+      activity.project = projects.find((project) => {
+        return project.id === activity.project_id
+      })
+    })
+  })
+  serviceApi.fetchAll().then((services) => {
+    scope.services = services
+    scope.activities.forEach((activity) => {
+      activity.service = services.find((service) => {
+        return service.id === activity.service_id
+      })
+    })
+  })
 
   scope.add = function (e) {
     if (e) {

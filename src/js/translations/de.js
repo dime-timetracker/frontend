@@ -2,6 +2,9 @@
 
 module.exports = {
   translation: {
+    'activity.customer': 'Kunde',
+    'activity.project': 'Projekt',
+    'activity.service': 'Service',
     'activity.description': 'Beschreibung',
     'activity.startstopbutton.start.title': 'Starte Aktivität',
     'activity.startstopbutton.stop.title': 'Stoppe Aktivität',

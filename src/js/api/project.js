@@ -4,12 +4,8 @@ const api = require('../api')
 
 const options = {}
 
-let collection
-
 function fetchAll () {
-  return api.fetchBunch('projects', { with: 100000 }).then((projects) => {
-    collection = projects
-  })
+  return api.fetchBunch('projects', { with: 100000 })
 }
 
 function fetchBunch () {
@@ -17,9 +13,7 @@ function fetchBunch () {
 }
 
 function persist (project, options) {
-  return api.persist('projects', project, options).then((project) => {
-    collection.push(project)
-  })
+  return api.persist('projects', project, options)
 }
 
 function total () {
@@ -30,7 +24,6 @@ function total () {
 }
 
 module.exports = {
-  collection: collection,
   fetchAll: fetchAll,
   fetchBunch: fetchBunch,
   persist: persist,

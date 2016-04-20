@@ -13,13 +13,13 @@ const isFunction = require('lodash/lang/isFunction')
 module.exports = function (options, value) {
   options = options || {}
 
-  var optionList = []
+  let optionList = []
   if (isArray(options.options)) {
-    options.options.map((option) => {
-      optionList.push(m('option', {
+    optionList = options.options.map((option) => {
+      return m('option', {
         selected: option.value === value,
         value: option.htmlValue !== undefined ? option.htmlValue : option.value
-      }, option.label))
+      }, option.label)
     })
   }
 

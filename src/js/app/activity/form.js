@@ -8,9 +8,9 @@ const selectView = require('../utils/views/formfields/select')
 function controller (context) {
   return {
     activity: context.activity,
-    customers: context.customers.map((customer) => { return { key: customer.id, value: customer.name } }),
-    projects: context.projects,
-    services: context.services
+    customers: context.customers.map((customer) => { return { value: customer.id, label: customer.name } }),
+    projects: context.projects.map((project) => { return { value: project.id, label: project.name } }),
+    services: context.services.map((service) => { return { value: service.id, label: service.name } })
   }
 }
 
@@ -30,6 +30,18 @@ function view (scope) {
         'for': id('customer')
       }, t('activity.customer'))),
       m('td', selectView({ id: id('customer'), options: scope.customers }, scope.activity.customer))
+    ]),
+    m('tr', [
+      m('td', m('.label', {
+        'for': id('project')
+      }, t('activity.project'))),
+      m('td', selectView({ id: id('project'), options: scope.projects }, scope.activity.project))
+    ]),
+    m('tr', [
+      m('td', m('.label', {
+        'for': id('service')
+      }, t('activity.service'))),
+      m('td', selectView({ id: id('service'), options: scope.services }, scope.activity.service))
     ])
   ]))
 }

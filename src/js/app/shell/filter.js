@@ -1,21 +1,43 @@
 'use strict'
 
-var m = require('mithril')
-var t = require('../../lib/translation')
-var formatShortcut = require('../../lib/helper/mousetrapCommand')
-var bookmarks = require('./filter/bookmarks')
-var shell = require('../shell')
-var settingsApi = require('../../api/setting')
+const m = require('mithril')
+const t = require('../../lib/translation')
+const debug = require('debug')('app.shell.filter')
+const formatShortcut = require('../../lib/helper/mousetrapCommand')
+const bookmarks = require('./filter/bookmarks')
+const shell = require('../shell')
+const parse = require('../../lib/parser').parse
+const settingsApi = require('../../api/setting')
 
 function onSubmitFilter (e, scope) {
   scope.query = e.target.value
-  scope.collection.reset()
-  scope.collection.initialize({
-    requestAttributes: {
-      filter: scope.query
-    },
-    reset: true
+  const parsers = ['customer', 'project', 'service', 'tags', 'description']
+  const filter = parse(scope.query, parsers)
+  debug('Running filter', filter)
+  scope.listScope.activities = scope.activities.filter((activity) => {
+    if (filter.customer) {
+      if (!activity.customer || filter.customer.alias !== activity.customer.alias) {
+        return false
+      }
+    }
+    if (filter.project) {
+      if (!activity.project || filter.project.alias !== activity.project.alias) {
+        return false
+      }
+    }
+    if (filter.service) {
+      if (!activity.service || filter.service.alias !== activity.service.alias) {
+        return false
+      }
+    }
+    if (filter.description) {
+      if (!activity.description || activity.description.indexOf(filter.description) === -1) {
+        return false
+      }
+    }
+    return true
   })
+  debug(scope.activities)
   scope.blur(e, scope)
 }
 
@@ -31,7 +53,7 @@ function buttonBookmarkView (scope) {
   const isBookmarked = bookmarks.isKnownQuery(scope.query)
   return m('.media-object.pull-right',
     m('span.form-icon-label', {
-      onclick: function () {
+      onclick: () => {
         bookmarks.add('', scope.query)
       }
     }, m('span.icon.icon-bookmark' + (isBookmarked ? '' : '-outline')))
@@ -52,11 +74,12 @@ function inputView (scope) {
 }
 
 function controller (listScope) {
-  var scope = {
-    collection: listScope.collection,
+  const scope = {
+    activities: listScope.activities,
     inputView: inputView,
     icon: 'icon-filter-list',
     htmlId: 'filter',
+    listScope: listScope,
     query: listScope.query || null,
     shortcut: settingsApi.find('shell/shortcuts/focusFilter')
   }
@@ -67,7 +90,7 @@ function controller (listScope) {
     () => { return buttonReportView(scope) },
     () => { return buttonBookmarkView(scope) }
   ]
-  scope.inputView = function () {
+  scope.inputView = () => {
     return inputView(scope)
   }
   shell.registerMouseEvents(scope)

@@ -10,9 +10,7 @@ function persist (activity, options) {
 }
 
 function fetchBunch () {
-  debug('fetching activities')
   let result = api.fetchBunch('activities', options)
-  debug(result)
   return result
 }
 
