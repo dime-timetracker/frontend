@@ -2,8 +2,8 @@
 
 const m = require('mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
-const settingsApi = require('../../api/setting')
-const userSettings = require('../setting').sections
+const settingsApi = require('../../../api/setting')
+const userSettings = require('../../setting').sections
 
 const debug = require('debug')('app.shell')
 

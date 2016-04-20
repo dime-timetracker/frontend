@@ -1,20 +1,20 @@
 'use strict'
 
 const m = require('mithril')
-const t = require('../../lib/translation')
+const t = require('../../../lib/translation')
 const debug = require('debug')('app.shell.filter')
-const formatShortcut = require('../../lib/helper/mousetrapCommand')
+const formatShortcut = require('../../../lib/helper/mousetrapCommand')
 const bookmarks = require('./filter/bookmarks')
 const shell = require('../shell')
-const parse = require('../../lib/parser').parse
-const settingsApi = require('../../api/setting')
+const parse = require('../../../lib/parser').parse
+const settingsApi = require('../../../api/setting')
 
 function onSubmitFilter (e, scope) {
   scope.query = e.target.value
   const parsers = ['customer', 'project', 'service', 'tags', 'description']
   const filter = parse(scope.query, parsers)
   debug('Running filter', filter)
-  scope.listScope.activities = scope.activities.filter((activity) => {
+  scope.listScope.activities = scope.listScope.visibleActivities.filter((activity) => {
     if (filter.customer) {
       if (!activity.customer || filter.customer.alias !== activity.customer.alias) {
         return false
@@ -37,7 +37,7 @@ function onSubmitFilter (e, scope) {
     }
     return true
   })
-  debug(scope.activities)
+  debug('Filter result: ', scope.listScope.activities)
   scope.blur(e, scope)
 }
 

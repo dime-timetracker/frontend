@@ -17,8 +17,8 @@ const buttonView = require('../utils/views/button')
 const card = require('../utils/views/card/default')
 
 const timesliceRunning = require('../timeslice').running
-const shellActivities = require('../shell/activity')
-const shellFilter = require('../shell/filter')
+const shellActivities = require('./shell/activity')
+const shellFilter = require('./shell/filter')
 const itemView = require('./item')
 
 const userSettings = require('../setting').sections
@@ -103,37 +103,43 @@ function controller () {
   debug('Running activity index controller')
   var scope = {
     activities: [],
+    visibleActivities: [],
     customers: [],
     projects: [],
     services: []
   }
-  api.fetchBunch().then((list) => {
+  const promiseActivities = api.fetchBunch().then((list) => {
     scope.activities = list
+    scope.visibleActivities = list
     scope.total = api.total()
   })
-  customerApi.fetchAll().then((customers) => {
+  const promiseCustomers = customerApi.fetchAll().then((customers) => {
     scope.customers = customers
+  })
+  const promiseProjects = projectApi.fetchAll().then((projects) => {
+    scope.projects = projects
+  })
+  const promiseServices = serviceApi.fetchAll().then((services) => {
+    scope.services = services
+  })
+  Promise.all([
+    promiseActivities,
+    promiseCustomers,
+    promiseProjects,
+    promiseServices
+  ]).then(() => {
     scope.activities.forEach((activity) => {
-      activity.customer = customers.find((customer) => {
+      activity.customer = scope.customers.find((customer) => {
         return customer.id === activity.customer_id
       })
-    })
-  })
-  projectApi.fetchAll().then((projects) => {
-    scope.projects = projects
-    scope.activities.forEach((activity) => {
-      activity.project = projects.find((project) => {
+      activity.project = scope.projects.find((project) => {
         return project.id === activity.project_id
       })
-    })
-  })
-  serviceApi.fetchAll().then((services) => {
-    scope.services = services
-    scope.activities.forEach((activity) => {
-      activity.service = services.find((service) => {
+      activity.service = scope.services.find((service) => {
         return service.id === activity.service_id
       })
     })
+    m.redraw()
   })
 
   scope.add = function (e) {

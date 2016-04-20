@@ -1,9 +1,10 @@
-'use strict';
+'use strict'
 
-var m = require('mithril');
-var t = require('../lib/translation');
-var cardView = require('./utils/views/card/default');
-var shellFilter = require('./shell/filter');
+const m = require('mithril')
+const t = require('../lib/translation')
+const cardView = require('./utils/views/card/default')
+const shellFilter = require('./activity/shell/filter')
+const timesliceApi = require('../api/timeslice')
 
 function itemView (scope, timeslice) {
   return m('tr.timeslice', [
@@ -13,7 +14,7 @@ function itemView (scope, timeslice) {
     m('td.activity.service', timeslice.activity.service ? timeslice.activity.service.name : ''),
     m('td.startedAt', timeslice.startedAt),
     m('td.stoppedAt', timeslice.stoppedAt)
-  ]);
+  ])
 }
 
 function headerView (scope) {
@@ -23,20 +24,20 @@ function headerView (scope) {
     m('th.project', t('project')),
     m('th.service', t('service')),
     m('th.startedAt', t('report.table.header.startedAt')),
-    m('th.stoppedAt', t('report.table.header.stoppedAt')),
-  ]));
+    m('th.stoppedAt', t('report.table.header.stoppedAt'))
+  ]))
 }
 
 function controller () {
-  var scope = {
-    collection: timesliceCollection,
-    query: decodeURIComponent((m.route.param('query')+'').replace(/\+/g, '%20'))
-  };
-  scope.collection.initialize({
+  const scope = {
+    collection: [],
+    query: decodeURIComponent((m.route.param('query') + '').replace(/\+/g, '%20'))
+  }
+  timesliceApi.fetchAll({
     filter: scope.query
-  });
+  })
 
-  return scope;
+  return scope
 }
 
 function view (scope) {
@@ -46,16 +47,16 @@ function view (scope) {
       m('table.table', [
         headerView(scope),
         m('tbody',
-          scope.collection.map(function(timeslice) {
-            return itemView(scope, timeslice);
+          scope.collection.map((timeslice) => {
+            return itemView(scope, timeslice)
           })
         )
       ])
     )
-  ]);
+  ])
 }
 
 module.exports = {
   controller: controller,
   view: view
-};
+}
