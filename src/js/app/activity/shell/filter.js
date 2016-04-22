@@ -64,7 +64,7 @@ function inputView (scope) {
   return m('input.form-control.mousetrap', {
     id: scope.htmlId,
     placeholder: t('shell.filter.placeholder', {
-      shortcut: scope.shortcut ? formatShortcut(scope.shortcut.value) : ''
+      shortcut: scope.shortcut ? formatShortcut(scope.shortcut) : ''
     }),
     onfocus: scope.focus,
     onblur: scope.blur,
@@ -81,7 +81,7 @@ function controller (listScope) {
     htmlId: 'filter',
     listScope: listScope,
     query: listScope.query || null,
-    shortcut: settingsApi.find('shell/shortcuts/focusFilter')
+    shortcut: settingsApi.find('shell.shortcuts.focusFilter')
   }
   scope.onSubmit = (e) => { onSubmitFilter(e, scope) }
   scope.blur = (e) => { shell.blur(e, scope) }
