@@ -1,70 +1,54 @@
 'use strict'
 
+const groupBy = require('lodash/collection/groupBy')
 const m = require('mithril')
-const t = require('../../lib/translation')
-const item = require('./item')
-const button = require('../utils/views/button')
+const sortBy = require('lodash/collection/sortBy')
+
 const api = require('../../api/service')
-const filter = require('lodash/collection/filter')
+const button = require('../utils/views/button')
+const item = require('./item')
+const t = require('../../lib/translation')
 
 function controller () {
-  var scope = {
+  const scope = {
     collection: []
   }
-  api.fetchBunch().then((collection) => {
-    scope.collection = collection
+  api.getCollection().then((services) => {
+    scope.collection = sortBy(services, (service) => service.name)
+    m.redraw()
   })
 
   scope.add = (e) => {
     if (e) {
       e.preventDefault()
     }
-    api.persist({})
+    const service = { enabled: true }
+    scope.collection.push(service)
+    api.persist(service)
+    m.redraw()
   }
 
   return scope
 };
 
 function view (scope) {
-  var list = []
-
-  list.push(m('h2', t('services')))
-
-  list.push(m('h3.content-sub-heading', t('service.list.enabled.headline')))
-
-  let collection = filter(scope.collection, { enabled: true })
-  if (collection.length > 0) {
-    collection.forEach((service) => {
-      list.push(m.component(item, {
-        key: 'service-' + service.uuid,
-        service: service,
-        collection: scope.collection
-      }))
-    })
-  } else {
-    list.push(m('p', t('service.list.enabled.empty')))
-  }
-
-  list.push(m('h3.content-sub-heading', t('service.list.disabled.headline')))
-  collection = filter(scope.collection, { enabled: false })
-  if (collection.length > 0) {
-    collection.forEach((service) => {
-      list.push(m.component(item, {
-        key: scope.type + '-' + service.uuid,
-        service: service,
-        collection: scope.collection
-      }))
-    })
-  } else {
-    list.push(m('p', t('service.list.disabled.empty')))
-  }
-
-  list.push(button('service.add', '/service', scope.add))
-
-  return m('div.list-service', list)
-};
-
-module.exports = {
-  controller: controller,
-  view: view
+  const services = groupBy(scope.collection, (service) => {
+    return service.enabled ? 'enabled' : 'disabled'
+  })
+  return m('.services', [
+    m('h2', t('services')),
+    ['enabled', 'disabled'].map((status) => m('.' + status, [
+      m('h3.content-sub-heading', t('service.list.' + status + '.headline')),
+      (services[status] && services[status].length) ? m('.row', services[status].map((service) => {
+        return m.component(item, {
+          key: 'service-' + service.id,
+          service: service,
+          collection: scope.collection
+        })
+      })) : m('p', t('service.list.' + status + '.empty'))
+    ])),
+    button('service.add', '/service', scope.add)
+  ])
 }
+
+module.exports = { controller, view }

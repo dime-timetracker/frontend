@@ -119,7 +119,7 @@ function controller () {
   const promiseProjects = projectApi.getCollection().then((projects) => {
     scope.projects = projects
   })
-  const promiseServices = serviceApi.fetchAll().then((services) => {
+  const promiseServices = serviceApi.getCollection().then((services) => {
     scope.services = services
   })
   Promise.all([
