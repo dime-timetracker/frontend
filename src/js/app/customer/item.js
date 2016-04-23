@@ -1,36 +1,70 @@
 'use strict'
 
 const m = require('mithril')
-const t = require('../../lib/translation')
-const tile = require('../utils/views/tile')
-const form = require('./form')
-const toggleButton = require('../utils/components/toggleButton')
 const api = require('../../api/customer')
+const debug = require('debug')('app.customer.item')
+const t = require('../../lib/translation')
 const userSettings = require('../setting').sections
 
-function controller (args) {
-  var scope = {
-    customer: args.customer,
-    show: false
+const fieldViews = {
+  input: require('../utils/views/formfields/input'),
+  select: require('../utils/views/formfields/select'),
+  boolean: require('../utils/views/formfields/selectBoolean')
+}
+
+function propertyView (scope, property) {
+  if (scope.edit === property.name) {
+    return m('.edit.property.' + property.name, m('.form-row', [
+      m('.affix.prefix', (property.prefix || '')),
+      m('.form-element', [
+        m('label', t('customer.property.' + property.name)),
+        m('.value', [
+          property.formElement({
+            id: scope.key + '-' + property.name,
+            name: property.name,
+            change: (value) => {
+              scope.customer[property.name] = value
+              api.persist(scope.customer)
+              scope.edit = null
+            }
+          }, scope.customer[property.name] || '')
+        ])
+      ]),
+      m('.affix.suffix', (property.postfix || ''))
+    ]))
   }
+  const valueOut = scope.customer[property.name] === 0 || scope.customer[property.name]
+    ? (property.prefix || '') + scope.customer[property.name] + (property.postfix || '')
+    : m('em', t('customer.property.missing', { property: t('customer.property.' + property.name) }))
+  return m('.property.' + property.name, {
+    onclick: () => { scope.edit = property.name },
+    title: t('property.edit', { property: t('customer.property.' + property.name) })
+  }, valueOut)
+}
 
-  scope.onSubmit = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    api.persist(scope.customer)
-    scope.show = false
+function controller (listContext) {
+  const scope = {
+    key: listContext.key,
+    customer: listContext.customer,
+    shortcut: userSettings.find('global.shortcuts.customer'),
+    edit: null
   }
-
-  scope.onDelete = function (e) {
-    if (e) {
-      e.preventDefault()
+  scope.requestStatusChange = (enable) => {
+    const question = t('customer.' + (enable ? 'enable' : 'disable') + '.confirm', {
+      customer: scope.customer.name }
+    )
+    return function () {
+      if (global.window.confirm(question)) {
+        scope.customer.enabled = enable
+        api.persist(scope.customer)
+      }
     }
-
-    const question = t('delete.confirm', { name: scope.customer.toString() })
+  }
+  scope.onRemove = function () {
+    const question = t('customer.remove.confirm', { customer: scope.customer.name || '' })
     if (global.window.confirm(question)) {
-      args.collection.remove(scope.customer)
-      scope.show = false
+      api.remove(scope.customer)
+      m.redraw()
     }
   }
 
@@ -38,38 +72,30 @@ function controller (args) {
 }
 
 function view (scope) {
-  var inner = [
-    scope.customer.name
-  ]
-  if (scope.customer.alias) {
-    inner.push(m('span.badge', userSettings.find('global.shortcuts.customer') + scope.customer.alias))
-  }
-
-  var options = { active: scope.show }
-
-  options.actions = m.component(toggleButton, {
-    iconName: '.icon-edit',
-    currentState: () => {
-      return scope.show
-    },
-    changeState: (state) => {
-      scope.show = state
-    }
-  })
-
-  if (scope.show) {
-    options.subs = m.component(form, {
-      key: 'form-' + scope.customer.uuid,
-      customer: scope.customer,
-      onSubmit: scope.onSubmit,
-      onDelete: scope.onDelete
-    })
-  }
-
-  return tile(inner, options)
+  return m('.col-md-3.col-sm-6', { key: scope.key }, m('.card', m('.card-main', [
+    m('.card-inner', {
+      onmouseleave: () => {
+        if (scope.edit) { debug('quit editing ', scope.customer.name); scope.edit = null }
+      }
+    }, [
+      m('p.card-heading', { title: scope.customer.name }, propertyView(scope, {
+        name: 'name',
+        formElement: fieldViews.input
+      })), m('p.card-content', [
+        propertyView(scope, {
+          name: 'alias',
+          formElement: fieldViews.input,
+          prefix: scope.shortcut
+        })
+      ])
+    ]),
+    m('.card-action', [
+      m('a.btn.btn-flat', { onclick: scope.onRemove }, t('Remove')),
+      scope.customer.enabled
+      ? m('a.btn.btn-flat', { onclick: scope.requestStatusChange(false) }, t('customer.disable'))
+      : m('a.btn.btn-flat', { onclick: scope.requestStatusChange(true) }, t('customer.enable'))
+    ])
+  ])))
 }
 
-module.exports = {
-  controller: controller,
-  view: view
-}
+module.exports = { controller, view }

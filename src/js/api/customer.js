@@ -2,6 +2,7 @@
 
 const m = require('mithril')
 const api = require('../api')
+const arrayRemove = require('lodash/array/remove')
 
 let collection = m.prop([])
 
@@ -14,7 +15,11 @@ function persist (customer, options) {
 }
 
 function remove (customer) {
-  return api.remove('customers', customer.id)
+  return api.remove('customers', customer.id).then(() => {
+    arrayRemove(collection, function (item) {
+      return item.id === customer.id
+    })
+  })
 }
 
 function getCollection () {

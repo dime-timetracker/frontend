@@ -1,63 +1,55 @@
 'use strict'
 
+const groupBy = require('lodash/collection/groupBy')
 const m = require('mithril')
-const t = require('../../lib/translation')
-const item = require('./item')
-const button = require('../utils/views/button')
+const sortBy = require('lodash/collection/sortBy')
+
 const api = require('../../api/customer')
-const filter = require('lodash/collection/filter')
+const button = require('../utils/views/button')
+const item = require('./item')
+const t = require('../../lib/translation')
 
 function controller () {
-  var scope = {
+  const scope = {
     collection: []
   }
-  api.fetchBunch().then((collection) => {
-    scope.collection = collection
+  api.getCollection().then((customers) => {
+    scope.collection = sortBy(customers, (customer) => customer.name)
+    m.redraw()
   })
 
   scope.add = (e) => {
     if (e) {
       e.preventDefault()
     }
-    api.persist({})
+    const newCustomer = { enabled: true }
+    api.persist(newCustomer).then((customer) => {
+      scope.collection.unshift(customer)
+      m.redraw()
+    })
   }
 
   return scope
 };
 
 function view (scope) {
-  const enabledCustomers = filter(scope.collection, { enabled: true })
-  const disabledCustomers = filter(scope.collection, { enabled: false })
-
-  return m('div.list-customer', [
+  const customers = groupBy(scope.collection, (customer) => {
+    return customer.enabled ? 'enabled' : 'disabled'
+  })
+  return m('.customers', [
     m('h2', t('customers')),
-    m('.enabled', [
-      m('h3.content-sub-heading', t('customer.list.enabled.headline')),
-      enabledCustomers.length > 0
-      ? enabledCustomers.map((customer) => {
+    ['enabled', 'disabled'].map((status) => m('.' + status, [
+      m('h3.content-sub-heading', t('customer.list.' + status + '.headline')),
+      (customers[status] && customers[status].length) ? m('.row', customers[status].map((customer) => {
         return m.component(item, {
-          key: 'customer-' + customer.uuid,
+          key: 'customer-' + customer.id,
           customer: customer,
           collection: scope.collection
         })
-      }) : m('p', t('customer.list.enabled.empty'))
-    ]),
-    m('.disabled', [
-      m('h3.content-sub-heading', t('customer.list.disabled.headline')),
-      disabledCustomers.length > 0
-      ? disabledCustomers.map((customer) => {
-        return m.component(item, {
-          key: 'customer-' + customer.uuid,
-          customer: customer,
-          collection: scope.collection
-        })
-      }) : m('p', t('customer.list.disabled.empty'))
-    ]),
+      })) : m('p', t('customer.list.' + status + '.empty'))
+    ])),
     button('customer.add', '/customer', scope.add)
   ])
 }
 
-module.exports = {
-  controller: controller,
-  view: view
-}
+module.exports = { controller, view }
