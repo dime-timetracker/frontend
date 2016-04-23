@@ -1,32 +1,26 @@
 'use strict'
 
+const m = require('mithril')
 const api = require('../api')
 
-const options = {}
+let collection = m.prop([])
 
-let collection
-
-function fetchBunch () {
-  return api.fetchBunch('tags', { with: 100000 }).then((tags) => {
-    collection = tags
-  })
+function fetchAll () {
+  return api.fetchBunch('customers', { with: 100000 }).then(collection)
 }
 
 function persist (tag, options) {
-  return api.persist('tags', tag, options).then((tag) => {
-    collection.push(tag)
+  return api.persist('tags', tag, options)
+}
+
+function remove (customer) {
+  return api.remove('customers', customer.id)
+}
+
+function getCollection () {
+  return new Promise(function (resolve, reject) {
+    collection().length ? resolve(collection()) : fetchAll().then(resolve)
   })
 }
 
-function total () {
-  if (!options.pagination) {
-    fetchBunch()
-  }
-  return options.total
-}
-module.exports = {
-  collection: collection,
-  fetchBunch: fetchBunch,
-  persist: persist,
-  total: total
-}
+module.exports = { fetchAll, getCollection, persist, remove }

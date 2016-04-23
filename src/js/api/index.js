@@ -44,7 +44,18 @@ function fetchBunch (resource, options) {
   })
 }
 
+function remove (resource, id) {
+  return m.request({
+    method: 'DELETE',
+    url: baseUrl + '/api/' + resource + '/' + id,
+    config: function (xhr) {
+      authorize.setup(xhr)
+    }
+  })
+}
+
 module.exports = {
   persist: persist,
-  fetchBunch: fetchBunch
+  fetchBunch: fetchBunch,
+  remove: remove
 }
