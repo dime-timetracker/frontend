@@ -1,18 +1,26 @@
 'use strict'
 
+const groupBy = require('lodash/collection/groupBy')
 const m = require('mithril')
-const t = require('../../lib/translation')
-const item = require('./item')
-const button = require('../utils/views/button')
+const map = require('lodash/collection/map')
+const sortBy = require('lodash/collection/sortBy')
+
 const api = require('../../api/project')
-const filter = require('lodash/collection/filter')
+const customerApi = require('../../api/customer')
+const item = require('./item')
+const t = require('../../lib/translation')
 
 function controller () {
-  var scope = {
+  const scope = {
     collection: []
   }
-  api.fetchBunch().then((collection) => {
-    scope.collection = collection
+  api.fetchAll().then((projects) => {
+    customerApi.fetchAll().then((customers) => {
+      scope.collection = sortBy(projects, (project) => project.name).map((project) => {
+        project.customer = customers.find((customer) => customer.id === project.customer_id)
+        return project
+      })
+    })
   })
 
   scope.add = (e) => {
@@ -26,45 +34,22 @@ function controller () {
 };
 
 function view (scope) {
-  var list = []
-
-  list.push(m('h2', t('projects')))
-
-  list.push(m('h3.content-sub-heading', t('project.list.enabled.headline')))
-
-  let collection = filter(scope.collection, { enabled: true })
-  if (collection.length > 0) {
-    collection.forEach((project) => {
-      list.push(m.component(item, {
-        key: 'project-' + project.uuid,
-        project: project,
-        collection: scope.collection
-      }))
-    })
-  } else {
-    list.push(m('p', t('project.list.enabled.empty')))
-  }
-
-  list.push(m('h3.content-sub-heading', t('project.list.disabled.headline')))
-  collection = filter(scope.collection, { enabled: false })
-  if (collection.length > 0) {
-    collection.forEach((project) => {
-      list.push(m.component(item, {
-        key: scope.type + '-' + project.uuid,
-        project: project,
-        collection: scope.collection
-      }))
-    })
-  } else {
-    list.push(m('p', t('project.list.disabled.empty')))
-  }
-
-  list.push(button('project.add', '/project', scope.add))
-
-  return m('div.list-project', list)
+  const projects = groupBy(scope.collection, (project) => {
+    return project.enabled ? 'enabled' : 'disabled'
+  })
+  return m('.projects', [
+    m('h2', t('projects')),
+    ['enabled', 'disabled'].map((status) => m('.' + status, [
+      m('h3.content-sub-heading', t('project.list.' + status + '.headline')),
+      projects[status].length ? m('.row', projects[status].map((project) => {
+        return m.component(item, {
+          key: 'project-' + project.id,
+          project: project,
+          collection: scope.collection
+        })
+      })) : m('p', t('project.list.' + status + '.empty'))
+    ]))
+  ])
 };
 
-module.exports = {
-  controller: controller,
-  view: view
-}
+module.exports = { controller, view }
