@@ -113,10 +113,10 @@ function controller () {
     scope.visibleActivities = list
     scope.total = api.total()
   })
-  const promiseCustomers = customerApi.fetchAll().then((customers) => {
+  const promiseCustomers = customerApi.getCollection().then((customers) => {
     scope.customers = customers
   })
-  const promiseProjects = projectApi.fetchAll().then((projects) => {
+  const promiseProjects = projectApi.getCollection().then((projects) => {
     scope.projects = projects
   })
   const promiseServices = serviceApi.fetchAll().then((services) => {

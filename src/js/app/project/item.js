@@ -2,7 +2,7 @@
 
 const m = require('mithril')
 const api = require('../../api/project')
-const debug = require('debug')('app.project.item')
+const customerApi = require('../../api/customer')
 const t = require('../../lib/translation')
 const userSettings = require('../setting').sections
 
@@ -14,33 +14,79 @@ const fieldViews = {
 
 function propertyView (scope, property) {
   if (scope.edit === property.name) {
-    return m('.edit.property.' + property.name, {
-    }, [
-      m('label', t('project.property.' + property.name)),
-      m('.value', {
-      }, property.formElement({
-        id: scope.key + '-' + property.name,
-        name: property.name,
-        change: (value) => {
-          scope.project[property.name] = value
-          api.persist(scope.project)
-        }
-      }, scope.project[property.name]))
-    ])
+    return m('.edit.property.' + property.name, m('.form-row', [
+      m('.affix.prefix', (property.prefix || '')),
+      m('.form-element', [
+        m('label', t('project.property.' + property.name)),
+        m('.value', [
+          property.formElement({
+            id: scope.key + '-' + property.name,
+            name: property.name,
+            change: (value) => {
+              scope.project[property.name] = value
+              api.persist(scope.project)
+              scope.edit = null
+            }
+          }, scope.project[property.name] || '')
+        ])
+      ]),
+      m('.affix.suffix', (property.postfix || ''))
+    ]))
   }
+  const valueOut = scope.project[property.name] === 0 || scope.project[property.name]
+    ? (property.prefix || '') + scope.project[property.name] + (property.postfix || '')
+    : m('em', t('project.property.missing', { property: t('project.property.' + property.name) }))
   return m('.property.' + property.name, {
     onclick: () => { scope.edit = property.name },
     title: t('property.edit', { property: t('project.property.' + property.name) })
-  }, (property.prefix || '') + scope.project[property.name] + (property.postfix || ''))
+  }, valueOut)
+}
+
+function relationView (scope, property) {
+  if (scope.edit === property.name) {
+    return m('.edit.property.' + property.name, m('.form-row', [
+      m('.affix.prefix', (property.prefix || '')),
+      m('.form-element', [
+        m('label', t('project.property.' + property.name)),
+        m('.value', property.formElement({
+          id: scope.key + '-' + property.name,
+          name: property.name,
+          options: property.relatedCollection.map((item) => {
+            return { value: item.id, label: item.name, item: item }
+          }),
+          change: (value) => {
+            scope.project[property.name + '_id'] = value
+            scope.project[property.name] = property.relatedCollection.filter((item) => {
+              return '' + item.id === value
+            })[0]
+            api.persist(scope.project)
+            scope.edit = null
+          }
+        }, scope.project[property.name + '_id']))
+      ]),
+      m('.affix.suffix', (property.postfix || ''))
+    ]))
+  }
+  const valueOut = scope.project[property.name]
+    ? scope.project[property.name].name
+    : m('em', t('project.property.missing', { property: t('project.property.' + property.name) }))
+  return m('.property.' + property.name, {
+    onclick: () => { scope.edit = property.name },
+    title: t('property.edit', { property: t('project.property.' + property.name) })
+  }, valueOut)
 }
 
 function controller (listContext) {
   const scope = {
+    edit: null,
     key: listContext.key,
     project: listContext.project,
-    shortcut: userSettings.find('global.shortcuts.project'),
-    edit: null
+    customers: [],
+    shortcut: userSettings.find('global.shortcuts.project')
   }
+  customerApi.getCollection().then((customers) => {
+    scope.customers = customers
+  })
   scope.requestStatusChange = (enable) => {
     const question = t('project.' + (enable ? 'enable' : 'disable') + '.confirm', {
       project: scope.project.name }
@@ -52,6 +98,12 @@ function controller (listContext) {
       }
     }
   }
+  scope.onRemove = function () {
+    const question = t('project.remove.confirm', { project: scope.project.name || '' })
+    if (global.window.confirm(question)) {
+      api.remove(scope.project)
+    }
+  }
 
   return scope
 }
@@ -60,7 +112,7 @@ function view (scope) {
   return m('.col-md-3.col-sm-6', { key: scope.key }, m('.card', m('.card-main', [
     m('.card-inner', {
       onmouseleave: () => {
-        if (scope.edit) { debug('quit editing ', scope.project.name); scope.edit = null }
+        if (scope.edit) { scope.edit = null }
       }
     }, [
       m('p.card-heading', { title: scope.project.name }, propertyView(scope, {
@@ -72,19 +124,20 @@ function view (scope) {
           formElement: fieldViews.input,
           prefix: scope.shortcut
         }),
-        m('a', {
-          config: m.route,
-          href: '/customer/' + scope.project.customer.id
-        }, scope.project.customer.name),
+        relationView(scope, {
+          name: 'customer',
+          formElement: fieldViews.select,
+          relatedCollection: scope.customers
+        }),
         propertyView(scope, {
           name: 'rate',
           formElement: fieldViews.input,
-          postfix: ' ' + t('default.currency')
+          postfix: '\u00a0' + t('default.currency')
         })
       ])
     ]),
     m('.card-action', [
-      m('a.btn.btn-flat', { onclick: scope.onDelete }, t('Delete')),
+      m('a.btn.btn-flat', { onclick: scope.onRemove }, t('Remove')),
       scope.project.enabled
       ? m('a.btn.btn-flat', { onclick: scope.requestStatusChange(false) }, t('project.disable'))
       : m('a.btn.btn-flat', { onclick: scope.requestStatusChange(true) }, t('project.enable'))
