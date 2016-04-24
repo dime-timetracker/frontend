@@ -27,12 +27,12 @@
   },
   "scripts": {
     "build:js": "node_modules/browserify-middleware/node_modules/browserify/bin/cmd.js src/app.js > public/app.js",
-    "build:css": "node_modules/.bin/stylus src/app.styl -m -u nib -o public/css/dime.css",
+    "build:css": "node_modules/.bin/stylus src/app.styl -m -u nib -o public/dime.css",
     "build": "npm run build:js && npm run build:css",
     "test": "mocha src/**/*.test.js",
     "watch": "npm run watch:js & npm run watch:css",
     "watch:js": "node_modules/.bin/watchify src/app.js -o public/app.js --debug --verbose",
-    "watch:css": "node_modules/.bin/stylus src/app.styl -m -u nib -w -o public/css/dime.css",
+    "watch:css": "node_modules/.bin/stylus src/app.styl -m -u nib -w -o public/dime.css",
     "watch:test": "node_modules/.bin/mocha -w src/**/*.test.js"
   }
 }

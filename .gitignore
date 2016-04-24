@@ -1,8 +1,8 @@
 /nbproject
 /node_modules
-/.sass-cache
 /dist
-public/css/*.css
-public/js/*
-*.map
-src/js/parameters.js
+
+public/*.css
+public/*.js
+public/*.map
+src/parameters.js
