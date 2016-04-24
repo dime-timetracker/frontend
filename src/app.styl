@@ -1,0 +1,153 @@
+// our css is based on http://daemonite.github.io/material/
+@import "daemonite"
+// we want vendor prefixes to be added automatically via http://tj.github.io/nib/
+@import "nib"
+
+@import "app/activity/index"
+
+.header
+  .nav
+    li
+      ul
+        background: #4CAF50
+        position: absolute
+        width: 100%
+
+      &:hover
+        ul.hide
+          display: inherit
+
+      &.active, &:hover
+        background: #3C9F40
+
+
+.collection
+  .list-item
+    position: relative
+
+    .title
+      font-size: 1.2rem
+
+    .description
+      color: #9E9E9E
+      font-size: .8rem
+
+      &:before
+        content: '-'
+        padding: 0 .8em
+
+    p
+      margin: 0px
+
+    .secondary-content
+      position: absolute
+      right: 16px
+
+.form-inline
+  background: #F5F5F5
+  border-bottom: dashed 1px black
+  color: #26A69A
+  padding: 1.3em 0
+
+  .form-group
+    margin: 0 1em
+    text-align: left
+
+    label
+      display: block
+      font-size: 0.9em
+      line-height: 1em
+      margin-top: 1em
+
+  .push-down
+    margin-top: 1.3em
+
+.nav
+  .tag-badges
+    a
+      display: inline
+      padding: 2px 4px
+      position: inherit
+
+.tile-action-show
+  z-index: 2
+
+.hide
+  display: none
+
+.fbtn-container
+  bottom: 34px
+
+.tile
+  .active
+    margin-top: 0 !important
+    margin-bottom: 24px !important
+
+.customers,
+.projects,
+.services
+  .card
+    .card-main
+      width: 100%
+
+      .edit
+        margin-left: -4px
+        margin-right: -4px
+
+        .form-row
+          border: 1px solid #9e9e9e
+          padding: 0 0.2rem
+          margin-bottom: -3px
+
+          .affix
+            display: inline-block
+            vertical-align: text-top
+
+          .form-element
+            display: inline-block
+
+            label
+              background: white
+              border: 1px solid #9e9e9e
+              border-bottom: none
+              font-size: 0.8rem
+              line-height: 1rem
+              margin: -1rem 0 0 0
+              padding: 0 0.3rem
+              position: absolute
+
+            input
+              border: none
+              height: 24px
+              padding-top: 5px
+
+            select
+              border: none
+              height: 24px
+              padding-bottom: 0px
+              padding-top: 0px
+
+              option
+                height: 24px
+
+        &.property.rate
+          input
+            text-align: right
+            width: 2em
+
+      .card-heading
+        overflow: hidden
+
+        div
+          overflow: hidden
+          text-overflow: ellipsis
+          white-space: nowrap
+
+        .edit
+          overflow: visible
+          input
+            height: 28px
+
+.report
+  table
+    font-size: 80%
