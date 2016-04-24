@@ -1,6 +1,6 @@
 'use strict';
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 var mq = require('mithril-query');
 
 var fakeWindow = {

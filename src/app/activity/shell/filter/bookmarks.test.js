@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 global.window = m.deps({
   dimeDebug: function () {
     return function () {}

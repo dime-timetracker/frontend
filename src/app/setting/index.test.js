@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const mq = require('mithril-query')
 
 const expect = require('expect.js')

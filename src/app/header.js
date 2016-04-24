@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const menu = require('./menu')
 
 const settings = require('../api/setting')

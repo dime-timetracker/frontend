@@ -1,6 +1,6 @@
-===========================
-DIME frontend Documentation
-===========================
+=============
+DIME frontend
+=============
 
 DIME frontend is - as it's name suggests - a frontend for a DIME timetracking
 server.
@@ -13,6 +13,9 @@ Development
 
 We are using the power of [Mithril](https://lhorie.github.io/mithril/), which is
 a great framework to writefrontend Javascript using functional programming.
+
+To find the origin of a specific element in your DOM, you may add ``?mdebug`` as
+a URL parameter and you will see it as a title on hover after reload.
 
 Our design is based on [Daemonite](http://daemonite.github.io/material/), that
 we converted to [Stylus](http://stylus-lang.com/) and all our styles are written

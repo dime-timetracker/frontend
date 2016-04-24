@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const api = require('../../api/project')
 const customerApi = require('../../api/customer')
 const t = require('../../lib/translation')

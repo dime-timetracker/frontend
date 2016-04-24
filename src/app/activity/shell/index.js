@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
 const settingsApi = require('../../../api/setting')
 const userSettings = require('../../setting').sections

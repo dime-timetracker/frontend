@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 
 const authorize = require('../lib/authorize')
 const baseUrl = require('../lib/helper/baseUrl')()

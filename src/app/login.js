@@ -1,6 +1,6 @@
 'use strict';
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 var t = require('../lib/translation');
 var authorize = require('../lib/authorize');
 var card = require('./utils/views/card/default');

@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 require('./parameters')
 global.window.dimeDebug = require('debug')
 const settingsApi = require('./api/setting')

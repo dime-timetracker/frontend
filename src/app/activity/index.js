@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const moment = require('moment')
 const t = require('../../lib/translation')
 

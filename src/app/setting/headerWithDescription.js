@@ -1,6 +1,6 @@
 'use strict';
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 var t = require('../../lib/translation');
 
 var headerWithDescription = function (configPath) {

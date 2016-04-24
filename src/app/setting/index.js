@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
 const headerWithDescription = require('./headerWithDescription')
 const userSettings = m.prop([])

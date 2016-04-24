@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const api = require('../api')
 const arrayRemove = require('lodash/array/remove')
 

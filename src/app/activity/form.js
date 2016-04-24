@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
 const inputView = require('../utils/views/formfields/input')
 const selectView = require('../utils/views/formfields/select')

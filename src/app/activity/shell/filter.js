@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const t = require('../../../lib/translation')
 const debug = require('debug')('app.shell.filter')
 const formatShortcut = require('../../../lib/helper/mousetrapCommand')

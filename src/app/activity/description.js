@@ -1,6 +1,6 @@
 'use strict';
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 var _ = require('lodash');
 
 var relations = ['customer', 'project', 'service'];
