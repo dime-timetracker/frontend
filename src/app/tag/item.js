@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
 const tile = require('../utils/views/tile')
 const form = require('./form')

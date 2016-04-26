@@ -12,7 +12,7 @@
  * });
  */
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 var isFunction = require('lodash/lang/isFunction');
 var forOwn = require('lodash/object/forOwn');
 var t = require('../../../lib/translation');

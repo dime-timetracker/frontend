@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const isArray = require('lodash/lang/isArray')
 const isFunction = require('lodash/lang/isFunction')
 

@@ -1,6 +1,6 @@
 'use strict'
 
-const m = require('mithril')
+const m = require('src/lib/mithril')
 const isNumber = require('lodash/lang/isNumber')
 const isUndefined = require('lodash/lang/isUndefined')
 const moment = require('moment')

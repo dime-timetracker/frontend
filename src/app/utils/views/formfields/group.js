@@ -2,7 +2,7 @@
 
 var isUndefined = require('lodash/lang/isUndefined');
 var isString    = require('lodash/lang/isString');
-var m           = require('mithril');
+var m           = require('src/lib/mithril');
 
 /**
  * Create a form-group.

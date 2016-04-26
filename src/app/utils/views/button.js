@@ -1,6 +1,6 @@
 'use strict';
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 var t = require('../../../lib/translation');
 var isFunction = require('lodash/lang/isFunction');
 var isString = require('lodash/lang/isString');

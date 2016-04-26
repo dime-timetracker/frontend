@@ -1,6 +1,6 @@
 'use strict';
 
-var m = require('mithril');
+var m = require('src/lib/mithril');
 
 module.exports = function(content, footer, title) {
   var inner = [];
