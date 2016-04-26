@@ -1,34 +1,34 @@
-'use strict';
+'use strict'
 
-var m = require('src/lib/mithril');
-var timesliceItem = require('./timesliceItem');
+var m = require('src/lib/mithril')
+var timesliceItem = require('./item')
 
 function controller (args) {
-  var scope = {};
+  var scope = {}
 
   scope.add = function (e) {
     if (e) {
-      e.preventDefault();
+      e.preventDefault()
     }
-    args.activity.addTimeslice();
-  };
+    args.activity.addTimeslice()
+  }
 
   scope.items = args.activity.timeslices.map(function (timeslice) {
     return m.component(timesliceItem, {
       key: timeslice.uuid,
       activity: args.activity,
       timeslice: timeslice
-    });
-  });
+    })
+  })
 
-  return scope;
+  return scope
 }
 
 function view (scope) {
-  return m('.tiles', scope.items);
+  return m('.tiles', scope.items)
 }
 
 module.exports = {
   controller: controller,
   view: view
-};
+}

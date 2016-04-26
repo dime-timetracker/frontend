@@ -10,7 +10,7 @@ const grid = require('../utils/views/grid')
 const tile = require('../utils/views/tile')
 const settingsApi = require('../../api/setting')
 
-const timesliceList = require('./timesliceList')
+const timesliceList = require('./timeslice/')
 
 const btnStartStop = require('./btnStartStop')
 
