@@ -20,25 +20,25 @@ function view (scope) {
   }
   return m('.table-responsive', m('table', [
     m('tr', [
-      m('td', m('.label', {
+      m('th', m('label', {
         'for': id('description')
       }, t('activity.description'))),
       m('td', inputView({ id: id('description') }, scope.activity.description))
     ]),
     m('tr', [
-      m('td', m('.label', {
+      m('th', m('label', {
         'for': id('customer')
       }, t('activity.customer'))),
       m('td', selectView({ id: id('customer'), options: scope.customers }, scope.activity.customer))
     ]),
     m('tr', [
-      m('td', m('.label', {
+      m('th', m('label', {
         'for': id('project')
       }, t('activity.project'))),
       m('td', selectView({ id: id('project'), options: scope.projects }, scope.activity.project))
     ]),
     m('tr', [
-      m('td', m('.label', {
+      m('th', m('label', {
         'for': id('service')
       }, t('activity.service'))),
       m('td', selectView({ id: id('service'), options: scope.services }, scope.activity.service))
