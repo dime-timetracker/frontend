@@ -100,6 +100,8 @@ module.exports = {
     'tag.list.disabled.headline': 'Inaktive Tags',
     'tag.list.enabled.empty': 'Ich habe keine aktiven Tags gefunden. Leg Tags an, um Ordnung in deine Aktivitäten zu bringen!',
     'tag.list.enabled.headline': 'Aktive Tags',
+    'timeslice.property.started_at': 'Beginn',
+    'timeslice.property.stopped_at': 'Ende',
 
     'yes': 'ja',
     'no': 'nein',

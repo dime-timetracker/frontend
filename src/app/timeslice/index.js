@@ -20,8 +20,16 @@ function getEnd (timeslice) {
   return timeslice.stopped_at ? moment(timeslice.stopped_at, timestampFormat) : now()
 }
 
+function setEnd (timeslice, value) {
+  timeslice.stopped_at = moment(value).format(timestampFormat)
+}
+
 function getStart (timeslice) {
   return moment(timeslice.started_at, timestampFormat)
+}
+
+function setStart (timeslice, value) {
+  timeslice.started_at = moment(value).format(timestampFormat)
 }
 
 function duration (timeslice, precision) {
@@ -41,8 +49,10 @@ function duration (timeslice, precision) {
 
 module.exports = {
   now: now,
-  getStart: getStart,
   getEnd: getEnd,
+  getStart: getStart,
+  setEnd: setEnd,
+  setStart: setStart,
   duration: duration,
   running: (t) => { return !t.stopped_at }
 }
