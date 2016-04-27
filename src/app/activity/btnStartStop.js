@@ -21,8 +21,7 @@ function controller (context) {
   const scope = {
     activity: context.activity,
     getTotalDuration: context.totalDuration,
-    running: context.running(context.activity),
-    duration: context.totalDuration(context.activity)
+    running: context.running(context.activity)
   }
 
   if (!scope.running && scope.refreshInterval) {
@@ -54,7 +53,9 @@ function view (scope) {
   const title = scope.running ? 'activity.startstopbutton.stop.title' : 'activity.startstopbutton.start.title'
 
   return m('a.btn.btn-flat' + color, { title: t(title), onclick: scope.action },
-    m('span' + icon), ' ', m('span.duration', { config: config }, durationView(scope.duration))
+    m('span' + icon), ' ', m('span.duration', { config: config },
+      durationView(scope.duration || scope.getTotalDuration(scope.activity))
+    )
   )
 };
 

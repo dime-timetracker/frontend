@@ -1,10 +1,12 @@
 'use strict'
 
-var m = require('src/lib/mithril')
-var timesliceItem = require('./item')
+const m = require('src/lib/mithril')
+const timesliceItem = require('./item')
 
 function controller (args) {
-  var scope = {}
+  const scope = {
+    items: args.activity.timeslices
+  }
 
   scope.add = function (e) {
     if (e) {
@@ -13,22 +15,15 @@ function controller (args) {
     args.activity.addTimeslice()
   }
 
-  scope.items = args.activity.timeslices.map(function (timeslice) {
-    return m.component(timesliceItem, {
-      key: timeslice.uuid,
-      activity: args.activity,
-      timeslice: timeslice
-    })
-  })
-
   return scope
 }
 
 function view (scope) {
-  return m('.timeslices.tile-wrap', m('tiles', scope.items))
+  return m('.timeslices.tile-wrap', m('tiles', scope.items.map((timeslice) => m.component(timesliceItem, {
+    key: timeslice.uuid,
+    activity: scope.activity,
+    timeslice: timeslice
+  }))))
 }
 
-module.exports = {
-  controller: controller,
-  view: view
-}
+module.exports = { controller, view }

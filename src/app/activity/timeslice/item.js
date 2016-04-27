@@ -12,23 +12,25 @@ const running = require('src/app/timeslice').running
 const setEnd = require('src/app/timeslice').setEnd
 const setStart = require('src/app/timeslice').setStart
 const tile = require('src/app/utils/views/tile')
+const timesliceApi = require('src/api/timeslice')
 
-function controller (args) {
+function controller (listContext) {
   var scope = {
-    timeslice: args.timeslice,
+    timeslice: listContext.timeslice,
     changed: false,
-    formatStart: (format = undefined) => getStart(args.timeslice).format(format),
-    formatEnd: (format = undefined) => getEnd(args.timeslice).format(format),
-    formatDuration: () => duration(getDuration(args.timeslice)),
-    isRunning: () => running(args.timeslice)
+    formatStart: (format = undefined) => getStart(listContext.timeslice).format(format),
+    formatEnd: (format = undefined) => getEnd(listContext.timeslice).format(format),
+    formatDuration: () => duration(getDuration(listContext.timeslice)),
+    isRunning: () => running(listContext.timeslice)
   }
 
   scope.save = function (e) {
     if (e) {
       e.preventDefault()
     }
-    args.activity.timeslices.persist(scope.timeslice).then(function () {
+    timesliceApi.persist(scope.timeslice).then(() => {
       scope.changed = false
+      m.redraw()
     })
   }
 
@@ -38,7 +40,14 @@ function controller (args) {
     }
     var question = t('Do you really want to delete "[name]"?', { name: scope.formatDuration() })
     if (global.window.confirm(question)) {
-      args.activity.removeTimeslice(scope.timeslice)
+      timesliceApi.remove(scope.timeslice).then(() => {
+        scope.activity.timeslices.forEach((timeslice, key) => {
+          if (timeslice.id === scope.timeslice.id) {
+            delete scope.activity.timeslices[key]
+          }
+        })
+        m.redraw()
+      })
     }
   }
 
@@ -57,6 +66,7 @@ function view (scope) {
         change: function (value) {
           setStart(scope.timeslice, value)
           if (scope.timeslice.started_at && scope.timeslice.stopped_at) {
+            scope.timeslice.duration = null
             scope.timeslice.duration = getDuration(scope.timeslice)
           }
           scope.changed = true
@@ -72,6 +82,7 @@ function view (scope) {
         change: function (value) {
           setEnd(scope.timeslice, value)
           if (scope.timeslice.started_at && scope.timeslice.stopped_at) {
+            scope.timeslice.duration = null
             scope.timeslice.duration = getDuration(scope.timeslice)
           }
           scope.changed = true
