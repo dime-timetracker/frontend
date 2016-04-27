@@ -8,8 +8,21 @@ server.
 This is under heavy development, but should be ready for production until Summer
 2016.
 
+Installation
+============
+
+Clone repository, run ``npm install``.
+
+Copy ``src/parameters.js.template`` to ``src/parameters.js`` and edit server URL
+in there.
+
+Build everything by running ``npm run build`` and open your browser to start using Dime.
+
 Development
 ===========
+
+To build everything on file change, just run ``npm run watch``, which packs your
+js via browserify and converts your stylus files to css.
 
 We are using the power of [Mithril](https://lhorie.github.io/mithril/), which is
 a great framework to writefrontend Javascript using functional programming.
@@ -25,4 +38,4 @@ Btw. you may convert existing CSS to Stylus by calling
 
     node_modules/.bin/stylus -C <path/to/your/css> <path/to/your/styl>``
 
-and that's what we did with Daemonite), but you should not need that.
+(and that's what we did with Daemonite), but you should not need that.
