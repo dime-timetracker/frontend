@@ -52,6 +52,8 @@ function view (scope) {
       input({
         type: 'datetime-local',
         inline: true,
+        name: 'start',
+        value: scope.formatStart('YYYY-MM-DDTHH:mm:ss'),
         change: function (value) {
           setStart(scope.timeslice, value)
           if (scope.timeslice.started_at && scope.timeslice.stopped_at) {
@@ -59,13 +61,14 @@ function view (scope) {
           }
           scope.changed = true
         }
-      }, scope.formatStart())
+      })
     ]),
     ' - ',
     m('span.end', [
       input({
         type: 'datetime-local',
         inline: true,
+        value: !scope.isRunning() ? scope.formatEnd('YYYY-MM-DDTHH:mm:ss') : '',
         change: function (value) {
           setEnd(scope.timeslice, value)
           if (scope.timeslice.started_at && scope.timeslice.stopped_at) {
@@ -73,7 +76,7 @@ function view (scope) {
           }
           scope.changed = true
         }
-      }, !scope.isRunning() ? scope.formatEnd() : '')
+      })
     ])
   ]
 

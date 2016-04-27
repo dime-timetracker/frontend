@@ -23,10 +23,14 @@ module.exports = function (options, value) {
     value = options.value
   }
   const attributes = {
-    id: options.id,
-    name: options.name,
     type: options.type || 'text',
     value: value
+  }
+  if (options.id) {
+    attributes.id = options.id
+  }
+  if (options.name) {
+    attributes.name = options.name
   }
   if (options.placeholder) {
     attributes.placeholder = options.placeholder

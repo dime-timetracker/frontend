@@ -25,7 +25,7 @@ function controller (args) {
 }
 
 function view (scope) {
-  return m('.tiles', scope.items)
+  return m('.timeslices.tile-wrap', m('tiles', scope.items))
 }
 
 module.exports = {
