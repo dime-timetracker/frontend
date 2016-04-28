@@ -18,6 +18,9 @@ function view (scope) {
   function id (field) {
     return 'activity-' + field + '-' + scope.activity.id
   }
+  const customerId = scope.activity.customer ? scope.activity.customer.id : null
+  const projectId = scope.activity.project ? scope.activity.project.id : null
+  const serviceId = scope.activity.service ? scope.activity.service.id : null
   return m('.table-responsive', m('table', [
     m('tr', [
       m('th', m('label', {
@@ -29,19 +32,19 @@ function view (scope) {
       m('th', m('label', {
         'for': id('customer')
       }, t('activity.customer'))),
-      m('td', selectView({ id: id('customer'), options: scope.customers }, scope.activity.customer))
+      m('td', selectView({ id: id('customer'), options: scope.customers }, customerId))
     ]),
     m('tr', [
       m('th', m('label', {
         'for': id('project')
       }, t('activity.project'))),
-      m('td', selectView({ id: id('project'), options: scope.projects }, scope.activity.project))
+      m('td', selectView({ id: id('project'), options: scope.projects }, projectId))
     ]),
     m('tr', [
       m('th', m('label', {
         'for': id('service')
       }, t('activity.service'))),
-      m('td', selectView({ id: id('service'), options: scope.services }, scope.activity.service))
+      m('td', selectView({ id: id('service'), options: scope.services }, serviceId))
     ])
   ]))
 }
