@@ -102,6 +102,7 @@ module.exports = {
     'tag.list.enabled.headline': 'Aktive Tags',
     'timeslice.property.started_at': 'Beginn',
     'timeslice.property.stopped_at': 'Ende',
+    'timeslice.remove.confirm': 'Sollen diese {duration} wirklich gelöscht werden?',
 
     'yes': 'ja',
     'no': 'nein',

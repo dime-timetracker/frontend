@@ -1,18 +1,20 @@
 'use strict'
 
 const m = require('src/lib/mithril')
+const sortBy = require('lodash/collection/sortBy')
 const timesliceItem = require('./item')
 
-function controller (args) {
+function controller (activityScope) {
   const scope = {
-    items: args.activity.timeslices
+    activity: activityScope.activity,
+    items: sortBy(activityScope.activity.timeslices, (timeslice) => timeslice.stopped_at || timeslice.stopped_at).reverse()
   }
 
   scope.add = function (e) {
     if (e) {
       e.preventDefault()
     }
-    args.activity.addTimeslice()
+    scope.activity.addTimeslice()
   }
 
   return scope

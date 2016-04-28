@@ -16,12 +16,13 @@ const timesliceApi = require('src/api/timeslice')
 
 function controller (listContext) {
   var scope = {
-    timeslice: listContext.timeslice,
+    activity: listContext.activity,
     changed: false,
-    formatStart: (format = undefined) => getStart(listContext.timeslice).format(format),
-    formatEnd: (format = undefined) => getEnd(listContext.timeslice).format(format),
     formatDuration: () => duration(getDuration(listContext.timeslice)),
-    isRunning: () => running(listContext.timeslice)
+    formatEnd: (format = undefined) => getEnd(listContext.timeslice).format(format),
+    formatStart: (format = undefined) => getStart(listContext.timeslice).format(format),
+    isRunning: () => running(listContext.timeslice),
+    timeslice: listContext.timeslice
   }
 
   scope.save = function (e) {
@@ -38,7 +39,7 @@ function controller (listContext) {
     if (e) {
       e.preventDefault()
     }
-    var question = t('Do you really want to delete "[name]"?', { name: scope.formatDuration() })
+    var question = t('timeslice.remove.confirm', { duration: getDuration(listContext.timeslice) })
     if (global.window.confirm(question)) {
       timesliceApi.remove(scope.timeslice).then(() => {
         scope.activity.timeslices.forEach((timeslice, key) => {

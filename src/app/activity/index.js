@@ -48,7 +48,7 @@ function stop (activity) {
   activity.timeslices.forEach((t) => {
     if (!t.stopped_at) {
       t.stopped_at = moment().format(timestampFormat)
-      t.duration = moment(t.stopped_at, timestampFormat).diff(moment(t.started_at, timestampFormat))
+      t.duration = timesliceDuration(t)
       m.startComputation()
       timesliceApi.persist(t).then(() => {
         m.endComputation()
