@@ -9,21 +9,24 @@ function persist (activity, options) {
   return api.persist('activities', activity, options)
 }
 
-function fetchBunch () {
-  let result = api.fetchBunch('activities', options)
-  return result
+function fetchBunch (fetchOptions = {}) {
+  return api.fetchBunch('activities', fetchOptions).then((bunch) => {
+    options.pagination = fetchOptions.pagination
+    debug(options)
+    return bunch
+  })
+}
+
+function fetchNext (fetchOptions = {}) {
+  fetchOptions.url = options.pagination.next
+  return fetchBunch(fetchOptions)
 }
 
 function total () {
   if (!options.pagination) {
-    debug('request activities to get total')
-    fetchBunch()
+    debug('Please request activities before to get total')
   }
-  return options.total
+  return options.pagination.total
 }
 
-module.exports = {
-  fetchBunch: fetchBunch,
-  persist: persist,
-  total: total
-}
+module.exports = { fetchBunch, fetchNext, persist, total }

@@ -1,29 +1,24 @@
 'use strict'
 
+const api = require('src/api/activity')
+const buttonView = require('src/app/utils/views/button')
+const card = require('src/app/utils/views/card/default')
+const customerApi = require('src/api/customer')
+const debug = require('debug')('app.activity')
+const itemView = require('./item')
 const m = require('src/lib/mithril')
 const moment = require('moment')
-const t = require('../../lib/translation')
-
-const api = require('../../api/activity')
-const timesliceApi = require('../../api/timeslice')
-const timesliceDuration = require('../timeslice').duration
-const customerApi = require('../../api/customer')
-const projectApi = require('../../api/project')
-const serviceApi = require('../../api/service')
-
-const debug = require('debug')('app.activity')
-
-const buttonView = require('../utils/views/button')
-const card = require('../utils/views/card/default')
-
-const timesliceRunning = require('../timeslice').running
+const projectApi = require('src/api/project')
+const serviceApi = require('src/api/service')
 const shellActivities = require('./shell/activity')
 const shellFilter = require('./shell/filter')
-const itemView = require('./item')
+const t = require('src/lib/translation')
+const timesliceApi = require('src/api/timeslice')
+const timesliceDuration = require('src/app/timeslice').duration
+const timesliceRunning = require('src/app/timeslice').running
+const userSettings = require('src/app/setting').sections
 
-const userSettings = require('../setting').sections
 const timestampFormat = userSettings.find('global.timestamp.format')
-
 userSettings.activity = require('./settings')
 
 function running (activity) {
@@ -39,13 +34,12 @@ function totalDuration (activity) {
 }
 
 function start (activity) {
-  let timeslice = {
+  m.startComputation()
+  timesliceApi.persist({
     activity_id: parseInt(activity.id),
     started_at: moment().format(timestampFormat)
-  }
-  m.startComputation()
-  timesliceApi.persist(timeslice).then(() => {
-    activity.timeslices.push(timeslice)
+  }).then((timeslice) => {
+    activity.timeslices.unshift(timeslice)
     m.endComputation()
   }, m.endComputation)
 }
@@ -90,7 +84,10 @@ function activityListView (scope) {
       if (e) {
         e.preventDefault()
       }
-      scope.activities.fetchNext()
+      api.fetchNext().then((bunch) => {
+        Array.prototype.push.apply(scope.activities, bunch)
+        assignRelations(scope)
+      })
     } }, t('Show more')))
   }
 
@@ -99,9 +96,23 @@ function activityListView (scope) {
   return m('.tile-wrap', container)
 }
 
+function assignRelations (scope) {
+  scope.activities.forEach((activity) => {
+    activity.customer = scope.customers.find((customer) => {
+      return customer.id === activity.customer_id
+    })
+    activity.project = scope.projects.find((project) => {
+      return project.id === activity.project_id
+    })
+    activity.service = scope.services.find((service) => {
+      return service.id === activity.service_id
+    })
+  })
+}
+
 function controller () {
   debug('Running activity index controller')
-  var scope = {
+  const scope = {
     activities: [],
     visibleActivities: [],
     customers: [],
@@ -110,8 +121,10 @@ function controller () {
   }
   const promiseActivities = api.fetchBunch().then((list) => {
     scope.activities = list
+    debug('showing', list.length)
     scope.visibleActivities = list
     scope.total = api.total()
+    debug('showing', list.length, 'of', scope.total)
   })
   const promiseCustomers = customerApi.getCollection().then((customers) => {
     scope.customers = customers
@@ -128,17 +141,7 @@ function controller () {
     promiseProjects,
     promiseServices
   ]).then(() => {
-    scope.activities.forEach((activity) => {
-      activity.customer = scope.customers.find((customer) => {
-        return customer.id === activity.customer_id
-      })
-      activity.project = scope.projects.find((project) => {
-        return project.id === activity.project_id
-      })
-      activity.service = scope.services.find((service) => {
-        return service.id === activity.service_id
-      })
-    })
+    assignRelations(scope)
     m.redraw()
   })
 
@@ -160,11 +163,4 @@ function view (scope) {
   ])
 }
 
-module.exports = {
-  running: running,
-  start: start,
-  stop: stop,
-  totalDuration: totalDuration,
-  controller: controller,
-  view: view
-}
+module.exports = { controller, running, start, stop, totalDuration, view }

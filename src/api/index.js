@@ -1,6 +1,7 @@
 'use strict'
 
 const m = require('src/lib/mithril')
+const debug = require('debug')('api')
 
 const authorize = require('../lib/authorize')
 const baseUrl = require('../lib/helper/baseUrl')()
@@ -29,7 +30,7 @@ function persist (resource, data, options) {
 function fetchBunch (resource, options) {
   return m.request({
     method: 'GET',
-    url: baseUrl + '/api/' + resource,
+    url: options.url || baseUrl + '/api/' + resource,
     config: function (xhr) {
       authorize.setup(xhr)
     },
@@ -38,6 +39,7 @@ function fetchBunch (resource, options) {
         m.route('/login')
       } else {
         options.pagination = extractXhrPagination(xhr)
+        debug('paginating ' + resource, options.pagination)
       }
       return xhr.responseText
     }
