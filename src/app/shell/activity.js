@@ -1,12 +1,12 @@
 'use strict'
 
 const m = require('src/lib/mithril')
-const t = require('../../../lib/translation')
-const formatShortcut = require('../../../lib/helper/mousetrapCommand')
+const t = require('src/lib/translation')
+const formatShortcut = require('src/lib/helper/mousetrapCommand')
 const debug = global.window.dimeDebug('shell.activity')
-const parse = require('../../../lib/parser').parse
+const parse = require('src/lib/parser').parse
 const shell = require('../shell')
-const api = require('../../../api/activity')
+const api = require('src/api/activity')
 
 function createActivity (e, scope) {
   const string = e.target.value

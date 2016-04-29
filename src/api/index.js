@@ -28,9 +28,23 @@ function persist (resource, data, options) {
 }
 
 function fetchBunch (resource, options) {
+  let url = options.url
+  if (!url) {
+    url = baseUrl + '/api/' + resource
+    let parameters = []
+    if (options.filter) {
+      parameters.push('filter=' + options.filter)
+    }
+    if (options.with) {
+      parameters.push('with=' + options.with)
+    }
+    if (parameters.length) {
+      url += '?' + parameters.join('&')
+    }
+  }
   return m.request({
     method: 'GET',
-    url: options.url || baseUrl + '/api/' + resource,
+    url: url,
     config: function (xhr) {
       authorize.setup(xhr)
     },

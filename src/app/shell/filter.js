@@ -1,13 +1,13 @@
 'use strict'
 
 const m = require('src/lib/mithril')
-const t = require('../../../lib/translation')
+const t = require('src/lib/translation')
 const debug = require('debug')('app.shell.filter')
-const formatShortcut = require('../../../lib/helper/mousetrapCommand')
+const formatShortcut = require('src/lib/helper/mousetrapCommand')
 const bookmarks = require('./filter/bookmarks')
 const shell = require('../shell')
-const parse = require('../../../lib/parser').parse
-const settingsApi = require('../../../api/setting')
+const parse = require('src/lib/parser').parse
+const settingsApi = require('src/api/setting')
 
 function onSubmitFilter (e, scope) {
   scope.query = e.target.value

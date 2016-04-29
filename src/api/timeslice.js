@@ -7,7 +7,7 @@ function persist (timeslice, options) {
 }
 
 function fetchAll (options) {
-  return api.fetchBunch('timeslices', Object.assign(options, { with: 1000000 }))
+  return api.fetchBunch('timeslices', Object.assign(options, { with: -1 }))
 }
 
 function remove (timeslice) {

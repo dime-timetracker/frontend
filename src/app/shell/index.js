@@ -2,7 +2,7 @@
 
 const m = require('src/lib/mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
-const settingsApi = require('../../../api/setting')
+const settingsApi = require('src/api/setting')
 const t = require('src/lib/translation')
 const userSettings = require('src/app/setting').sections
 
