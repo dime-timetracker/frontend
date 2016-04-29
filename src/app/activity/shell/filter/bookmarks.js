@@ -1,12 +1,13 @@
 'use strict'
 
-const settingsApi = require('../../../../api/setting')
+const debug = require('debug')('app.activity.shell.filter.bookmarks')
 const find = require('lodash/collection/find')
 const isEqual = require('lodash/lang/isEqual')
+const settingsApi = require('src/api/setting')
 
 const configPath = 'filter/bookmarks'
 
-let bookmarks = settingsApi.find(configPath) || []
+let bookmarks = []
 
 function getQueryParts (query) {
   return query && query.replace(/\s+/, ' ').trim().split(' ').sort()
@@ -20,7 +21,7 @@ function isKnownQuery (query) {
 
 function add (name, query) {
   bookmarks.push({name: name, query: query})
-  settingsApi.persistConfig(configPath, bookmarks)
+  settingsApi.persistConfig(configPath, JSON.stringify(bookmarks))
 }
 
 function update (oldName, newName, newQuery) {
@@ -41,11 +42,18 @@ function remove (name) {
   })
 }
 
-module.exports = {
-  injectList: function (list) { bookmarks = list }, // for testing purposes
-  add: add,
-  remove: remove,
-  update: update,
-  list: bookmarks,
-  isKnownQuery: isKnownQuery
+function init (list) {
+  if (list) {
+    bookmarks = list
+  }
+  list = settingsApi.find(configPath)
+  if (list) {
+    bookmarks = JSON.parse(list)
+  } else {
+    bookmarks = []
+  }
+  debug('bookmarks', bookmarks)
+  return bookmarks
 }
+
+module.exports = { init, add, remove, update, list: () => bookmarks, isKnownQuery }

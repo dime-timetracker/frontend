@@ -54,7 +54,7 @@ function buttonBookmarkView (scope) {
   return m('.media-object.pull-right',
     m('span.form-icon-label', {
       onclick: () => {
-        bookmarks.add('', scope.query)
+        bookmarks.add(null, scope.query)
       }
     }, m('span.icon.icon-bookmark' + (isBookmarked ? '' : '-outline')))
   )
@@ -74,8 +74,10 @@ function inputView (scope) {
 }
 
 function controller (listScope) {
+  bookmarks.init()
   const scope = {
     activities: listScope.activities,
+    bookmarks: bookmarks.list(),
     inputView: inputView,
     icon: 'icon-filter-list',
     htmlId: 'filter',

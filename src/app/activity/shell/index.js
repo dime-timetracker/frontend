@@ -3,7 +3,8 @@
 const m = require('src/lib/mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
 const settingsApi = require('../../../api/setting')
-const userSettings = require('../../setting').sections
+const t = require('src/lib/translation')
+const userSettings = require('src/app/setting').sections
 
 const debug = require('debug')('app.shell')
 
@@ -44,9 +45,7 @@ function focus (e, scope) {
 
   applySetting('shell.shortcuts.submit', (shortcut) => {
     debug('Register shortcut to submit shell', shortcut)
-    mousetrap(e.target).bind(shortcut, () => {
-      mousetrap(e.target).bind(shortcut, () => { scope.onSubmit(e, scope) })
-    })
+    mousetrap(e.target).bind(shortcut, () => { scope.onSubmit(e, scope) })
   })
 
   /*
@@ -68,12 +67,25 @@ function focus (e, scope) {
   */
 }
 
+function bookmarksView (bookmarks, onSubmit) {
+  if (!bookmarks || !bookmarks.length) {
+    return
+  }
+  let options = bookmarks.map((bookmark) => m('option', {
+    value: bookmark.query
+  }, bookmark.name || bookmark.query))
+  options.unshift(m('option[value=""]', t('activity.filter.none')))
+  return m('.bookmarks', m('select', { onchange: onSubmit }, options))
+}
+
 function controller (parentScope) {
-  var scope = {
+  const scope = {
+    bookmarks: parentScope.bookmarks,
     htmlId: parentScope.htmlId,
     icon: parentScope.icon,
     iconViews: parentScope.iconViews || [],
     inputView: parentScope.inputView,
+    onSubmit: parentScope.onSubmit,
     shortcut: parentScope.shortcut
   }
   scope.focus = (e) => { focus(e, scope) }
@@ -82,15 +94,14 @@ function controller (parentScope) {
 }
 
 function view (scope) {
-  var parts = scope.iconViews.map(function (view) {
-    return view()
-  })
+  const parts = scope.iconViews.map((view) => view())
   parts.unshift(
-    m('.media-object.pull-left',
+    m('.media-object.pull-left', [
       m('label.form-icon-label', {
         for: scope.htmlId
-      }, m('span.icon.' + scope.icon))
-    )
+      }, m('span.icon.' + scope.icon)),
+      bookmarksView(scope.bookmarks, scope.onSubmit)
+    ])
   )
   parts.push(m('.media-inner', scope.inputView()))
   return m('.media', parts)

@@ -8,6 +8,7 @@ module.exports = {
     'activity.description': 'Beschreibung',
     'activity.startstopbutton.start.title': 'Starte Aktivität',
     'activity.startstopbutton.stop.title': 'Stoppe Aktivität',
+    'activity.filter.none': 'Kein Filter',
     'button.save': 'Speichern',
     'config.activity.description': 'Einstellungen für Aktivitäten',
     'config.activity.title': 'Aktivitäten',

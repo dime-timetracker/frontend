@@ -12,7 +12,7 @@ const expect = require('expect.js')
 
 describe('bookmarks', () => {
   beforeEach(() => {
-    bookmarks.injectList([
+    bookmarks.init([
       {name: 'foo', query: 'foo'},
       {name: 'foobar', query: 'foo /bar'}
     ])
