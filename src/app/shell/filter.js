@@ -9,12 +9,8 @@ const shell = require('../shell')
 const parse = require('src/lib/parser').parse
 const settingsApi = require('src/api/setting')
 
-function onSubmitFilter (e, scope) {
-  scope.query = e.target.value
-  const parsers = ['customer', 'project', 'service', 'tags', 'description']
-  const filter = parse(scope.query, parsers)
-  debug('Running filter', filter)
-  scope.listScope.activities = scope.listScope.visibleActivities.filter((activity) => {
+function matchesFilter (filter) {
+  return function (activity) {
     if (filter.customer) {
       if (!activity.customer || filter.customer.alias !== activity.customer.alias) {
         return false
@@ -36,8 +32,20 @@ function onSubmitFilter (e, scope) {
       }
     }
     return true
-  })
-  debug('Filter result: ', scope.listScope.activities)
+  }
+}
+
+function onSubmitFilter (e, scope) {
+  scope.query = e.target.value
+  if (scope.listScope.onSubmitFilter) {
+    scope.listScope.onSubmitFilter(scope.query)
+  } else {
+    const parsers = ['customer', 'project', 'service', 'tags', 'description']
+    const filter = parse(scope.query, parsers)
+    debug('Running filter', filter)
+    scope.listScope.activities = scope.listScope.activities.filter(matchesFilter(filter))
+    debug('Filter result: ', scope.listScope.activities)
+  }
   scope.blur(e, scope)
 }
 

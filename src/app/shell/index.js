@@ -45,7 +45,7 @@ function focus (e, scope) {
 
   applySetting('shell.shortcuts.submit', (shortcut) => {
     debug('Register shortcut to submit shell', shortcut)
-    mousetrap(e.target).bind(shortcut, () => { scope.onSubmit(e, scope) })
+    mousetrap(e.target).bind(shortcut, (e) => { scope.onSubmit(e, scope) })
   })
 
   /*

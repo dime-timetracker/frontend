@@ -3,7 +3,9 @@
 const activityApi = require('src/api/activity')
 const cardView = require('src/app/utils/views/card/default')
 const customerApi = require('src/api/customer')
+const debug = require('debug')('app.report')
 const m = require('src/lib/mithril')
+const moment = require('moment')
 const projectApi = require('src/api/project')
 const serviceApi = require('src/api/service')
 const shellFilter = require('src/app/shell/filter')
@@ -32,29 +34,88 @@ function headerView (scope) {
   ]))
 }
 
+function getFilterOptions (customers, projects, services) {
+  return function (query) {
+    const parsers = ['customer', 'project', 'service', 'tags', 'filterTimes', 'description']
+    const filters = require('src/lib/parser').parse(query, parsers)
+    const options = { parameters: {} }
+    if (filters.customer) {
+      let customer = customers.find((customer) => customer.alias === filters.customer.alias)
+      if (customer) {
+        options.parameters['by[customer]'] = customer.id
+      }
+    }
+    if (filters.project) {
+      let project = projects.find((project) => project.alias === filters.project.alias)
+      if (project) {
+        options.parameters['by[project]'] = project.id
+      }
+    }
+    if (filters.service) {
+      let service = services.find((service) => service.alias === filters.service.alias)
+      if (service) {
+        options.parameters['by[service]'] = service.id
+      }
+    }
+    if (filters.description) {
+      options.parameters['by[search]'] = '%' + filters.description + '%'
+    }
+    if (filters.filterStart || filters.filterStop) {
+      let start = filters.filterStart ? moment(filters.filterStart).format('YYYY-MM-DD') : null
+      let stop = filters.filterStop ? moment(filters.filterStop).format('YYYY-MM-DD') : null
+      options.parameters['by[date]'] = (start || '') + ';' + (stop || '')
+    }
+    return options
+  }
+}
+
+function onFetch (customers, projects, services) {
+  return function (scope, options) {
+    Promise.all([
+      activityApi.fetchAll(options),
+      timesliceApi.fetchAll(options)
+    ]).then(function ([activities, timeslices]) {
+      debug('filtered activities', activities)
+      scope.collection = timeslices.map((timeslice) => {
+        const activity = activities.find((activity) => (activity.id === timeslice.activity_id))
+        if (activity) {
+          timeslice.activity = activity
+          timeslice.activity.customer = customers.find((customer) => (
+            customer.id === timeslice.activity.customer_id
+          ))
+          timeslice.activity.project = projects.find((project) => (
+            project.id === timeslice.activity.project_id
+          ))
+          timeslice.activity.service = services.find((service) => (
+            service.id === timeslice.activity.service_id
+          ))
+          return timeslice
+        }
+      }).filter((timeslice) => timeslice)
+      m.redraw()
+    })
+  }
+}
+
 function controller () {
+  const query = m.route.param('query') + ''
   const scope = {
     collection: [],
-    query: decodeURIComponent((m.route.param('query') + '').replace(/\+/g, '%20'))
+    query: decodeURIComponent(query.replace(/\+/g, '%20')),
+    onSubmitFilter: function () {}
   }
-  const options = { filter: scope.query }
   Promise.all([
-    activityApi.fetchAll(options),
     customerApi.getCollection(),
     projectApi.getCollection(),
-    serviceApi.getCollection(),
-    timesliceApi.fetchAll(options)
-  ]).then(function ([activities, customers, projects, services, timeslices]) {
-    scope.collection = timeslices.map((timeslice) => {
-      const activity = activities.find((activity) => (activity.id === timeslice.activity_id))
-      if (activity) {
-        timeslice.activity = activity
-        timeslice.activity.customer = customers.find((customer) => (customer.id === timeslice.activity.customer_id))
-        timeslice.activity.project = projects.find((project) => (project.id === timeslice.activity.project_id))
-        timeslice.activity.service = services.find((service) => (service.id === timeslice.activity.service_id))
-        return timeslice
-      }
-    })
+    serviceApi.getCollection()
+  ]).then(function ([customers, projects, services]) {
+    const filter = getFilterOptions(customers, projects, services)
+    const fetch = onFetch(customers, projects, services)
+    scope.onSubmitFilter = function (query) {
+      fetch(scope, filter(query))
+    }
+    debug('Registered filter submit event')
+    scope.onSubmitFilter(scope.query)
     m.redraw()
   })
 
@@ -75,7 +136,4 @@ function view (scope) {
   ])
 }
 
-module.exports = {
-  controller: controller,
-  view: view
-}
+module.exports = { controller, getFilterOptions, view }

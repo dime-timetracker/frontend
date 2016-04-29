@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-var moment = require('moment');
+var moment = require('moment')
 
 module.exports = function (obj) {
-  var filter = {};
-  [
+  const filter = {}
+  const patterns = [
     {
       'keyword': 'today',
       'start': moment().startOf('day')
@@ -30,16 +30,20 @@ module.exports = function (obj) {
       'start': moment().subtract(1, 'month').startOf('month'),
       'stop': moment().subtract(1, 'month').endOf('month')
     }
-  ].forEach(function (pattern) {
-    var regex = new RegExp('\\b' + pattern.keyword + '\\b');
+  ]
+  patterns.forEach(function (pattern) {
+    var regex = new RegExp('\\b' + pattern.keyword + '\\b')
     if (obj._text.match(regex)) {
-      filter.start = pattern.start;
-      filter.stop = pattern.stop;
-      obj._text = obj._text.replace(regex, '', 'g');
+      filter.start = pattern.start
+      filter.stop = pattern.stop
+      obj._text = obj._text.replace(regex, '', 'g')
     }
-  });
-  if (filter.start || filter.stop) {
-    obj.filter = filter;
+  })
+  if (filter.start) {
+    obj.filterStart = filter.start
   }
-  return obj;
-};
+  if (filter.stop) {
+    obj.filterStop = filter.stop
+  }
+  return obj
+}

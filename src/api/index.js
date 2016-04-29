@@ -6,6 +6,7 @@ const debug = require('debug')('api')
 const authorize = require('../lib/authorize')
 const baseUrl = require('../lib/helper/baseUrl')()
 const extractXhrPagination = require('../lib/helper/extractXhrPagination')
+const reduce = require('lodash/collection/reduce')
 
 function persist (resource, data, options) {
   options = options || {}
@@ -31,15 +32,13 @@ function fetchBunch (resource, options) {
   let url = options.url
   if (!url) {
     url = baseUrl + '/api/' + resource
-    let parameters = []
-    if (options.filter) {
-      parameters.push('filter=' + options.filter)
-    }
+
+    let parameters = options.parameters || {}
     if (options.with) {
-      parameters.push('with=' + options.with)
+      parameters.with = options.with
     }
-    if (parameters.length) {
-      url += '?' + parameters.join('&')
+    if (parameters !== {}) {
+      url += reduce(parameters, (query, value, key) => query + key + '=' + value + '&', '?')
     }
   }
   return m.request({
