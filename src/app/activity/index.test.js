@@ -11,7 +11,7 @@ global.window = m.deps({
   localStorage: {},
   dimeDebug: () => {},
   navigator: global.navigator,
-  document: global.document,
+  document: global.document
 })
 
 const expect = require('expect.js')

@@ -1,22 +1,22 @@
-'use strict';
+'use strict'
 
-var extend = require('lodash/object/extend');
-var t = require('../translation');
+const extend = require('lodash/object/extend')
+const t = require('src/lib/translation')
 
 /**
  * Format number as currency.
  *
- * Example:
+ * @param float amount   amount to be formatted
+ * @param object options e.g. { currency: "EUR" }
+ * @param string locales e.g. "de-DE"
  *
- * currency(3.23, '€ {number}') => '€ 3,23'
- *
- * @param {Number} amount
- * @param {String} pattern
  * @returns {String}
  */
-var currency = function (amount, options, locales) {
-  options = extend({style: 'currency', currency: t('default.currency')}, options);
-  return amount.toLocaleString(locales, options);
-};
+const currency = function (amount, options, locales) {
+  options = extend({style: 'currency', currency: t('default.currency')}, options)
+  const result = amount.toLocaleString(locales, options)
+  console.log(amount + '.toLocaleString("' + locales + '", ' + JSON.stringify(options) + ')', result)
+  return result
+}
 
-module.exports = currency;
+module.exports = currency

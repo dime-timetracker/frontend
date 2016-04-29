@@ -2,6 +2,6 @@
 
 module.exports = require('mithril')
 
-if (window.location.search.indexOf('mdebug') > 0) {
+if (undefined !== global.window && global.window.location.search.indexOf('mdebug') > 0) {
   module.exports = require('mithril-source-hint')
 }
