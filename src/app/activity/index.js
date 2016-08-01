@@ -35,13 +35,12 @@ function totalDuration (activity) {
 
 function start (activity) {
   m.startComputation()
-  timesliceApi.persist({
-    activity_id: parseInt(activity.id),
-    started_at: moment().format(timestampFormat)
-  }).then((timeslice) => {
-    activity.timeslices.unshift(timeslice)
-    m.endComputation()
-  }, m.endComputation)
+  timesliceApi
+    .persist(timesliceApi.create(activity.id, timestampFormat))
+    .then((timeslice) => {
+      activity.timeslices.unshift(timeslice)
+      m.endComputation()
+    }, m.endComputation)
 }
 
 function stop (activity) {
