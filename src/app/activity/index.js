@@ -134,6 +134,12 @@ function controller () {
   const promiseServices = serviceApi.getCollection().then((services) => {
     scope.services = services
   })
+  scope.startNewActivity = function (activity) {
+    api.persist(activity).then((newActivity) => {
+      scope.activities.unshift(newActivity)
+      start(newActivity)
+    })
+  }
   Promise.all([
     promiseActivities,
     promiseCustomers,
