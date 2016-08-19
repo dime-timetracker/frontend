@@ -36,6 +36,6 @@ in Stylus, too.
 
 Btw. you may convert existing CSS to Stylus by calling
 
-    node_modules/.bin/stylus -C <path/to/your/css> <path/to/your/styl>``
+    node_modules/.bin/stylus -C <path/to/your/css> <path/to/your/styl>
 
 (and that's what we did with Daemonite), but you should not need that.
