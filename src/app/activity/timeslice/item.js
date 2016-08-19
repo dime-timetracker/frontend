@@ -94,7 +94,10 @@ function view (scope) {
 
   const actions = [
     m('a.duration', scope.formatDuration()),
-    m('a.btn.btn-flat[href=#]', { onclick: scope.remove }, m('span.icon.icon-delete'))
+    m('a.btn.btn-flat[href=#]', {
+      onclick: scope.remove,
+      title: t('timeslice.remove.title')
+    }, m('span.icon.icon-delete'))
   ]
   if (scope.changed) {
     actions.push(m('a.btn.btn-green[href=#]', { onclick: scope.save }, m('span.icon.icon-done')))

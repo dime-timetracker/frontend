@@ -6,6 +6,8 @@ function controller (args) {
   const scope = {
     currentState: args.currentState,
     iconName: args.iconName,
+    title: args.title,
+    alternateTitle: args.alternateTitle,
     alternateIconName: args.alternateIconName || '.icon-close'
   }
 
@@ -19,11 +21,16 @@ function controller (args) {
 }
 
 function view (scope) {
-  var icon = scope.iconName
+  let icon = scope.iconName
+  const options = {
+    onclick: scope.onclick,
+    title: scope.title
+  }
   if (scope.currentState()) {
     icon = scope.alternateIconName
+    options.title = scope.alternateTitle || ''
   }
-  return m('a.btn.btn-flat', { onclick: scope.onclick }, m('span.icon.icon-lg' + icon))
+  return m('a.btn.btn-flat', options, m('span.icon.icon-lg' + icon))
 }
 
 module.exports = {

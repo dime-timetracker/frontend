@@ -9,6 +9,8 @@ module.exports = {
     'activity.startstopbutton.start.title': 'Start Activity',
     'activity.startstopbutton.stop.title': 'Stop Aktivity',
     'activity.filter.none': 'No Filter',
+    'activity.details.hide': 'Hide details',
+    'activity.details.show': 'Show details',
     'button.save': 'Save',
     'config.activity.description': 'Activity Settings',
     'config.activity.title': 'Aktivities',
@@ -103,6 +105,7 @@ module.exports = {
     'tag.list.enabled.headline': 'Active tags',
     'timeslice.property.started_at': 'Start',
     'timeslice.property.stopped_at': 'End',
+    'timeslice.remove.title': 'Delete these {duration} seconds of work!',
     'timeslice.remove.confirm': 'Do you really want to delete these {duration} seconds of work?',
 
     'crud.enabled': 'Active',

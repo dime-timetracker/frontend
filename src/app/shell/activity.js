@@ -32,7 +32,7 @@ function inputView (scope) {
 function controller (listScope) {
   const scope = {
     shortcut: 'd a',
-    icon: 'icon-play-arrow',
+    icon: 'icon-add',
     htmlId: 'shell',
     addActivity: listScope.startNewActivity
   }

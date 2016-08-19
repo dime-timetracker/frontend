@@ -71,6 +71,8 @@ function view (scope) {
   options.actions.push(m.component(toggleButton, {
     iconName: '.icon-keyboard-arrow-down',
     alternateIconName: '.icon-keyboard-arrow-up',
+    title: t('activity.details.show'),
+    alternateTitle: t('activity.details.hide'),
     currentState: () => { return scope.showDetails },
     changeState: (state) => { scope.showDetails = state }
   }))
@@ -96,7 +98,9 @@ function view (scope) {
   inner.push(m('span', scope.activity.description));
   ['customer', 'project', 'service'].forEach((relation) => {
     if (scope.activity[relation]) {
-      inner.push(m('span.badge', scope.shortcuts[relation] + scope.activity[relation].alias))
+      inner.push(m('span.badge', {
+        title: scope.activity[relation].name
+      }, scope.shortcuts[relation] + scope.activity[relation].alias))
     }
   })
 

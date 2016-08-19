@@ -9,6 +9,8 @@ module.exports = {
     'activity.startstopbutton.start.title': 'Starte Aktivität',
     'activity.startstopbutton.stop.title': 'Stoppe Aktivität',
     'activity.filter.none': 'Kein Filter',
+    'activity.details.hide': 'Details verbergen',
+    'activity.details.show': 'Details anzeigen',
     'button.save': 'Speichern',
     'config.activity.description': 'Einstellungen für Aktivitäten',
     'config.activity.title': 'Aktivitäten',
@@ -103,6 +105,7 @@ module.exports = {
     'tag.list.enabled.headline': 'Aktive Tags',
     'timeslice.property.started_at': 'Beginn',
     'timeslice.property.stopped_at': 'Ende',
+    'timeslice.remove.title': 'Diese {duration} Sekunden löschen!',
     'timeslice.remove.confirm': 'Sollen diese {duration} Sekunden wirklich gelöscht werden?',
 
     'yes': 'ja',
