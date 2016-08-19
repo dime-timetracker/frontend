@@ -5,6 +5,20 @@ const t = require('../../lib/translation')
 const inputView = require('../utils/views/formfields/input')
 const selectView = require('../utils/views/formfields/select')
 
+function compareLabel (a, b) {
+  const nameA = a.label.toUpperCase() // ignore upper and lowercase
+  const nameB = b.label.toUpperCase() // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1
+  }
+  if (nameA > nameB) {
+    return 1
+  }
+
+  // names must be equal
+  return 0
+}
+
 function controller (context) {
   const scope = {
     activity: context.activity,
@@ -13,6 +27,9 @@ function controller (context) {
     services: context.services.map((service) => { return { value: service.id, label: service.name } }),
     changes: []
   }
+  scope.customers.sort(compareLabel).unshift({})
+  scope.projects.sort(compareLabel).unshift({})
+  scope.services.sort(compareLabel).unshift({})
   scope.save = function () {
     scope.changes.forEach((change) => {
       scope.activity[change.field] = change.value
