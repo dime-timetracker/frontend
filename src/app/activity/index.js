@@ -59,14 +59,14 @@ function stop (activity) {
 function activityListView (scope) {
   var container = []
 
-  debug('view list', scope.activities)
-  container.push(scope.activities.map(function (activity) {
+  debug('view list', scope.visibleActivities)
+  container.push(scope.visibleActivities.map(function (activity) {
     if (!activity.timeslices) {
       activity.timeslices = []
     }
     return m.component(itemView, {
       activity: activity,
-      collection: scope.activities,
+      collection: scope.visibleActivities,
       customers: scope.customers,
       key: activity.id,
       projects: scope.projects,
@@ -78,13 +78,14 @@ function activityListView (scope) {
     })
   }, scope))
 
-  if (scope.activities.length < scope.total) {
+  if (scope.visibleActivities.length < scope.total) {
     container.push(m('a.margin-top.btn.btn-block[href=#]', { onclick: function (e) {
       if (e) {
         e.preventDefault()
       }
       api.fetchNext().then((bunch) => {
         Array.prototype.push.apply(scope.activities, bunch)
+        Array.prototype.push.apply(scope.visibleActivities, bunch)
         assignRelations(scope)
       })
     } }, t('Show more')))
@@ -111,6 +112,7 @@ function assignActivityRelations (scope) {
 
 function assignRelations (scope) {
   scope.activities.forEach(assignActivityRelations(scope))
+  scope.visibleActivities.forEach(assignActivityRelations(scope))
 }
 
 function controller () {
@@ -158,6 +160,7 @@ function controller () {
     api.persist(activity).then((newActivity) => {
       assignActivityRelations(scope)(newActivity)
       scope.activities.unshift(newActivity)
+      scope.visibleActivities.unshift(newActivity)
       start(newActivity)
     })
   }

@@ -43,8 +43,8 @@ function onSubmitFilter (e, scope) {
     const parsers = ['customer', 'project', 'service', 'tags', 'description']
     const filter = parse(scope.query, parsers)
     debug('Running filter', filter)
-    scope.listScope.activities = scope.listScope.activities.filter(matchesFilter(filter))
-    debug('Filter result: ', scope.listScope.activities)
+    scope.listScope.visibleActivities = scope.listScope.activities.filter(matchesFilter(filter))
+    debug('Filter result: ', scope.listScope.visibleActivities)
   }
   scope.blur(e, scope)
 }
@@ -84,7 +84,6 @@ function inputView (scope) {
 function controller (listScope) {
   bookmarks.init()
   const scope = {
-    activities: listScope.activities,
     bookmarks: bookmarks.list(),
     inputView: inputView,
     icon: 'icon-filter-list',
