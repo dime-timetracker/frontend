@@ -25,7 +25,7 @@ To build everything on file change, just run ``npm run watch``, which packs your
 js via browserify and converts your stylus files to css.
 
 We are using the power of [Mithril](https://lhorie.github.io/mithril/), which is
-a great framework to writefrontend Javascript using functional programming.
+a great framework to write frontend Javascript using functional programming.
 
 To find the origin of a specific element in your DOM, you may add ``?mdebug`` as
 a URL parameter and you will see it as a title on hover after reload.
