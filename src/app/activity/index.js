@@ -95,8 +95,8 @@ function activityListView (scope) {
   return m('.tile-wrap', container)
 }
 
-function assignRelations (scope) {
-  scope.activities.forEach((activity) => {
+function assignActivityRelations (scope) {
+  return function (activity) {
     activity.customer = scope.customers.find((customer) => {
       return customer.id === activity.customer_id
     })
@@ -106,7 +106,11 @@ function assignRelations (scope) {
     activity.service = scope.services.find((service) => {
       return service.id === activity.service_id
     })
-  })
+  }
+}
+
+function assignRelations (scope) {
+  scope.activities.forEach(assignActivityRelations(scope))
 }
 
 function controller () {
@@ -135,7 +139,24 @@ function controller () {
     scope.services = services
   })
   scope.startNewActivity = function (activity) {
+    if (activity.customer) {
+      activity.customer = scope.customers.find(customer => customer.alias === activity.customer.alias)
+      activity.customer_id = activity.customer ? activity.customer.id : undefined
+    }
+    if (activity.project) {
+      activity.project = scope.projects.find(project => project.alias === activity.project.alias)
+      if (activity.project) {
+        activity.project_id = activity.project.id
+        activity.customer_id = activity.project.customer_id
+        activity.customer = scope.customers.find(customer => customer.id === activity.customer_id)
+      }
+    }
+    if (activity.service) {
+      activity.service = scope.services.find(service => service.alias === activity.service.alias)
+      activity.service_id = activity.service ? activity.service.id : undefined
+    }
     api.persist(activity).then((newActivity) => {
+      assignActivityRelations(scope)(newActivity)
       scope.activities.unshift(newActivity)
       start(newActivity)
     })
