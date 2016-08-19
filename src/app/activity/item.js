@@ -69,7 +69,8 @@ function view (scope) {
   }))
 
   options.actions.push(m.component(toggleButton, {
-    iconName: '.icon-edit',
+    iconName: '.icon-keyboard-arrow-down',
+    alternateIconName: '.icon-keyboard-arrow-up',
     currentState: () => { return scope.showDetails },
     changeState: (state) => { scope.showDetails = state }
   }))
