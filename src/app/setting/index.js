@@ -23,6 +23,7 @@ const sections = {
     'global.shortcuts.customer': { type: 'text', value: '@' },
     'global.shortcuts.project': { type: 'text', value: '/' },
     'global.shortcuts.service': { type: 'text', value: ':' },
+    'global.shortcuts.tag': { type: 'text', value: '#' },
     'global.timestamp.format': { type: 'text', value: 'YYYY-MM-DD HH:mm:ss' }
   }
 }

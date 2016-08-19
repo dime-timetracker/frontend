@@ -4,16 +4,13 @@ const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
 
 const activityApi = require('../../api/activity')
-
 const activityForm = require('./form')
-const grid = require('../utils/views/grid')
-const tile = require('../utils/views/tile')
-const settingsApi = require('../../api/setting')
-
-const timesliceList = require('./timeslice/')
-
 const btnStartStop = require('./btnStartStop')
-
+const debug = require('debug')('app.activity.item')
+const grid = require('../utils/views/grid')
+const settingsApi = require('../../api/setting')
+const tile = require('../utils/views/tile')
+const timesliceList = require('./timeslice/')
 const toggleButton = require('../utils/components/toggleButton')
 
 function controller (activityScope) {
@@ -22,6 +19,7 @@ function controller (activityScope) {
     customers: activityScope.customers,
     projects: activityScope.projects,
     services: activityScope.services,
+    tags: activityScope.tags,
     running: activityScope.running,
     totalDuration: activityScope.totalDuration,
     start: activityScope.start,
@@ -30,7 +28,8 @@ function controller (activityScope) {
     shortcuts: {
       'customer': settingsApi.find('global.shortcuts.customer'),
       'project': settingsApi.find('global.shortcuts.project'),
-      'service': settingsApi.find('global.shortcuts.service')
+      'service': settingsApi.find('global.shortcuts.service'),
+      'tag': settingsApi.find('global.shortcuts.tag')
     }
   }
 
@@ -102,6 +101,10 @@ function view (scope) {
         title: scope.activity[relation].name
       }, scope.shortcuts[relation] + scope.activity[relation].alias))
     }
+  })
+  debug(scope.activity.tags)
+  scope.activity.tags.forEach(tag => {
+    inner.push(m('span.badge.tag', '' + scope.shortcuts.tag + tag.name))
   })
 
   return tile(inner, options)

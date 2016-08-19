@@ -31,6 +31,13 @@ function matchesFilter (filter) {
         return false
       }
     }
+    if (filter.tags) {
+      if (!filter.tags.some(filterTag => activity.tags.some(
+        activityTag => filterTag.name === activityTag.name
+      ))) {
+        return false
+      }
+    }
     return true
   }
 }

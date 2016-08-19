@@ -13,6 +13,7 @@ const serviceApi = require('src/api/service')
 const shellActivities = require('src/app/shell/activity')
 const shellFilter = require('src/app/shell/filter')
 const t = require('src/lib/translation')
+const tagApi = require('src/api/tag')
 const timesliceApi = require('src/api/timeslice')
 const timesliceDuration = require('src/app/timeslice').duration
 const timesliceRunning = require('src/app/timeslice').running
@@ -107,6 +108,9 @@ function assignActivityRelations (scope) {
     activity.service = scope.services.find((service) => {
       return service.id === activity.service_id
     })
+    activity.tags = activity.tags.map(activityTag => scope.tags.find(tag => {
+      return tag.id === activityTag || tag.id === activityTag.id
+    }))
   }
 }
 
@@ -122,24 +126,9 @@ function controller () {
     visibleActivities: [],
     customers: [],
     projects: [],
-    services: []
+    services: [],
+    tags: []
   }
-  const promiseActivities = api.fetchBunch().then((list) => {
-    scope.activities = list
-    debug('showing', list.length)
-    scope.visibleActivities = list
-    scope.total = api.total()
-    debug('showing', list.length, 'of', scope.total)
-  })
-  const promiseCustomers = customerApi.getCollection().then((customers) => {
-    scope.customers = customers
-  })
-  const promiseProjects = projectApi.getCollection().then((projects) => {
-    scope.projects = projects
-  })
-  const promiseServices = serviceApi.getCollection().then((services) => {
-    scope.services = services
-  })
   scope.startNewActivity = function (activity) {
     if (activity.customer) {
       activity.customer = scope.customers.find(customer => customer.alias === activity.customer.alias)
@@ -164,11 +153,31 @@ function controller () {
       start(newActivity)
     })
   }
+  const promiseActivities = api.fetchBunch().then((list) => {
+    scope.activities = list
+    debug('showing', list.length)
+    scope.visibleActivities = list
+    scope.total = api.total()
+    debug('showing', list.length, 'of', scope.total)
+  })
+  const promiseCustomers = customerApi.getCollection().then((customers) => {
+    scope.customers = customers
+  })
+  const promiseProjects = projectApi.getCollection().then((projects) => {
+    scope.projects = projects
+  })
+  const promiseServices = serviceApi.getCollection().then((services) => {
+    scope.services = services
+  })
+  const promiseTags = tagApi.getCollection().then((tags) => {
+    scope.tags = tags
+  })
   Promise.all([
     promiseActivities,
     promiseCustomers,
     promiseProjects,
-    promiseServices
+    promiseServices,
+    promiseTags
   ]).then(() => {
     assignRelations(scope)
     m.redraw()
