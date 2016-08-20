@@ -2,6 +2,7 @@
 
 const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
+const debug = require('debug')('app.activity.form')
 const inputView = require('../utils/views/formfields/input')
 const selectView = require('../utils/views/formfields/select')
 
@@ -25,17 +26,18 @@ function controller (context) {
     customers: context.customers.map((customer) => { return { value: customer.id, label: customer.name } }),
     projects: context.projects.map((project) => { return { value: project.id, label: project.name } }),
     services: context.services.map((service) => { return { value: service.id, label: service.name } }),
-    changes: []
+    tags: context.tags,
+    changes: {}
   }
   scope.customers.sort(compareLabel).unshift({})
   scope.projects.sort(compareLabel).unshift({})
   scope.services.sort(compareLabel).unshift({})
   scope.save = function () {
-    scope.changes.forEach((change) => {
-      scope.activity[change.field] = change.value
+    Object.keys(scope.changes).forEach(field => {
+      scope.activity[field] = scope.changes[field]
     })
     context.onSubmit()
-    scope.changes = []
+    scope.changes = {}
   }
   return scope
 }
@@ -48,7 +50,7 @@ function view (scope) {
   const projectId = scope.activity.project ? scope.activity.project.id : null
   const serviceId = scope.activity.service ? scope.activity.service.id : null
   const buttons = []
-  if (scope.changes.length) {
+  if (Object.keys(scope.changes).length) {
     buttons.push(m('a.btn.btn-green[href=#]', { onclick: scope.save }, m('span.icon.icon-done')))
   }
   return m('.table-responsive', m('table', [
@@ -59,9 +61,9 @@ function view (scope) {
       m('td', inputView({
         id: id('description'),
         change: function (value) {
-          scope.changes.push({ field: 'description', value: value })
+          scope.changes.description = value
         }
-      }, scope.activity.description))
+      }, scope.changes.description || scope.activity.description))
     ]),
     m('tr', [
       m('th', m('label', {
@@ -75,13 +77,10 @@ function view (scope) {
             field: 'customer_id',
             value: customerId
           })
-          scope.changes.push({
-            field: 'customer',
-            value: scope.customers.find(customer => customer.id === customerId)
-          })
+          scope.changes.customer = scope.customers.find(customer => customer.id === customerId)
         },
         options: scope.customers
-      }, customerId))
+      }, scope.changes.customer ? scope.changes.customer.id : customerId))
     ]),
     m('tr', [
       m('th', m('label', {
@@ -95,13 +94,10 @@ function view (scope) {
             field: 'project_id',
             value: projectId
           })
-          scope.changes.push({
-            field: 'project',
-            value: scope.projects.find(project => project.id === projectId)
-          })
+          scope.changes.project = scope.projects.find(project => project.id === projectId)
         },
         options: scope.projects
-      }, projectId))
+      }, scope.changes.project ? scope.changes.project.id : projectId))
     ]),
     m('tr', [
       m('th', m('label', {
@@ -115,13 +111,25 @@ function view (scope) {
             field: 'service_id',
             value: serviceId
           })
-          scope.changes.push({
-            field: 'service',
-            value: scope.services.find(service => service.id === serviceId)
-          })
+          scope.changes.service = scope.services.find(service => service.id === serviceId)
         },
         options: scope.services
-      }, serviceId))
+      }, scope.changes.service ? scope.changes.service.id : serviceId))
+    ]),
+    m('tr', [
+      m('th', m('label', {
+        'for': id('tags')
+      }, t('activity.tags'))),
+      m('td', inputView({
+        id: id('tags'),
+        change: function (value) {
+          const tagNames = value.split('#').map(tag => tag.replace(/^#/, ''))
+          scope.changes.tags = tagNames.map(tagName => {
+            return scope.tags.find(tag => tag.name === tagName) || { name: tagName }
+          })
+          debug(tagNames, scope.changes)
+        }
+      }, (scope.changes.tags || scope.activity.tags || []).map(tag => tag.name).join(' ')))
     ]),
     m('tr', [
       m('td.buttons.text-right', { colspan: 2 },

@@ -75,6 +75,7 @@ function activityListView (scope) {
       services: scope.services,
       start: start,
       stop: stop,
+      tags: scope.tags,
       totalDuration: totalDuration
     })
   }, scope))

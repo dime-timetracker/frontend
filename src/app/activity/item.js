@@ -9,6 +9,7 @@ const btnStartStop = require('./btnStartStop')
 const debug = require('debug')('app.activity.item')
 const grid = require('../utils/views/grid')
 const settingsApi = require('../../api/setting')
+const tagApi = require('../../api/tag')
 const tile = require('../utils/views/tile')
 const timesliceList = require('./timeslice/')
 const toggleButton = require('../utils/components/toggleButton')
@@ -37,7 +38,16 @@ function controller (activityScope) {
     if (e) {
       e.preventDefault()
     }
-    activityApi.persist(scope.activity)
+    Promise.all(scope.activity.tags.filter(tag => !tag.id).map(tag =>
+      tagApi.persist(tag).then(savedTag => { tag.id = savedTag.id }
+    ))).then(() => {
+      // server might expect ids, only
+      // scope.activity.tags = scope.activity.tags.map(tag => tag.id)
+      activityApi.persist(scope.activity)
+      debug(scope.activity)
+      debug(activityScope.activity)
+      m.redraw()
+    })
   }
   scope.onDelete = (e) => {
     if (e) {
@@ -84,7 +94,8 @@ function view (scope) {
         onDelete: scope.onDelete,
         customers: scope.customers,
         projects: scope.projects,
-        services: scope.services
+        services: scope.services,
+        tags: scope.tags
       }),
       m.component(timesliceList, {
         key: 'timeslices-' + scope.activity.id,
@@ -102,7 +113,6 @@ function view (scope) {
       }, scope.shortcuts[relation] + scope.activity[relation].alias))
     }
   })
-  debug(scope.activity.tags)
   scope.activity.tags.forEach(tag => {
     inner.push(m('span.badge.tag', '' + scope.shortcuts.tag + tag.name))
   })
