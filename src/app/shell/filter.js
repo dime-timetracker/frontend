@@ -58,9 +58,9 @@ function onSubmitFilter (e, scope) {
 
 function buttonReportView (scope) {
   return m('.media-object.pull-right',
-    m('a[href="/report/' + encodeURIComponent(scope.query) + '"].form-icon-label', {
+    m('a[href="/report/' + encodeURIComponent(scope.query || '') + '"].form-icon-label', {
       config: m.route
-    }, m('span.icon.icon-print'))
+    }, 'Σ')
   )
 }
 
