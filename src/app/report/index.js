@@ -25,10 +25,10 @@ function itemView (scope, timeslice) {
 
 function headerView (scope) {
   return m('thead', m('tr', [
-    m('th.description', t('description')),
-    m('th.customer', t('customer')),
-    m('th.project', t('project')),
-    m('th.service', t('service')),
+    m('th.description', t('report.table.header.description')),
+    m('th.customer', t('report.table.header.customer')),
+    m('th.project', t('report.table.header.project')),
+    m('th.service', t('report.table.header.service')),
     m('th.startedAt', t('report.table.header.startedAt')),
     m('th.stoppedAt', t('report.table.header.stoppedAt'))
   ]))
