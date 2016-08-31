@@ -1,16 +1,6 @@
 'use strict'
 
 const m = require('mithril')
-global.document = {
-  body: {},
-  attachEvent: () => {}
-}
-global.navigator = {}
-global.window = m.deps({
-  dimeDebug: () => {},
-  navigator: global.navigator,
-  document: global.document
-})
 
 const expect = require('expect.js')
 const getFilterOptions = require('./').getFilterOptions
@@ -19,6 +9,17 @@ const prepareCollection = require('./').prepareCollection
 describe('turning filters into fetch options', () => {
   let customers, projects, services
   beforeEach(() => {
+    global.document = {
+      body: {},
+      attachEvent: () => {}
+    }
+    global.navigator = {}
+    global.window = m.deps({
+      dimeDebug: () => {},
+      navigator: global.navigator,
+      document: global.document
+    })
+
     customers = [{ id: 14, alias: 'foo' }]
     projects = [{ id: 234, alias: 'bar' }]
     services = [{ id: 98723, alias: 'baz' }]

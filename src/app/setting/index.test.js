@@ -7,13 +7,14 @@ const expect = require('expect.js')
 const view = require('./').view
 const sections = require('./').sections
 
-global.window = {
-  navigator: {
-    language: 'en'
-  }
-}
-
 describe('settings view', () => {
+  beforeEach(() => {
+    global.window = {
+      navigator: {
+        language: 'en'
+      }
+    }
+  })
   it('contains nothing for an empty section', () => {
     sections.global = {}
     let out = mq(view, { settings: {} })

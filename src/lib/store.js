@@ -1,6 +1,6 @@
 'use strict'
 
-var Store = function () {
+const Store = function () {
   if (!(this instanceof Store)) {
     return new Store()
   }
@@ -31,4 +31,4 @@ Store.prototype.clear = function (key) {
   }
 }
 
-module.exports = global.window.localStorage || new Store()
+module.exports = (global.window && global.window.localStorage) ? global.window.localStorage : new Store()
