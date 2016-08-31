@@ -14,6 +14,7 @@ global.window = m.deps({
 
 const expect = require('expect.js')
 const getFilterOptions = require('./').getFilterOptions
+const prepareCollection = require('./').prepareCollection
 
 describe('turning filters into fetch options', () => {
   let customers, projects, services
@@ -25,7 +26,7 @@ describe('turning filters into fetch options', () => {
 
   it('should add customer', () => {
     const query = '@foo'
-    expect(getFilterOptions(query, customers, projects, services)).to.eql({
+    expect(getFilterOptions(customers, projects, services)(query)).to.eql({
       parameters: {
         'by[customer]': 14
       }
@@ -34,7 +35,7 @@ describe('turning filters into fetch options', () => {
 
   it('should add project', () => {
     const query = '/bar'
-    expect(getFilterOptions(query, customers, projects, services)).to.eql({
+    expect(getFilterOptions(customers, projects, services)(query)).to.eql({
       parameters: {
         'by[project]': 234
       }
@@ -43,7 +44,7 @@ describe('turning filters into fetch options', () => {
 
   it('should add customer', () => {
     const query = ':baz'
-    expect(getFilterOptions(query, customers, projects, services)).to.eql({
+    expect(getFilterOptions(customers, projects, services)(query)).to.eql({
       parameters: {
         'by[service]': 98723
       }
@@ -53,13 +54,32 @@ describe('turning filters into fetch options', () => {
   describe('add dates', () => {
     it('should add a start date', () => {
       const query = 'current week'
-      let result = getFilterOptions(query, customers, projects, services)
+      let result = getFilterOptions(customers, projects, services)(query)
       expect(result.parameters['by[date]']).to.match(/^[^;]+;$/)
     })
     it('should add a start and an end date', () => {
       const query = 'last month'
-      let result = getFilterOptions(query, customers, projects, services)
+      let result = getFilterOptions(customers, projects, services)(query)
       expect(result.parameters['by[date]']).to.match(/^[^;]+;[^;]+$/)
+    })
+  })
+
+  describe('custom merge', () => {
+    it('should apply a custom merge function', () => {
+      const scope = {
+        collection: [
+          { activity: { name: 'a' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
+          { activity: { name: 'b' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
+          { activity: { name: 'c' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
+          { activity: { name: 'd' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' }
+        ],
+        customMergeCode: 'rows.filter(row => row.activity.name !== "c")'
+      }
+      expect(prepareCollection(scope)).to.eql([
+        { activity: { name: 'a' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
+        { activity: { name: 'b' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
+        { activity: { name: 'd' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' }
+      ])
     })
   })
 })

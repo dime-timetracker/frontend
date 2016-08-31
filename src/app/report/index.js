@@ -167,4 +167,4 @@ function view (scope) {
   ])
 }
 
-module.exports = { controller, getFilterOptions, view }
+module.exports = { controller, getFilterOptions, view, prepareCollection }
