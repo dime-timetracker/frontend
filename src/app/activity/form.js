@@ -73,10 +73,7 @@ function view (scope) {
         id: id('customer'),
         change: function (value) {
           const customerId = parseInt(value)
-          scope.changes.push({
-            field: 'customer_id',
-            value: customerId
-          })
+          scope.changes.customer_id = customerId
           scope.changes.customer = scope.customers.find(customer => customer.id === customerId)
         },
         options: scope.customers
@@ -90,10 +87,7 @@ function view (scope) {
         id: id('project'),
         change: function (value) {
           const projectId = parseInt(value)
-          scope.changes.push({
-            field: 'project_id',
-            value: projectId
-          })
+          scope.changes.project_id = projectId
           scope.changes.project = scope.projects.find(project => project.id === projectId)
         },
         options: scope.projects
@@ -107,10 +101,7 @@ function view (scope) {
         id: id('service'),
         change: function (value) {
           const serviceId = parseInt(value)
-          scope.changes.push({
-            field: 'service_id',
-            value: serviceId
-          })
+          scope.changes.service_id = serviceId
           scope.changes.service = scope.services.find(service => service.id === serviceId)
         },
         options: scope.services
