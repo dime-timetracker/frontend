@@ -2,7 +2,6 @@
 
 const expect = require('expect.js')
 const m = require('src/lib/mithril')
-require('intl')
 
 const fakeWindow = {
   localStorage: {},
