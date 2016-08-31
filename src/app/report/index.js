@@ -16,7 +16,7 @@ const timesliceApi = require('src/api/timeslice')
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
 
-function headerView (scope) {
+function headerView () {
   return m('thead', m('tr', [
     m('th.description', t('report.table.header.description')),
     m('th.customer', t('report.table.header.customer')),
@@ -158,7 +158,7 @@ function view (scope) {
     */
     m('.table-responsive',
       m('table.table', [
-        headerView(scope),
+        headerView(),
         m('tbody',
           prepareCollection(scope).map((timeslice) => m.component(itemView, { item: timeslice }))
         )
