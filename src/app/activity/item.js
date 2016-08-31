@@ -25,7 +25,7 @@ function controller (activityScope) {
     totalDuration: activityScope.totalDuration,
     start: activityScope.start,
     stop: activityScope.stop,
-    showDetails: false,
+    showDetails: activityScope.activity.description === undefined || false,
     shortcuts: {
       'customer': settingsApi.find('global.shortcuts.customer'),
       'project': settingsApi.find('global.shortcuts.project'),

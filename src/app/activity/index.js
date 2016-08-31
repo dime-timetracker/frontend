@@ -188,7 +188,7 @@ function controller () {
     if (e) {
       e.preventDefault()
     }
-    scope.collection.add({})
+    scope.activities.unshift({tags: []})
   }
 
   return scope

@@ -63,7 +63,7 @@ function view (scope) {
         change: function (value) {
           scope.changes.description = value
         }
-      }, scope.changes.description || scope.activity.description))
+      }, scope.changes.description || scope.activity.description || ''))
     ]),
     m('tr', [
       m('th', m('label', {
