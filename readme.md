@@ -2,6 +2,8 @@
 DIME frontend
 =============
 
+[![Build Status](https://travis-ci.org/dime-timetracker/frontend.svg?branch=develop)](https://travis-ci.org/dime-timetracker/frontend)
+
 DIME frontend is - as it's name suggests - a frontend for a DIME timetracking
 server.
 
