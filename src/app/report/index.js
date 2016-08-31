@@ -10,22 +10,11 @@ const moment = require('moment')
 const projectApi = require('src/api/project')
 const serviceApi = require('src/api/service')
 const shellFilter = require('src/app/shell/filter')
+const itemView = require('./item')
 const t = require('src/lib/translation')
 const timesliceApi = require('src/api/timeslice')
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
-
-function itemView (scope, timeslice) {
-  return m('tr.timeslice', [
-    m('td.activity.description', timeslice.activity.description),
-    m('td.activity.customer', timeslice.activity.customer ? timeslice.activity.customer.name : ''),
-    m('td.activity.project', timeslice.activity.project ? timeslice.activity.project.name : ''),
-    m('td.activity.service', timeslice.activity.service ? timeslice.activity.service.name : ''),
-//    m('td.startedAt', timeslice.started_at),
-//    m('td.stoppedAt', timeslice.stopped_at),
-    m('td.duration', moment.duration(timeslice.duration, 'seconds').asHours() + ' h')
-  ])
-}
 
 function headerView (scope) {
   return m('thead', m('tr', [
@@ -171,7 +160,7 @@ function view (scope) {
       m('table.table', [
         headerView(scope),
         m('tbody',
-          prepareCollection(scope).map((timeslice) => itemView(scope, timeslice))
+          prepareCollection(scope).map((timeslice) => m.component(itemView, { item: timeslice }))
         )
       ])
     )

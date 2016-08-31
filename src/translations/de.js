@@ -87,6 +87,7 @@ module.exports = {
     'report.table.header.service': 'Service',
     'report.table.header.startedAt': 'Beginn',
     'report.table.header.stoppedAt': 'Ende',
+    'report.table.header.duration': 'Dauer',
     'service.add': 'Eine neue Dienstleistung hinzufügen',
     'service.disable': 'deaktivieren',
     'service.disable.confirm': 'Keine Lust mehr auf {service}?',
