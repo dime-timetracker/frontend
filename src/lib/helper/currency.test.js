@@ -32,6 +32,7 @@ describe('currency', () => {
   })
 
   it('should convert number (3.22) into formated string 3,22 €, using browser locale', () => {
+    global.window.navigator.language = 'de-DE'
     let result = currency(3.22)
     expect(result).to.be('3,22' + nbsp + '€')
   })
