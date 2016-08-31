@@ -14,9 +14,7 @@ function getQueryParts (query) {
 }
 
 function isKnownQuery (query) {
-  return (undefined !== find(bookmarks, function (candidate) {
-    return isEqual(getQueryParts(candidate.query), getQueryParts(query))
-  }))
+  return bookmarks.some(bookmark => isEqual(getQueryParts(bookmark.query), getQueryParts(query)))
 }
 
 function add (name, query) {
@@ -45,12 +43,13 @@ function remove (name) {
 function init (list) {
   if (list) {
     bookmarks = list
-  }
-  list = settingsApi.find(configPath)
-  if (list) {
-    bookmarks = JSON.parse(list)
   } else {
-    bookmarks = []
+    list = settingsApi.find(configPath)
+    if (list) {
+      bookmarks = JSON.parse(list)
+    } else {
+      bookmarks = []
+    }
   }
   debug('bookmarks', bookmarks)
   return bookmarks
