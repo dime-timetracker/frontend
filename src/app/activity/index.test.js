@@ -18,22 +18,22 @@ const expect = require('expect.js')
 const running = require('./').running
 
 describe('activity', () => {
-  let item
+  let activity
 
   beforeEach(() => {
-    item = { timeslices: [
-      { stoppedAt: '2015-06-22 14:23:35' },
-      { stoppedAt: '2015-06-22 14:23:35' },
-      { stoppedAt: '2015-06-22 14:23:35' }
+    activity = { timeslices: [
+      { stopped_at: '2015-06-22 14:23:35' },
+      { stopped_at: '2015-06-22 14:23:35' },
+      { stopped_at: '2015-06-22 14:23:35' }
     ]}
   })
 
   it('should not be running', () => {
-    expect(running(item)).to.be(false)
+    expect(running(activity)).to.be(false)
   })
 
   it('should be running', () => {
-    item.timeslices.push({})
-    expect(running(item)).to.be(true)
+    activity.timeslices.push({})
+    expect(running(activity)).to.be(true)
   })
 })

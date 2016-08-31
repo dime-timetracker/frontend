@@ -23,9 +23,9 @@ const timestampFormat = userSettings.find('global.timestamp.format')
 userSettings.activity = require('./settings')
 
 function running (activity) {
-  return activity.timeslices.reduce((running, timeslice) => {
-    return running || timesliceRunning(timeslice)
-  }, false)
+  return activity.timeslices.some(timeslice => {
+    return timesliceRunning(timeslice)
+  })
 }
 
 function totalDuration (activity) {
