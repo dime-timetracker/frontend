@@ -13,6 +13,7 @@ const shellFilter = require('src/app/shell/filter')
 const itemView = require('./item')
 const t = require('src/lib/translation')
 const timesliceApi = require('src/api/timeslice')
+const totalsView = require('./totals').view
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
 
@@ -148,6 +149,7 @@ function controller () {
 }
 
 function view (scope) {
+  const rows = prepareCollection(scope)
   return m('.report', [
     m('.query.filter', cardView(m.component(shellFilter, scope))),
     /*
@@ -160,8 +162,9 @@ function view (scope) {
       m('table.table', [
         headerView(),
         m('tbody',
-          prepareCollection(scope).map((timeslice) => m.component(itemView, { item: timeslice }))
-        )
+          rows.map((timeslice) => m.component(itemView, { item: timeslice }))
+        ),
+        totalsView({ rows: rows })
       ])
     )
   ])

@@ -88,6 +88,7 @@ module.exports = {
     'report.table.header.startedAt': 'Beginn',
     'report.table.header.stoppedAt': 'Ende',
     'report.table.header.duration': 'Dauer',
+    'report.table.totals.duration': 'Gesamtdauer',
     'service.add': 'Eine neue Dienstleistung hinzufügen',
     'service.disable': 'deaktivieren',
     'service.disable.confirm': 'Keine Lust mehr auf {service}?',
