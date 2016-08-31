@@ -62,7 +62,7 @@ function controller () {
 function view (scope) {
   return m('.settings', Object.keys(sections).map((sectionName) => {
     const itemNames = Object.keys(sections[sectionName])
-    return itemNames.length ? m('.section', [
+    return itemNames.length ? m('.section.' + sectionName, [
       m('h2.content-sub-heading', headerWithDescription(sectionName)),
       cardView(itemNames.map((name) => {
         const setting = sections[sectionName][name]

@@ -19,16 +19,16 @@ describe('settings view', () => {
     sections.global = {}
     let out = mq(view, { settings: {} })
     out.should.have(1, '.settings')
-    out.should.have(0, '.section')
-    out.should.have(0, '.item')
+    out.should.have(0, '.section.global')
+    out.should.have(0, '.section.global .item')
   })
   it('renders a text input, if no type is given', () => {
     sections.global = { foo: { value: 'bla' } }
     let out = mq(view, { settings: {} })
     out.should.have(1, '.settings')
-    out.should.have(1, '.section')
-    out.should.have(1, '.item')
-    out.should.have(1, '.item input[name="foo"][type="text"]')
+    out.should.have(1, '.section.global')
+    out.should.have(1, '.section.global .item')
+    out.should.have(1, '.section.global .item input[name="foo"][type="text"]')
   })
   it('renders a text input, if type "text" is given; using default value', () => {
     sections.global = { foo: { value: 'bla', type: 'text' } }
