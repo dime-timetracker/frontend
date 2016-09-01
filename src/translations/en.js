@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   translation: {
@@ -190,6 +190,6 @@ module.exports = {
     'Name your bookmark': 'Name your bookmark',
     'Save': 'Save',
     'Remove': 'Remove',
-    'Close': 'Close',
+    'Close': 'Close'
   }
-};
+}
