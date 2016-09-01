@@ -7,6 +7,8 @@ const m = require('mithril')
 //	if they don't already exist, otherwise we would override the browser
 if (!global.document) {
   global.document = {}
+}
+if (!global.document.createElement) {
   global.document.createElement = global.document.createElement || function () {
     return {
       setAttribute: function () {}
@@ -24,7 +26,6 @@ if (!global.navigator) {
     userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.130 Safari/537.36'
   }
 }
-
 
 //	Grab code mirror and the javascript language
 //	Note: you cannot dynamically require with browserify,
