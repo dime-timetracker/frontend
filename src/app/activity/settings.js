@@ -6,6 +6,7 @@ module.exports = {
   'activity.display.showActivityIncome': { type: 'checkbox', value: true },
   'activity.display.incomePrecisionSeconds': { type: 'number', value: 15 * 60 },
 
+  /*
   'activity.shortcuts.selectNext': { type: 'text', value: 'j' },
   'activity.shortcuts.selectPrevious': { type: 'text', value: 'k' },
   'activity.shortcuts.startStop': { type: 'text', value: 'space' },
@@ -13,4 +14,5 @@ module.exports = {
   'activity.shortcuts.confirmTag': { type: 'text', value: 'space' },
   'activity.shortcuts.removeLatestTag': { type: 'text', value: 'backspace' },
   'activity.shortcuts.confirmAllTags': { type: 'text', value: 'enter' }
+  */
 }
