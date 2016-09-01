@@ -5,6 +5,7 @@ module.exports = {
     'activity.customer': 'Kunde',
     'activity.project': 'Projekt',
     'activity.service': 'Service',
+    'activity.tags': 'Tags',
     'activity.description': 'Beschreibung',
     'activity.startstopbutton.start.title': 'Starte Aktivität',
     'activity.startstopbutton.stop.title': 'Stoppe Aktivität',

@@ -6,6 +6,7 @@ module.exports = {
     'activity.project': 'project',
     'activity.service': 'service',
     'activity.description': 'description',
+    'activity.tags': 'tags',
     'activity.startstopbutton.start.title': 'Start Activity',
     'activity.startstopbutton.stop.title': 'Stop Aktivity',
     'activity.filter.none': 'No Filter',
