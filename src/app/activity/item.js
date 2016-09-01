@@ -6,13 +6,37 @@ const t = require('../../lib/translation')
 const activityApi = require('../../api/activity')
 const activityForm = require('./form')
 const btnStartStop = require('./btnStartStop')
-const debug = require('debug')('app.activity.item')
 const grid = require('../utils/views/grid')
 const settingsApi = require('../../api/setting')
 const tagApi = require('../../api/tag')
 const tile = require('../utils/views/tile')
 const timesliceList = require('./timeslice/')
 const toggleButton = require('../utils/components/toggleButton')
+
+function submit (context) {
+  /**
+   * @var context {
+   *    object activity    Activity to be submitted
+   *    object activityApi Activity API client
+   *    array  tags        Array of existing tags
+   *    object tagApi      Tag API client
+   * }
+   */
+  function persistActivity (resolve, reject) {
+    context.activity.tags = (context.activity.tags || []).map(tag => tag.id)
+    return context.activityApi.persist(context.activity).then(resolve, reject)
+  }
+  if ((context.activity.tags || []).length) {
+    return Promise.all((context.activity.tags || []).filter(tag => !tag.id).map(tag =>
+      context.tagApi.persist(tag).then(savedTag => {
+        tag.id = savedTag.id
+        context.tags.push(tag)
+      }
+    ))).then(persistActivity)
+  } else {
+    return new Promise(persistActivity)
+  }
+}
 
 function controller (activityScope) {
   const scope = {
@@ -38,17 +62,13 @@ function controller (activityScope) {
     if (e) {
       e.preventDefault()
     }
-    Promise.all(scope.activity.tags.filter(tag => !tag.id).map(tag =>
-      tagApi.persist(tag).then(savedTag => {
-        tag.id = savedTag.id
-        scope.tags.push(tag)
-        activityScope.tags.push(tag)
-      }
-    ))).then(() => {
-      scope.activity.tags = scope.activity.tags.map(tag => tag.id)
-      activityApi.persist(scope.activity)
-      debug(scope.activity)
-      debug(activityScope.activity)
+    submit({
+      activity: scope.activity,
+      activityApi: activityApi,
+      tags: activityScope.tags,
+      tagApi: tagApi
+    }).then((activity) => {
+      scope.activity = activity
       m.redraw()
     })
   }
@@ -126,5 +146,6 @@ function view (scope) {
 
 module.exports = {
   controller: controller,
-  view: view
+  view: view,
+  submit: submit
 }

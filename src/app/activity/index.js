@@ -5,7 +5,7 @@ const buttonView = require('src/app/utils/views/button')
 const card = require('src/app/utils/views/card/default')
 const customerApi = require('src/api/customer')
 const debug = require('debug')('app.activity')
-const itemView = require('./item')
+const item = require('./item')
 const m = require('src/lib/mithril')
 const moment = require('moment')
 const projectApi = require('src/api/project')
@@ -65,7 +65,7 @@ function activityListView (scope) {
     if (!activity.timeslices) {
       activity.timeslices = []
     }
-    return m.component(itemView, {
+    return m.component(item, {
       activity: activity,
       collection: scope.visibleActivities,
       customers: scope.customers,
@@ -147,7 +147,12 @@ function controller () {
       activity.service = scope.services.find(service => service.alias === activity.service.alias)
       activity.service_id = activity.service ? activity.service.id : undefined
     }
-    api.persist(activity).then((newActivity) => {
+    item.submit({
+      activity: activity,
+      activityApi: api,
+      tags: scope.tags,
+      tagApi: tagApi
+    }).then((newActivity) => {
       assignActivityRelations(scope)(newActivity)
       scope.activities.unshift(newActivity)
       scope.visibleActivities.unshift(newActivity)
