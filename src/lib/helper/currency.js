@@ -15,7 +15,6 @@ const t = require('src/lib/translation')
 const currency = function (amount, options, locales) {
   options = extend({style: 'currency', currency: t('default.currency')}, options)
   const result = amount.toLocaleString(locales, options)
-  console.log(amount + '.toLocaleString("' + locales + '", ' + JSON.stringify(options) + ')', result)
   return result
 }
 

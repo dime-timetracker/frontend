@@ -37,6 +37,7 @@ require('codemirror/mode/htmlmixed/htmlmixed.js')
 require('codemirror/mode/css/css.js')
 
 const CodemirrorComponent = {
+  instance: null,
 	//	Returns a textarea
   view: function (ctrl, attrs) {
     return m('div', [
@@ -47,12 +48,13 @@ const CodemirrorComponent = {
     return function (element, isInitialized) {
       if (typeof CodeMirror !== 'undefined') {
         if (!isInitialized) {
-          const editor = CodeMirror.fromTextArea(element, {
-            lineNumbers: true
+          CodemirrorComponent.instance = CodeMirror.fromTextArea(element, {
+            lineNumbers: true,
+            mode: 'text/javascript'
           })
-          editor.on('change', function (instance, object) {
+          CodemirrorComponent.instance.on('change', function (instance, object) {
             m.startComputation()
-            attrs.value(editor.doc.getValue())
+            attrs.value(CodemirrorComponent.instance.doc.getValue())
             if (typeof attrs.onchange === 'function') {
               attrs.onchange(instance, object)
             }
@@ -63,6 +65,9 @@ const CodemirrorComponent = {
         console.warn('ERROR: You need Codemirror in the page')
       }
     }
+  },
+  reload: function (newContent) {
+    CodemirrorComponent.instance.doc.setValue(newContent)
   }
 }
 

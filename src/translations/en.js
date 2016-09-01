@@ -112,6 +112,8 @@ module.exports = {
     'service.remove.confirm': 'Won\'t you offer {service} anymore?',
     'shell.activity.placeholder': 'Add activity ({shortcut})',
     'shell.filter.placeholder': 'Filter list ({shortcut})',
+    'shell.merger.example.none': 'custom code',
+    'shell.merger.example.groupByActivity': 'merge by activity',
     'tag.add': 'Add tag',
     'tag.property.name': 'Tag name',
     'tag.list.disabled.empty': 'There are no disabled tags.',

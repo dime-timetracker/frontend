@@ -112,6 +112,8 @@ module.exports = {
     'service.remove.confirm': 'Soll die Dienstleistung "{service}" wirklich gelöscht werden?',
     'shell.activity.placeholder': 'Eine Aktivität hinzufügen ({shortcut})',
     'shell.filter.placeholder': 'Liste filtern ({shortcut})',
+    'shell.merger.example.none': 'eigener Code',
+    'shell.merger.example.groupByActivity': 'nach Aktivität zusammenfassen',
     'tag.add': 'Ein neues Tag hinzufügen',
     'tag.property.name': 'Name des Tags',
     'tag.list.disabled.empty': 'Ich habe keine inaktiven Tags gefunden.',
