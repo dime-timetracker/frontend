@@ -39,7 +39,11 @@ function controller (activityScope) {
       e.preventDefault()
     }
     Promise.all(scope.activity.tags.filter(tag => !tag.id).map(tag =>
-      tagApi.persist(tag).then(savedTag => { tag.id = savedTag.id }
+      tagApi.persist(tag).then(savedTag => {
+        tag.id = savedTag.id
+        scope.tags.push(tag)
+        activityScope.tags.push(tag)
+      }
     ))).then(() => {
       scope.activity.tags = scope.activity.tags.map(tag => tag.id)
       activityApi.persist(scope.activity)
