@@ -5,6 +5,7 @@ const t = require('src/lib/translation')
 const formatShortcut = require('src/lib/helper/mousetrapCommand')
 const debug = global.window.dimeDebug('shell.activity')
 const parse = require('src/lib/parser').parse
+const settingsApi = require('src/api/setting')
 const shell = require('../shell')
 
 function createActivity (e, scope) {
@@ -31,10 +32,10 @@ function inputView (scope) {
 
 function controller (listScope) {
   const scope = {
-    shortcut: 'd a',
-    icon: 'icon-add',
+    addActivity: listScope.startNewActivity,
     htmlId: 'shell',
-    addActivity: listScope.startNewActivity
+    icon: 'icon-add',
+    shortcut: settingsApi.find('shell.shortcuts.focusActivity')
   }
   scope.placeholder = ' ' + t('shell.activity.placeholder', {
     shortcut: formatShortcut(scope.shortcut)
