@@ -41,8 +41,7 @@ function controller (activityScope) {
     Promise.all(scope.activity.tags.filter(tag => !tag.id).map(tag =>
       tagApi.persist(tag).then(savedTag => { tag.id = savedTag.id }
     ))).then(() => {
-      // server might expect ids, only
-      // scope.activity.tags = scope.activity.tags.map(tag => tag.id)
+      scope.activity.tags = scope.activity.tags.map(tag => tag.id)
       activityApi.persist(scope.activity)
       debug(scope.activity)
       debug(activityScope.activity)
