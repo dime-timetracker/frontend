@@ -109,7 +109,7 @@ function assignActivityRelations (scope) {
     activity.service = scope.services.find((service) => {
       return service.id === activity.service_id
     })
-    activity.tags = activity.tags.map(activityTag => scope.tags.find(tag => {
+    activity.tags = activity.tags.filter(tag => tag).map(activityTag => scope.tags.find(tag => {
       return tag.id === activityTag || tag.id === activityTag.id
     }))
   }
