@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
@@ -60,4 +60,4 @@ function view (scope) {
 module.exports = {
   controller: controller,
   view: view
-};
+}
