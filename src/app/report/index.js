@@ -10,6 +10,7 @@ const moment = require('moment')
 const projectApi = require('src/api/project')
 const serviceApi = require('src/api/service')
 const shellFilter = require('src/app/shell/filter')
+const shellMerger = require('src/app/shell/merger')
 const itemView = require('./item')
 const t = require('src/lib/translation')
 const timesliceApi = require('src/api/timeslice')
@@ -125,7 +126,22 @@ function controller () {
     query: decodeURIComponent(query.replace(/\+/g, '%20')),
     onSubmitFilter: function () {},
     customMergeCodeExamples: {
-      groupByActivity: 'rows.reduce((result, row) => { if (undefined === result[row.activity.id]) { result[row.activity.id] = row; console.log(row) } else { result[row.activity.id].duration += row.duration; if (row.started_at < result[row.activity.id].started_at) { result[row.activity.id].started_at = row.started_at } }; if (result[row.activity.id].stopped_at < row.stopped_at) { result[row.activity.id].stopped_at = row.stopped_at }; return result }, [])'
+      groupByActivity: `
+        rows.reduce((result, row) => {
+          if (undefined === result[row.activity.id]) {
+            result[row.activity.id] = row
+            console.log(row)
+          } else {
+            result[row.activity.id].duration += row.duration
+            if (row.started_at < result[row.activity.id].started_at) {
+              result[row.activity.id].started_at = row.started_at
+            }
+          }
+          if (result[row.activity.id].stopped_at < row.stopped_at) {
+            result[row.activity.id].stopped_at = row.stopped_at
+          }
+          return result
+        }, [])`
     },
     customMergeCode: null
   }
@@ -152,12 +168,11 @@ function view (scope) {
   const rows = prepareCollection(scope)
   return m('.report', [
     m('.query.filter', cardView(m.component(shellFilter, scope))),
-    /*
     m('.query.merger', cardView(m.component(shellMerger, {
+      current: scope.customMergeCode || '',
       update: function (code) { scope.customMergeCode = code },
       examples: scope.customMergeCodeExamples
     }))),
-    */
     m('.table-responsive',
       m('table.table', [
         headerView(),
