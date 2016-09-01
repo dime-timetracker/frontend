@@ -12,6 +12,7 @@ module.exports = {
     'activity.filter.none': 'Kein Filter',
     'activity.details.hide': 'Details verbergen',
     'activity.details.show': 'Details anzeigen',
+    'activity.form.tags.placeholder': 'z.B.: {shortcut}dime54 {shortcut}tags {shortcut}bugfix',
     'button.save': 'Speichern',
     'config.activity.description': 'Einstellungen für Aktivitäten',
     'config.activity.title': 'Aktivitäten',

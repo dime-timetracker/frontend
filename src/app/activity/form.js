@@ -26,6 +26,7 @@ function controller (context) {
     customers: context.customers.map((customer) => { return { value: customer.id, label: customer.name } }),
     projects: context.projects.map((project) => { return { value: project.id, label: project.name } }),
     services: context.services.map((service) => { return { value: service.id, label: service.name } }),
+    shortcuts: context.shortcuts,
     tags: context.tags,
     changes: {}
   }
@@ -49,6 +50,7 @@ function view (scope) {
   const customerId = scope.activity.customer ? scope.activity.customer.id : null
   const projectId = scope.activity.project ? scope.activity.project.id : null
   const serviceId = scope.activity.service ? scope.activity.service.id : null
+  const tags = (scope.changes.tags || scope.activity.tags || [])
   const buttons = []
   if (Object.keys(scope.changes).length) {
     buttons.push(m('a.btn.btn-green[href=#]', { onclick: scope.save }, m('span.icon.icon-done')))
@@ -114,13 +116,17 @@ function view (scope) {
       m('td', inputView({
         id: id('tags'),
         change: function (value) {
-          const tagNames = value.split('#').map(tag => tag.replace(/^#/, ''))
+          const tagNames = value.split(scope.shortcuts.tag)
+            .map(tag => tag.trim())
+            .filter(tag => tag.length)
+            .map(tag => tag.replace(new RegExp('/^' + scope.shortcuts.tag + '/'), ''))
           scope.changes.tags = tagNames.map(tagName => {
             return scope.tags.find(tag => tag.name === tagName) || { name: tagName }
           })
           debug(tagNames, scope.changes)
-        }
-      }, (scope.changes.tags || scope.activity.tags || []).map(tag => tag.name).join(' ')))
+        },
+        placeholder: t('activity.form.tags.placeholder', { shortcut: scope.shortcuts.tag })
+      }, tags.map(tag => scope.shortcuts.tag + tag.name).join(' ')))
     ]),
     m('tr', [
       m('td.buttons.text-right', { colspan: 2 },

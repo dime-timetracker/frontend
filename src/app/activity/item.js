@@ -95,7 +95,8 @@ function view (scope) {
         customers: scope.customers,
         projects: scope.projects,
         services: scope.services,
-        tags: scope.tags
+        tags: scope.tags,
+        shortcuts: scope.shortcuts
       }),
       m.component(timesliceList, {
         key: 'timeslices-' + scope.activity.id,
