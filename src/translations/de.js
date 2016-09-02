@@ -59,6 +59,7 @@ module.exports = {
     'customer.disable.confirm': 'Gibt es vorerst nix mehr zu tun für {customer}?',
     'customer.enable': 'aktivieren',
     'customer.enable.confirm': 'Gibt es wieder Arbeit von {customer}?',
+    'customer.property.address': 'Adresse',
     'customer.property.alias': 'Alias des Kunden',
     'customer.property.enabled': 'Kunde ist aktiv',
     'customer.property.missing': 'Bitte {property} eingeben!',

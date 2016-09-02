@@ -1,19 +1,42 @@
-'use strict';
+'use strict'
 
-var m = require('src/lib/mithril');
-var isFunction = require('lodash/isFunction');
+const m = require('src/lib/mithril')
+const isFunction = require('lodash/isFunction')
 
-var text = function (value, options) {
-  var attr = {
-    contenteditable: true
-  };
+/**
+ * Textarea field
+ *
+ * options = {
+ *   type: String,
+ *   update: func,
+ *   inline: Boolean
+ * }
+ *
+ * @param  {Object} options
+ * @param  {String} value
+ * @return {VirtualElement} textarea field
+ */
+module.exports = function (options, value) {
+  options = options || {}
 
-  if (isFunction(options.update)) {
-    attr.oninput = function(e) {
-      options.update(e.target.textContent, e);
-    };
+  if (value === null || value === undefined) {
+    value = options.value
   }
-  return m('span.form-control-static', attr, value);
-};
+  const attributes = {
+    value: value
+  }
+  if (options.id) {
+    attributes.id = options.id
+  }
+  if (options.name) {
+    attributes.name = options.name
+  }
+  if (options.placeholder) {
+    attributes.placeholder = options.placeholder
+  }
+  if (isFunction(options.change)) {
+    attributes.onchange = (e) => { options.change(e.target.value, e) }
+  }
 
-module.exports = text;
+  return m('textarea.form-control' + ((options.inline) ? '.form-control-inline' : ''), attributes)
+}

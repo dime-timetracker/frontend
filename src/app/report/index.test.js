@@ -33,37 +33,14 @@ describe('turning filters into fetch options', () => {
     out.should.have(8, '.columns-selection input')
     out.should.have(8, '.columns-selection label')
 
-    out.should.have(1, '.columns-selection input#enable_column_description[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_description[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_description[type=checkbox][checked]'))
-
-    out.should.have(1, '.columns-selection input#enable_column_customer[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_customer[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_customer[type=checkbox]:not([checked])'))
-
-    out.should.have(1, '.columns-selection input#enable_column_project[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_project[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_project[type=checkbox][checked]'))
-
-    out.should.have(1, '.columns-selection input#enable_column_service[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_service[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_service[type=checkbox]:not([checked])'))
-
-    out.should.have(1, '.columns-selection input#enable_column_tags[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_tags[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_tags[type=checkbox]:not([checked])'))
-
-    out.should.have(1, '.columns-selection input#enable_column_started_at[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_started_at[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_started_at[type=checkbox]:not([checked])'))
-
-    out.should.have(1, '.columns-selection input#enable_column_stopped_at[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_stopped_at[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_stopped_at[type=checkbox]:not([checked])'))
-
-    out.should.have(1, '.columns-selection input#enable_column_duration[type=checkbox]')
-    console.log(out.first('.columns-selection input#enable_column_duration[type=checkbox]'))
-    console.log(out.first('.columns-selection input#enable_column_duration[type=checkbox][checked]'))
+    out.should.have(1, '.columns-selection input#enable_column_description[type=checkbox][checked]')
+    out.should.have(1, '.columns-selection input#enable_column_customer[type=checkbox]:not([checked])')
+    out.should.have(1, '.columns-selection input#enable_column_project[type=checkbox][checked]')
+    out.should.have(1, '.columns-selection input#enable_column_service[type=checkbox]:not([checked])')
+    out.should.have(1, '.columns-selection input#enable_column_tags[type=checkbox]:not([checked])')
+    out.should.have(1, '.columns-selection input#enable_column_started_at[type=checkbox]:not([checked])')
+    out.should.have(1, '.columns-selection input#enable_column_stopped_at[type=checkbox]:not([checked])')
+    out.should.have(1, '.columns-selection input#enable_column_duration[type=checkbox][checked]')
   })
 
   it('should add customer', () => {

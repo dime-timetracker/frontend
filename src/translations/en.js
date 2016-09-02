@@ -58,6 +58,7 @@ module.exports = {
     'customer.disable.confirm': 'Nothing left to do for {customer}?',
     'customer.enable': 'enable',
     'customer.enable.confirm': 'Yeah, another job to do for {customer}?',
+    'customer.property.address': 'Address',
     'customer.property.alias': 'Customer alias',
     'customer.property.enabled': 'Customer is enabled',
     'customer.property.missing': 'Please enter {property}!',

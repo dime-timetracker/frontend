@@ -9,10 +9,27 @@ const userSettings = require('../setting').sections
 const fieldViews = {
   input: require('../utils/views/formfields/input'),
   select: require('../utils/views/formfields/select'),
+  text: require('../utils/views/formfields/text'),
   boolean: require('../utils/views/formfields/selectBoolean')
 }
 
-function propertyView (scope, property) {
+function propertyValue (customer, property) {
+  let value = customer[property.name]
+  if (value && property.name === 'address') {
+    const parts = value.split("\n").reduce((parts, part) => {
+      parts.push(m('br'))
+      parts.push(part)
+      return parts
+    }, [])
+    parts.shift()
+    return m('.value', parts)
+  }
+  return value === 0 || value
+    ? m('.value', [(property.prefix || ''), value, (property.postfix || '')].join(''))
+    : m('em', t('customer.property.missing', { property: t('customer.property.' + property.name) }))
+}
+
+function propertyField (scope, property) {
   if (scope.edit === property.name) {
     return m('.edit.property.' + property.name, m('.form-row', [
       m('.affix.prefix', (property.prefix || '')),
@@ -33,13 +50,10 @@ function propertyView (scope, property) {
       m('.affix.suffix', (property.postfix || ''))
     ]))
   }
-  const valueOut = scope.customer[property.name] === 0 || scope.customer[property.name]
-    ? (property.prefix || '') + scope.customer[property.name] + (property.postfix || '')
-    : m('em', t('customer.property.missing', { property: t('customer.property.' + property.name) }))
   return m('.property.' + property.name, {
     onclick: () => { scope.edit = property.name },
     title: t('property.edit', { property: t('customer.property.' + property.name) })
-  }, valueOut)
+  }, propertyValue(scope.customer, property))
 }
 
 function controller (listContext) {
@@ -78,14 +92,18 @@ function view (scope) {
         if (scope.edit) { debug('quit editing ', scope.customer.name); scope.edit = null }
       }
     }, [
-      m('p.card-heading', { title: scope.customer.name }, propertyView(scope, {
+      m('p.card-heading', { title: scope.customer.name }, propertyField(scope, {
         name: 'name',
         formElement: fieldViews.input
       })), m('p.card-content', [
-        propertyView(scope, {
+        propertyField(scope, {
           name: 'alias',
           formElement: fieldViews.input,
           prefix: scope.shortcut
+        }),
+        propertyField(scope, {
+          name: 'address',
+          formElement: fieldViews.text
         })
       ])
     ]),
@@ -98,4 +116,4 @@ function view (scope) {
   ])))
 }
 
-module.exports = { controller, view }
+module.exports = { controller, view, propertyValue }
