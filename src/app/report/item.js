@@ -9,13 +9,12 @@ function view (scope) {
   const columns = scope.columns
   return m('tr.timeslice', { key: scope.key }, columns.map(col => {
     let value
-    if (item.activity[col]) {
-      if (col === 'tags') {
-        const shortcut = userSettings.find('global.shortcuts.tag')
-        value = item.activity.tags.map(tag => tag ? shortcut + tag.name : null).join(' ')
-      } else {
-        value = item.activity[col].name || item.activity[col]
-      }
+    if (col === 'tags') {
+      // activity tags were broken down to row
+      const shortcut = userSettings.find('global.shortcuts.tag')
+      value = item.tags.map(tag => tag ? shortcut + tag.name : null).join(' ')
+    } else if (item.activity[col]) {
+      value = item.activity[col].name || item.activity[col]
     } else {
       if (col === 'duration') {
         value = moment.duration(item.duration, 'seconds').asHours().toFixed(2) + ' h'

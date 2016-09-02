@@ -65,7 +65,7 @@ function onFetch (customers, projects, services, tags) {
       timesliceApi.fetchAll(options)
     ]).then(function ([activities, timeslices]) {
       debug('filtered activities', activities)
-      scope.collection(timeslices.map((timeslice) => {
+      scope.collection(timeslices.map(timeslice => {
         const activity = activities.find((activity) => (activity.id === timeslice.activity_id))
         if (activity) {
           timeslice.activity = activity
@@ -78,10 +78,11 @@ function onFetch (customers, projects, services, tags) {
           timeslice.activity.service = services.find((service) => (
             service.id === timeslice.activity.service_id
           ))
-          timeslice.activity.tags = timeslice.activity.tags.map(tagId => tags.find(tag => tag.id === tagId))
+          timeslice.tags = timeslice.activity.tags
+            .map(tagId => tags.find(tag => tag.id === tagId))
           return timeslice
         }
-      }).filter((timeslice) => timeslice))
+      }).filter(timeslice => timeslice))
       prepareCollection(scope)
     })
   }
@@ -123,8 +124,8 @@ function controller () {
       'project',
       'service',
       'tags',
-      'startedAt',
-      'stoppedAt',
+      'started_at',
+      'stopped_at',
       'duration'
     ]),
     query: decodeURIComponent(query.replace(/\+/g, '%20')),
