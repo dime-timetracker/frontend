@@ -1,6 +1,6 @@
 'use strict'
 
-const extend = require('lodash/object/extend')
+const extend = require('lodash/extend')
 const t = require('src/lib/translation')
 
 /**

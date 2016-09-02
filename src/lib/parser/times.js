@@ -1,7 +1,7 @@
 'use strict';
 
 var moment = require('moment');
-var isEmpty = require('lodash/lang/isEmpty');
+var isEmpty = require('lodash/isEmpty');
 var now;
 
 function parseStartStop (obj) {

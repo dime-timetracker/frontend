@@ -2,7 +2,7 @@
 
 var m = require('src/lib/mithril');
 var moment = require('moment');
-var isNumber = require('lodash/lang/isNumber');
+var isNumber = require('lodash/isNumber');
 
 var duration = function (data, unit) {
   var content = '--:--:--';

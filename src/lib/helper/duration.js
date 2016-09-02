@@ -1,7 +1,7 @@
 'use strict';
 
 var moment = require('moment');
-var isNumber = require('lodash/lang/isNumber');
+var isNumber = require('lodash/isNumber');
 
 /**
  * Format duration.

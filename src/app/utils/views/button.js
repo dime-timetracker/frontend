@@ -2,8 +2,8 @@
 
 var m = require('src/lib/mithril');
 var t = require('../../../lib/translation');
-var isFunction = require('lodash/lang/isFunction');
-var isString = require('lodash/lang/isString');
+var isFunction = require('lodash/isFunction');
+var isString = require('lodash/isString');
 
 /**
  * Button is mithril virtual element that will generate a float button

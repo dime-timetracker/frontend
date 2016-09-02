@@ -1,7 +1,7 @@
 'use strict'
 
 const m = require('src/lib/mithril')
-const isFunction = require('lodash/lang/isFunction')
+const isFunction = require('lodash/isFunction')
 
 /**
  * Input field

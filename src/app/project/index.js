@@ -1,8 +1,8 @@
 'use strict'
 
-const groupBy = require('lodash/collection/groupBy')
+const groupBy = require('lodash/groupBy')
 const m = require('src/lib/mithril')
-const sortBy = require('lodash/collection/sortBy')
+const sortBy = require('lodash/sortBy')
 
 const api = require('../../api/project')
 const button = require('../utils/views/button')

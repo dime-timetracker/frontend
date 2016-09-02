@@ -1,7 +1,7 @@
 'use strict'
 
 const m = require('src/lib/mithril')
-const sortBy = require('lodash/collection/sortBy')
+const sortBy = require('lodash/sortBy')
 const timesliceItem = require('./item')
 
 function controller (activityScope) {

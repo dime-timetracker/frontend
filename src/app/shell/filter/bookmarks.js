@@ -1,8 +1,8 @@
 'use strict'
 
 const debug = require('debug')('app.activity.shell.filter.bookmarks')
-const find = require('lodash/collection/find')
-const isEqual = require('lodash/lang/isEqual')
+const find = require('lodash/find')
+const isEqual = require('lodash/isEqual')
 const settingsApi = require('src/api/setting')
 
 const configPath = 'filter/bookmarks'

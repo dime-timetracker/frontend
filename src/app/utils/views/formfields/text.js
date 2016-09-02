@@ -1,7 +1,7 @@
 'use strict';
 
 var m = require('src/lib/mithril');
-var isFunction = require('lodash/lang/isFunction');
+var isFunction = require('lodash/isFunction');
 
 var text = function (value, options) {
   var attr = {

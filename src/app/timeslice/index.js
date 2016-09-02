@@ -1,8 +1,8 @@
 'use strict'
 
 const m = require('src/lib/mithril')
-const isNumber = require('lodash/lang/isNumber')
-const isUndefined = require('lodash/lang/isUndefined')
+const isNumber = require('lodash/isNumber')
+const isUndefined = require('lodash/isUndefined')
 const moment = require('moment')
 const userSettings = require('../setting').sections
 const timestampFormat = userSettings.find('global.timestamp.format')

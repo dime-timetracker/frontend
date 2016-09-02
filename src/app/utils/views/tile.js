@@ -1,8 +1,8 @@
 'use strict';
 
 var m = require('src/lib/mithril');
-var isEmpty = require('lodash/lang/isEmpty');
-var isArray = require('lodash/lang/isArray');
+var isEmpty = require('lodash/isEmpty');
+var isArray = require('lodash/isArray');
 
 var buildAction = function (actions) {
   var content;

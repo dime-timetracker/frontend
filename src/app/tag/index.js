@@ -5,7 +5,7 @@ const t = require('../../lib/translation')
 const item = require('./item')
 const button = require('../utils/views/button')
 const api = require('../../api/tag')
-const filter = require('lodash/collection/filter')
+const filter = require('lodash/filter')
 
 function controller () {
   var scope = {

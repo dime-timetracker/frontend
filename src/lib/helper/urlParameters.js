@@ -1,8 +1,8 @@
 'use strict';
 
-var forOwn = require('lodash/object/forOwn');
-var isUndefined = require('lodash/lang/isUndefined');
-var isPlainObject = require('lodash/lang/isPlainObject');
+var forOwn = require('lodash/forOwn');
+var isUndefined = require('lodash/isUndefined');
+var isPlainObject = require('lodash/isPlainObject');
 
 /**
  * Concatenates and encode parameter object, divided by ampersand.

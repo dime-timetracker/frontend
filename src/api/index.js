@@ -6,7 +6,7 @@ const debug = require('debug')('api')
 const authorize = require('../lib/authorize')
 const baseUrl = require('../lib/helper/baseUrl')()
 const extractXhrPagination = require('../lib/helper/extractXhrPagination')
-const reduce = require('lodash/collection/reduce')
+const reduce = require('lodash/reduce')
 
 function persist (resource, data, options) {
   options = options || {}

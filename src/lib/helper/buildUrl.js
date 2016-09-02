@@ -1,7 +1,7 @@
 'use strict';
 
-var isArray = require('lodash/lang/isArray');
-var isPlainObject = require('lodash/lang/isPlainObject');
+var isArray = require('lodash/isArray');
+var isPlainObject = require('lodash/isPlainObject');
 var baseUrl = require('./baseUrl');
 var urlParameters = require('./urlParameters');
 

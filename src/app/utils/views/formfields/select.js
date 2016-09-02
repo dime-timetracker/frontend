@@ -1,8 +1,8 @@
 'use strict'
 
 const m = require('src/lib/mithril')
-const isArray = require('lodash/lang/isArray')
-const isFunction = require('lodash/lang/isFunction')
+const isArray = require('lodash/isArray')
+const isFunction = require('lodash/isFunction')
 
 /**
  * select - generate a select VirtualElement.

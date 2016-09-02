@@ -2,7 +2,7 @@
 
 const m = require('src/lib/mithril')
 const api = require('../api')
-const arrayRemove = require('lodash/array/remove')
+const arrayRemove = require('lodash/remove')
 
 let collection = m.prop([])
 

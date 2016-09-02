@@ -3,7 +3,7 @@
 const m = require('src/lib/mithril')
 const t = require('../../lib/translation')
 const settingsApi = require('../../api/setting')
-const isFunction = require('lodash/lang/isFunction')
+const isFunction = require('lodash/isFunction')
 const fields = {
   input: require('../utils/views/formfields/input'),
   select: require('../utils/views/formfields/select'),

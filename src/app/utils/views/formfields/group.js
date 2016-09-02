@@ -1,7 +1,7 @@
 'use strict';
 
-var isUndefined = require('lodash/lang/isUndefined');
-var isString    = require('lodash/lang/isString');
+var isUndefined = require('lodash/isUndefined');
+var isString    = require('lodash/isString');
 var m           = require('src/lib/mithril');
 
 /**

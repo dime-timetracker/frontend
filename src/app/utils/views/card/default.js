@@ -1,7 +1,7 @@
 'use strict';
 
 var m = require('src/lib/mithril');
-var isUndefined = require('lodash/lang/isUndefined');
+var isUndefined = require('lodash/isUndefined');
 
 /**
  * Card is mithril virtual element that generate a card design.
