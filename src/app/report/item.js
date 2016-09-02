@@ -18,10 +18,13 @@ function view (scope) {
       }
     } else {
       if (col === 'duration') {
-        value = moment.duration(item.duration, 'seconds').asHours().toFixed(2)
+        value = moment.duration(item.duration, 'seconds').asHours().toFixed(2) + ' h'
       } else {
         value = item[col]
       }
+    }
+    if (undefined === value) {
+      value = ''
     }
     return m('td.' + col, value)
   }))
