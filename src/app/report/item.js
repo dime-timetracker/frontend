@@ -3,13 +3,9 @@
 const m = require('src/lib/mithril')
 const moment = require('moment')
 
-function controller (context) {
-  return { item: context.item }
-}
-
 function view (scope) {
   const item = scope.item
-  return m('tr.timeslice', [
+  return m('tr.timeslice', { key: scope.key }, [
     m('td.activity.description', item.activity.description),
     m('td.activity.customer', item.activity.customer ? item.activity.customer.name : ''),
     m('td.activity.project', item.activity.project ? item.activity.project.name : ''),
@@ -20,4 +16,4 @@ function view (scope) {
   ])
 }
 
-module.exports = { controller, view }
+module.exports = { view }

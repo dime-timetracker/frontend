@@ -68,13 +68,13 @@ describe('turning filters into fetch options', () => {
   describe('custom merge', () => {
     it('should apply a custom merge function', () => {
       const scope = {
-        collection: [
+        collection: m.prop([
           { activity: { name: 'a' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
           { activity: { name: 'b' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
           { activity: { name: 'c' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
           { activity: { name: 'd' }, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' }
-        ],
-        customMergeCode: 'rows.filter(row => row.activity.name !== "c")'
+        ]),
+        customMergeCode: m.prop('rows.filter(row => row.activity.name !== "c")')
       }
       expect(prepareCollection(scope)).to.eql([
         { activity: { name: 'a' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },

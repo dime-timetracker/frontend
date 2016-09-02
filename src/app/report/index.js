@@ -72,7 +72,7 @@ function onFetch (customers, projects, services) {
       timesliceApi.fetchAll(options)
     ]).then(function ([activities, timeslices]) {
       debug('filtered activities', activities)
-      scope.collection = timeslices.map((timeslice) => {
+      scope.collection(timeslices.map((timeslice) => {
         const activity = activities.find((activity) => (activity.id === timeslice.activity_id))
         if (activity) {
           timeslice.activity = activity
@@ -87,65 +87,70 @@ function onFetch (customers, projects, services) {
           ))
           return timeslice
         }
-      }).filter((timeslice) => timeslice)
-      m.redraw()
+      }).filter((timeslice) => timeslice))
+      prepareCollection(scope)
     })
   }
 }
 
 function prepareCollection (scope) {
-  const rows = JSON.parse(JSON.stringify(scope.collection)).map(row => {
+  let rows = JSON.parse(JSON.stringify(scope.collection())).map(row => {
     row.duration = duration(row, userSettings.find('report.precision'))
     return row
   })
   if (!scope.customMergeCode) {
     debug('no custom merger')
-    return rows
+    scope.rows(rows)
+    m.redraw()
+    return
   }
   try {
-    debug('launch custom merger')
-    const customMerge = function (rows) {
-      return eval(scope.customMergeCode)
-    }
-    if (typeof customMerge === 'function') {
-      debug('running custom merger')
-      return customMerge(rows)
+    debug('running custom merger')
+    rows = eval(scope.customMergeCode()) || []
+    if (Array.isArray(rows) === false) {
+      debug('This should have been an array:', rows)
+      return
     }
   } catch (e) {
-    debug('error running custom merger')
-    debug(e)
-    scope.warning = t('report.merge.invalid')
+    debug('error running custom merger', e)
+    return
   }
-  return rows
+  scope.rows(rows)
+    debug('UPDATED rows:', scope.rows())
+  m.redraw()
 }
 
 function controller () {
   const query = m.route.param('query') + ''
   const scope = {
-    collection: [],
+    collection: m.prop([]),
     query: decodeURIComponent(query.replace(/\+/g, '%20')),
     onSubmitFilter: function () {},
-    customMergeCodeExamples: {
-      groupByActivity: `
-        rows.reduce((result, row) => {
-          if (undefined === result[row.activity.id]) {
-            result[row.activity.id] = row
-            console.log(row)
-          } else {
-            result[row.activity.id].duration += row.duration
-            if (row.started_at < result[row.activity.id].started_at) {
-              result[row.activity.id].started_at = row.started_at
-            }
-          }
-          if (result[row.activity.id].stopped_at < row.stopped_at) {
-            result[row.activity.id].stopped_at = row.stopped_at
-          }
-          return result
-        }, [])`
-    },
-    customMergeCode: null
+    customMergeCode: m.prop('[]'),
+    rows: m.prop([])
   }
-  scope.customMergeCode = scope.customMergeCodeExamples.groupByActivity
+  scope.customMergeCodeExamples = {
+    groupByActivity: `rows.reduce((result, row) => {
+  if (undefined === result[row.activity.id]) {
+    result[row.activity.id] = row
+  } else {
+    result[row.activity.id].duration += row.duration
+    if (row.started_at < result[row.activity.id].started_at) {
+      result[row.activity.id].started_at = row.started_at
+    }
+  }
+  if (result[row.activity.id].stopped_at < row.stopped_at) {
+    result[row.activity.id].stopped_at = row.stopped_at
+  }
+  return result
+}, [])`
+  }
+  scope.customMergeCode(scope.customMergeCodeExamples.groupByActivity)
+  scope.updateMergeCode = function (code) {
+    scope.customMergeCode(code)
+    prepareCollection(scope)
+  }
+  prepareCollection(scope)
   Promise.all([
     customerApi.getCollection(),
     projectApi.getCollection(),
@@ -158,26 +163,26 @@ function controller () {
     }
     debug('Registered filter submit event')
     scope.onSubmitFilter(scope.query)
-    m.redraw()
   })
 
   return scope
 }
 
 function view (scope) {
-  const rows = prepareCollection(scope)
+  const rows = scope.rows()
+  debug('rendering list', rows.map(row => row.duration))
   return m('.report', [
     m('.query.filter', cardView(m.component(shellFilter, scope))),
     m('.query.merger', cardView(m.component(shellMerger, {
-      current: scope.customMergeCode || '',
-      update: function (code) { scope.customMergeCode = code },
-      examples: scope.customMergeCodeExamples
+      current: scope.customMergeCode,
+      examples: scope.customMergeCodeExamples,
+      update: scope.updateMergeCode
     }))),
     m('.table-responsive',
       m('table.table', [
         headerView(),
         m('tbody',
-          rows.map((timeslice) => m.component(itemView, { item: timeslice }))
+          rows.map((row) => itemView.view({ item: row, key: row.id }))
         ),
         totalsView({ rows: rows })
       ])

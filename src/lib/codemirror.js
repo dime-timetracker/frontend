@@ -67,7 +67,9 @@ const CodemirrorComponent = {
     }
   },
   reload: function (newContent) {
-    CodemirrorComponent.instance.doc.setValue(newContent)
+    if (CodemirrorComponent.instance) {
+      CodemirrorComponent.instance.doc.setValue(newContent)
+    }
   }
 }
 
