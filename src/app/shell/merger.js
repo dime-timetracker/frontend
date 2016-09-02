@@ -16,6 +16,7 @@ function examplesView (scope) {
     return m('.examples.column', m('select', {
       onchange: (e) => {
         scope.query(scope.examples[e.target.value] || 'rows')
+        scope.update(scope.examples[e.target.value] || 'rows')
         codemirror.reload(scope.query())
         if (e.target.value === 'none') {
           scope.showDetails = true
