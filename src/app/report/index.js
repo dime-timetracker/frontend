@@ -58,6 +58,34 @@ function getFilterOptions (customers, projects, services, tags) {
   }
 }
 
+function columnSelectionView (columns) {
+  const availableColumns = [
+    'description',
+    'customer',
+    'project',
+    'service',
+    'tags',
+    'started_at',
+    'stopped_at',
+    'duration'
+  ].reverse()
+  return m('.columns-selection.row', availableColumns.map(currentCol => m('.column.pull-right.' + currentCol, [
+    m('input#enable_column_' + currentCol + '[type=checkbox]', {
+      checked: columns().indexOf(currentCol) > -1,
+      onchange: (e) => {
+        const enabledColumns = columns()
+        columns(availableColumns.filter(col => {
+          if (currentCol === col) {
+            return e.target.checked
+          }
+          return enabledColumns.indexOf(col) > -1
+        }).reverse())
+      }
+    }),
+    m('label[for=enable_column_' + currentCol + ']', t('report.table.header.' + currentCol))
+  ])))
+}
+
 function onFetch (customers, projects, services, tags) {
   return function (scope, options) {
     Promise.all([
@@ -124,8 +152,6 @@ function controller () {
       'project',
       'service',
       'tags',
-      'started_at',
-      'stopped_at',
       'duration'
     ]),
     query: decodeURIComponent(query.replace(/\+/g, '%20')),
@@ -174,8 +200,9 @@ function controller () {
 }
 
 function view (scope) {
+  const columns = scope.columns()
   const rows = scope.rows()
-  debug('rendering list', rows.map(row => row.duration))
+  debug('rendering list', rows.map(row => row.duration), columns)
   return m('.report', [
     m('.query.filter', cardView(m.component(shellFilter, scope))),
     m('.query.merger', cardView(m.component(shellMerger, {
@@ -183,16 +210,17 @@ function view (scope) {
       examples: scope.customMergeCodeExamples,
       update: scope.updateMergeCode
     }))),
+    columnSelectionView(scope.columns),
     m('.table-responsive',
       m('table.table', [
-        headerView(scope.columns()),
+        headerView(columns),
         m('tbody',
-          rows.map((row) => itemView({ item: row, key: row.id, columns: scope.columns() }))
+          rows.map((row) => itemView({ item: row, key: row.id, columns: columns }))
         ),
-        totalsView({ rows: rows, columns: scope.columns() })
+        totalsView({ rows: rows, columns: columns })
       ])
     )
   ])
 }
 
-module.exports = { controller, getFilterOptions, view, prepareCollection }
+module.exports = { controller, getFilterOptions, view, prepareCollection, columnSelectionView }
