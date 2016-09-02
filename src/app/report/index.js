@@ -8,29 +8,22 @@ const duration = require('src/app/timeslice').duration
 const m = require('src/lib/mithril')
 const moment = require('moment')
 const projectApi = require('src/api/project')
+const tagApi = require('src/api/tag')
 const serviceApi = require('src/api/service')
 const shellFilter = require('src/app/shell/filter')
 const shellMerger = require('src/app/shell/merger')
-const itemView = require('./item')
+const itemView = require('./item').view
 const t = require('src/lib/translation')
 const timesliceApi = require('src/api/timeslice')
 const totalsView = require('./totals').view
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
 
-function headerView () {
-  return m('thead', m('tr', [
-    m('th.description', t('report.table.header.description')),
-    m('th.customer', t('report.table.header.customer')),
-    m('th.project', t('report.table.header.project')),
-    m('th.service', t('report.table.header.service')),
-//    m('th.startedAt', t('report.table.header.startedAt')),
-//    m('th.stoppedAt', t('report.table.header.stoppedAt')),
-    m('th.duration', t('report.table.header.duration'))
-  ]))
+function headerView (columns) {
+  return m('thead', m('tr', columns.map(col => m('th.' + col, t('report.table.header.' + col)))))
 }
 
-function getFilterOptions (customers, projects, services) {
+function getFilterOptions (customers, projects, services, tags) {
   return function (query) {
     const parsers = ['customer', 'project', 'service', 'tags', 'filterTimes', 'description']
     const filters = require('src/lib/parser').parse(query, parsers)
@@ -65,7 +58,7 @@ function getFilterOptions (customers, projects, services) {
   }
 }
 
-function onFetch (customers, projects, services) {
+function onFetch (customers, projects, services, tags) {
   return function (scope, options) {
     Promise.all([
       activityApi.fetchAll(options),
@@ -85,6 +78,7 @@ function onFetch (customers, projects, services) {
           timeslice.activity.service = services.find((service) => (
             service.id === timeslice.activity.service_id
           ))
+          timeslice.activity.tags = timeslice.activity.tags.map(tagId => tags.find(tag => tag.id === tagId))
           return timeslice
         }
       }).filter((timeslice) => timeslice))
@@ -116,7 +110,6 @@ function prepareCollection (scope) {
     return
   }
   scope.rows(rows)
-    debug('UPDATED rows:', scope.rows())
   m.redraw()
 }
 
@@ -124,6 +117,16 @@ function controller () {
   const query = m.route.param('query') + ''
   const scope = {
     collection: m.prop([]),
+    columns: m.prop([
+      'description',
+      'customer',
+      'project',
+      'service',
+      'tags',
+      'startedAt',
+      'stoppedAt',
+      'duration'
+    ]),
     query: decodeURIComponent(query.replace(/\+/g, '%20')),
     onSubmitFilter: function () {},
     customMergeCode: m.prop('[]'),
@@ -154,10 +157,11 @@ function controller () {
   Promise.all([
     customerApi.getCollection(),
     projectApi.getCollection(),
-    serviceApi.getCollection()
-  ]).then(function ([customers, projects, services]) {
-    const filter = getFilterOptions(customers, projects, services)
-    const fetch = onFetch(customers, projects, services)
+    serviceApi.getCollection(),
+    tagApi.getCollection()
+  ]).then(function ([customers, projects, services, tags]) {
+    const filter = getFilterOptions(customers, projects, services, tags)
+    const fetch = onFetch(customers, projects, services, tags)
     scope.onSubmitFilter = function (query) {
       fetch(scope, filter(query))
     }
@@ -180,11 +184,11 @@ function view (scope) {
     }))),
     m('.table-responsive',
       m('table.table', [
-        headerView(),
+        headerView(scope.columns()),
         m('tbody',
-          rows.map((row) => itemView.view({ item: row, key: row.id }))
+          rows.map((row) => itemView({ item: row, key: row.id, columns: scope.columns() }))
         ),
-        totalsView({ rows: rows })
+        totalsView({ rows: rows, columns: scope.columns() })
       ])
     )
   ])

@@ -94,6 +94,7 @@ module.exports = {
     'report.table.header.service': 'service',
     'report.table.header.startedAt': 'begin',
     'report.table.header.stoppedAt': 'end',
+    'report.table.header.tags': 'tags',
     'report.table.header.duration': 'duration',
     'report.table.totals.duration': 'Total Duration',
     'service.add': 'Add a service',
