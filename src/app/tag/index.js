@@ -1,18 +1,20 @@
 'use strict'
 
-const m = require('src/lib/mithril')
-const t = require('../../lib/translation')
-const item = require('./item')
-const button = require('../utils/views/button')
 const api = require('../../api/tag')
+const button = require('../utils/views/button')
 const filter = require('lodash/filter')
+const item = require('./item')
+const m = require('src/lib/mithril')
+const sortBy = require('lodash/sortBy')
+const t = require('../../lib/translation')
 
 function controller () {
   var scope = {
     collection: []
   }
-  api.fetchBunch().then((collection) => {
-    scope.collection = collection
+  api.getCollection().then((tags) => {
+    scope.collection = sortBy(tags, (tag) => tag.name)
+    m.redraw()
   })
 
   scope.add = (e) => {
