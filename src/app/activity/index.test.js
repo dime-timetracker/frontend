@@ -16,6 +16,7 @@ global.window = m.deps({
 
 const expect = require('expect.js')
 const running = require('./').running
+const assignRelated = require('./').assignRelated
 
 describe('activity', () => {
   let activity
@@ -35,5 +36,52 @@ describe('activity', () => {
   it('should be running', () => {
     activity.timeslices.push({})
     expect(running(activity)).to.be(true)
+  })
+
+  describe('should assign related items', () => {
+    let savedItem
+    const api = {
+      persist: (item) => {
+        return new Promise(function (resolve) {
+          savedItem = item
+          resolve(item)
+        })
+      }
+    }
+    function ask (question) {
+      return true
+    }
+    it('and create new ones', (done) => {
+      activity.foo = { alias: 'new' }
+      const collection = [{ alias: 'old' }]
+      assignRelated('foo', api, collection, ask)(activity).then(() => {
+        try {
+          expect(collection).to.eql([
+            { alias: 'old' },
+            { alias: 'new' }
+          ])
+          expect(savedItem).to.eql({ alias: 'new' })
+          done()
+        } catch (e) {
+          done(e)
+        }
+      })
+    })
+    it('without re-creating existing ones', (done) => {
+      savedItem = undefined
+      activity.foo = { alias: 'old' }
+      const collection = [{ alias: 'old' }]
+      assignRelated('foo', api, collection, ask)(activity).then(() => {
+        try {
+          expect(collection).to.eql([
+            { alias: 'old' }
+          ])
+          expect(savedItem).to.be(undefined)
+          done()
+        } catch (e) {
+          done(e)
+        }
+      })
+    })
   })
 })

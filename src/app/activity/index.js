@@ -120,6 +120,31 @@ function assignRelations (scope) {
   scope.visibleActivities.forEach(assignActivityRelations(scope))
 }
 
+function assignRelated (relation, api, collection, ask) {
+  return function (activity) {
+    return new Promise((resolve, reject) => {
+      if (!activity[relation] || !activity[relation].alias) {
+        resolve()
+        return
+      }
+      const alias = activity[relation].alias
+      const related = collection.find(item => item.alias === alias)
+      if (related) {
+        activity[relation] = related
+        resolve()
+        return
+      }
+      if (ask(t('activity.' + relation + '.confirm.create', { alias: alias }))) {
+        api.persist(activity[relation]).then((newItem) => {
+          activity[relation] = newItem
+          collection.push(newItem)
+          resolve()
+        })
+      }
+    })
+  }
+}
+
 function controller () {
   debug('Running activity index controller')
   const scope = {
@@ -131,32 +156,33 @@ function controller () {
     tags: []
   }
   scope.startNewActivity = function (activity) {
-    if (activity.customer) {
-      activity.customer = scope.customers.find(customer => customer.alias === activity.customer.alias)
-      activity.customer_id = activity.customer ? activity.customer.id : undefined
-    }
-    if (activity.project) {
-      activity.project = scope.projects.find(project => project.alias === activity.project.alias)
+    Promise.all([
+      assignRelated('customer', customerApi, scope.customers, global.confirm),
+      assignRelated('project', projectApi, scope.projects, global.confirm),
+      assignRelated('service', serviceApi, scope.services, global.confirm)
+    ].map(assign => assign(activity))).then(() => {
+      if (activity.customer) {
+        activity.customer_id = activity.customer.id
+      }
       if (activity.project) {
         activity.project_id = activity.project.id
         activity.customer_id = activity.project.customer_id
         activity.customer = scope.customers.find(customer => customer.id === activity.customer_id)
       }
-    }
-    if (activity.service) {
-      activity.service = scope.services.find(service => service.alias === activity.service.alias)
-      activity.service_id = activity.service ? activity.service.id : undefined
-    }
-    item.submit({
-      activity: activity,
-      activityApi: api,
-      tags: scope.tags,
-      tagApi: tagApi
-    }).then((newActivity) => {
-      assignActivityRelations(scope)(newActivity)
-      scope.activities.unshift(newActivity)
-      scope.visibleActivities.unshift(newActivity)
-      start(newActivity)
+      if (activity.service) {
+        activity.service_id = activity.service.id
+      }
+      item.submit({
+        activity: activity,
+        activityApi: api,
+        tags: scope.tags,
+        tagApi: tagApi
+      }).then((newActivity) => {
+        assignActivityRelations(scope)(newActivity)
+        scope.activities.unshift(newActivity)
+        scope.visibleActivities.unshift(newActivity)
+        start(newActivity)
+      })
     })
   }
   const promiseActivities = api.fetchBunch().then((list) => {
@@ -207,4 +233,12 @@ function view (scope) {
   ])
 }
 
-module.exports = { controller, running, start, stop, totalDuration, view }
+module.exports = {
+  assignRelated,
+  controller,
+  running,
+  start,
+  stop,
+  totalDuration,
+  view
+}

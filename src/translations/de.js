@@ -3,8 +3,11 @@
 module.exports = {
   translation: {
     'activity.customer': 'Kunde',
+    'activity.customer.confirm.create': 'Soll der Kunde "{alias}" neu angelegt werden?',
     'activity.project': 'Projekt',
+    'activity.project.confirm.create': 'Soll das Projekt "{alias}" neu angelegt werden?',
     'activity.service': 'Service',
+    'activity.service.confirm.create': 'Soll der Service "{alias}" neu angelegt werden?',
     'activity.tags': 'Tags',
     'activity.description': 'Beschreibung',
     'activity.startstopbutton.start.title': 'Starte Aktivität',
