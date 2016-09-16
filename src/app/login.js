@@ -18,7 +18,7 @@ function controller () {
 
 function view (scope) {
   return card(
-    m('form.form', {
+    m('form.form#login', {
       onsubmit: function (e) {
         authorize.signin(scope.username, scope.password).then(function (response) {
           m.route('/')
@@ -29,7 +29,7 @@ function view (scope) {
       }
     }, [
       formGroup(
-        m('input#username.form-control', {
+        m('input[type=text]#username.form-control', {
           onchange: function (e) {
             scope.username = e.target.value
           }
