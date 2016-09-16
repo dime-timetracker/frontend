@@ -1,39 +1,37 @@
-'use strict';
+'use strict'
 
-var m = require('src/lib/mithril');
-var t = require('../lib/translation');
-var authorize = require('../lib/authorize');
-var card = require('./utils/views/card/default');
-var formGroup = require('./utils/views/formfields/group');
+const m = require('src/lib/mithril')
+const t = require('../lib/translation')
+const authorize = require('../lib/authorize')
+const card = require('./utils/views/card/default')
+const formGroup = require('./utils/views/formfields/group')
 
-var component = {};
-
-component.controller = function () {
-  var scope = {};
+function controller () {
+  const scope = {}
 
   if (authorize.is()) {
-    m.route('/');
+    m.route('/')
   }
 
-  return scope;
-};
+  return scope
+}
 
-component.view = function (scope) {
+function view (scope) {
   return card(
     m('form.form', {
-      onsubmit: function(e) {
+      onsubmit: function (e) {
         authorize.signin(scope.username, scope.password).then(function (response) {
-          m.route('/');
+          m.route('/')
         }, function (response) {
-          m.route('/login');
-        });
-        return false;
+          m.route('/login')
+        })
+        return false
       }
     }, [
       formGroup(
         m('input#username.form-control', {
-          onchange: function(e) {
-            scope.username = e.target.value;
+          onchange: function (e) {
+            scope.username = e.target.value
           }
         }),
         t('Username')
@@ -41,8 +39,8 @@ component.view = function (scope) {
 
       formGroup(
         m('input[type=password]#password.form-control', {
-          onchange: function(e) {
-            scope.password = e.target.value;
+          onchange: function (e) {
+            scope.password = e.target.value
           }
         }),
         t('Password')
@@ -54,7 +52,7 @@ component.view = function (scope) {
       )
     ]),
     t('Login')
-  );
-};
+  )
+}
 
-module.exports = component;
+module.exports = { controller, view }
