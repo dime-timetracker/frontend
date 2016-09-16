@@ -152,6 +152,44 @@ Auth.prototype.signin = function (username, password) {
 };
 
 /**
+ * Register a new user on the api using username, password, email, first and last name.
+ *
+ * @param {string} username
+ * @param {string} password
+ * @param {string} email
+ * @param {string} firstname
+ * @param {string} lastname
+ * @returns {m.request.promise} The promise of the request function.
+ */
+Auth.prototype.register = function (username, password, email, firstname, lastname) {
+  var data = {
+    client: this.device(),
+    email: email,
+    firstname: firstname,
+    lastname: lastname,
+    password: password,
+    username: username
+  };
+  var that = this;
+
+  return m.request({
+    url: baseUrl('register'),
+    method: 'POST',
+    data: data
+  }).then(
+    function success (response) {
+      if (response && response.token) {
+        that.username(username);
+        that.token(response.token);
+      }
+    },
+    function error (response) {
+      that.clear();
+    }
+  );
+};
+
+/**
  * Signout from the api, removes username and token from store and route to '/login'.
  *
  * @returns {m.request} Promise of the request function.

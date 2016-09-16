@@ -16,6 +16,14 @@ function setOnLaunch (onLaunch) {
   launchApp = onLaunch
 }
 
+function greeting () {
+  return m('h2', t('login.greeting'))
+}
+
+function introduction () {
+  return m('.introduction', t('login.introduction'))
+}
+
 function loginForm (scope) {
   return card(
     m('form.form#login', {
@@ -23,15 +31,43 @@ function loginForm (scope) {
     }, [
       formGroup(m('input[type=text]#username.form-control', {
         onchange: function (e) { scope.username = e.target.value }
-      }), t('Username')),
+      }), t('login.form.username')),
       formGroup(m('input[type=password]#password.form-control', {
         onchange: function (e) { scope.password = e.target.value }
-      }), t('Password')),
+      }), t('login.form.password')),
       formGroup(m('input[type=submit].btn.btn-block.btn-blue', {
-        value: t('Login')
+        value: t('login.signin.submit')
       }))
     ]),
-    t('Login')
+    t('login.signin.title')
+  )
+}
+
+function registrationForm (scope) {
+  return card(
+    m('form.form#registration', {
+      onsubmit: scope.onRegistrationFormSubmit
+    }, [
+      formGroup(m('input[type=text]#username.form-control', {
+        onchange: function (e) { scope.username = e.target.value }
+      }), t('login.form.username')),
+      formGroup(m('input[type=password]#password.form-control', {
+        onchange: function (e) { scope.password = e.target.value }
+      }), t('login.form.password')),
+      formGroup(m('input[type=email]#email.form-control', {
+        onchange: function (e) { scope.email = e.target.value }
+      }), t('login.form.email')),
+      formGroup(m('input[type=text]#firstname.form-control', {
+        onchange: function (e) { scope.firstname = e.target.value }
+      }), t('login.form.firstname')),
+      formGroup(m('input[type=text]#lastname.form-control', {
+        onchange: function (e) { scope.lastname = e.target.value }
+      }), t('login.form.lastname')),
+      formGroup(m('input[type=submit].btn.btn-block.btn-blue', {
+        value: t('login.registration.submit')
+      }))
+    ]),
+    t('login.registration.title')
   )
 }
 
@@ -56,13 +92,34 @@ function controller (context) {
       .catch(scope.loginFailed)
     return false
   }
+  scope.onRegistrationFormSubmit = function () {
+    authorize.register(scope.username, scope.password, scope.email, scope.firstname, scope.lastname)
+      .then(scope.loginSuccess)
+      .catch(scope.loginFailed)
+    return false
+  }
 
   return scope
 }
 
 function view (scope) {
   return m('.guest', [
-    loginForm(scope)
+    m('.row',
+      m('.col-md-12.text-center',
+        card([
+          greeting(),
+          introduction()
+        ])
+      )
+    ),
+    m('.row',
+      m('.col-md-6.col-sm-12',
+        loginForm(scope)
+      ),
+      m('.col-md-6.col-sm-12',
+        registrationForm(scope)
+      )
+    )
   ])
 }
 
