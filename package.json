@@ -30,7 +30,7 @@
     "translate.js": "0.4.1"
   },
   "scripts": {
-    "build:js": "node_modules/browserify-middleware/node_modules/browserify/bin/cmd.js src/app.js > public/app.js",
+    "build:js": "node_modules/.bin/browserify src/app.js > public/app.js",
     "build:css": "node_modules/.bin/stylus src/app.styl -m -u nib -o public/dime.css",
     "build": "npm run build:js && npm run build:css",
     "test": "NODE_ICU_DATA=node_modules/full-icu mocha src/**/*.test.js",
