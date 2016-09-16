@@ -6,11 +6,12 @@ global.window.dimeDebug = require('debug')
 const settingsApi = require('./api/setting')
 const settings = require('./app/setting')
 const debug = require('debug')('index')
+const login = require('./app/login')
 
 const routes = {
   '/': require('./app/activity'),
   '/customer': require('./app/customer'),
-  '/login': require('./app/login'),
+  '/login': login,
   '/project': require('./app/project'),
   '/service': require('./app/service'),
   '/tag': require('./app/tag'),
@@ -20,22 +21,21 @@ const routes = {
 
 m.route.mode = 'hash'
 
-// request settings and launch app afterwards
-settingsApi.fetchAll().then((userSettings) => {
-  settings.userSettings(userSettings)
+function launch () {
   m.route(global.window.document.getElementById('app'), '/', routes)
   m.mount(global.window.document.getElementById('app-header'), require('./app/header'))
   m.mount(global.window.document.getElementById('app-menu'), require('./app/menu'))
+}
+
+// request settings and launch app afterwards
+settingsApi.fetchAll().then((userSettings) => {
+  settings.userSettings(userSettings)
+  launch()
 }, (error) => {
   debug(error)
   if (error.error === 'Authentication error') {
-    m.mount(global.window.document.getElementById('app'), routes['/login'], {
-      onLogin: () => {
-        require('./api/setting').init().then(() => {
-          m.route(global.window.document.getElementById('app'), '/', routes)
-        }, (error) => { debug(error) })
-      }
-    })
+    login.setOnLaunch(launch)
+    m.mount(global.window.document.getElementById('app'), login)
   } else {
     m.mount(global.window.document.getElementById('app'), {
       view: () => {
