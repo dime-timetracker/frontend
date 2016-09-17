@@ -16,12 +16,20 @@ function now (time) {
   return currently() || moment()
 }
 
+function updateDuration (timeslice) {
+  if (timeslice.started_at && timeslice.stopped_at) {
+    timeslice.duration = null
+    timeslice.duration = duration(timeslice)
+  }
+}
+
 function getEnd (timeslice) {
   return timeslice.stopped_at ? moment(timeslice.stopped_at, timestampFormat) : now()
 }
 
 function setEnd (timeslice, value) {
   timeslice.stopped_at = moment(value).format(timestampFormat)
+  updateDuration(timeslice)
 }
 
 function getStart (timeslice) {
@@ -30,6 +38,17 @@ function getStart (timeslice) {
 
 function setStart (timeslice, value) {
   timeslice.started_at = moment(value).format(timestampFormat)
+  updateDuration(timeslice)
+}
+
+function setStartTime (timeslice, time) {
+  const date = moment(timeslice.started_at).format('YYYY-MM-DD')
+  setStart(timeslice, date + 'T' + time)
+}
+
+function setStartDate (timeslice, date) {
+  const time = moment(timeslice.started_at).format('HH:mm:ss')
+  setStart(timeslice, date + 'T' + time)
 }
 
 function duration (timeslice, precision) {
@@ -53,6 +72,8 @@ module.exports = {
   getStart: getStart,
   setEnd: setEnd,
   setStart: setStart,
+  setStartDate: setStartDate,
+  setStartTime: setStartTime,
   duration: duration,
   running: (t) => { return !t.stopped_at }
 }

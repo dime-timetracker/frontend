@@ -9,13 +9,15 @@ const getEnd = require('src/app/timeslice').getEnd
 const getStart = require('src/app/timeslice').getStart
 const input = require('src/app/utils/views/formfields/input')
 const running = require('src/app/timeslice').running
-const setEnd = require('src/app/timeslice').setEnd
-const setStart = require('src/app/timeslice').setStart
+const setEndDate = require('src/app/timeslice').setEndDate
+const setEndTime = require('src/app/timeslice').setEndTime
+const setStartDate = require('src/app/timeslice').setStartDate
+const setStartTime = require('src/app/timeslice').setStartTime
 const tile = require('src/app/utils/views/tile')
 const timesliceApi = require('src/api/timeslice')
 
 function controller (listContext) {
-  var scope = {
+  const scope = {
     activity: listContext.activity,
     changed: false,
     formatDuration: () => duration(getDuration(listContext.timeslice)),
@@ -60,16 +62,24 @@ function view (scope) {
   const inner = [
     m('span.start', [
       input({
-        type: 'datetime-local',
+        type: 'date',
         inline: true,
-        name: 'start',
-        value: scope.formatStart('YYYY-MM-DDTHH:mm:ss'),
+        name: 'start-date',
+        placeholder: 'YYYY-MM-DD',
+        value: scope.formatStart('YYYY-MM-DD'),
         change: function (value) {
-          setStart(scope.timeslice, value)
-          if (scope.timeslice.started_at && scope.timeslice.stopped_at) {
-            scope.timeslice.duration = null
-            scope.timeslice.duration = getDuration(scope.timeslice)
-          }
+          setStartDate(scope.timeslice, value)
+          scope.changed = true
+        }
+      }),
+      input({
+        type: 'time',
+        inline: true,
+        name: 'start-time',
+        placeholder: 'HH:mm:ss',
+        value: scope.formatStart('HH:mm:ss'),
+        change: function (value) {
+          setStartTime(scope.timeslice, value)
           scope.changed = true
         }
       })
@@ -77,15 +87,24 @@ function view (scope) {
     ' - ',
     m('span.end', [
       input({
-        type: 'datetime-local',
+        type: 'date',
         inline: true,
-        value: !scope.isRunning() ? scope.formatEnd('YYYY-MM-DDTHH:mm:ss') : '',
+        name: 'end-date',
+        placeholder: 'YYYY-MM-DD',
+        value: !scope.isRunning() ? scope.formatEnd('YYYY-MM-DD') : '',
         change: function (value) {
-          setEnd(scope.timeslice, value)
-          if (scope.timeslice.started_at && scope.timeslice.stopped_at) {
-            scope.timeslice.duration = null
-            scope.timeslice.duration = getDuration(scope.timeslice)
-          }
+          setEndDate(scope.timeslice, value)
+          scope.changed = true
+        }
+      }),
+      input({
+        type: 'time',
+        inline: true,
+        name: 'end-time',
+        placeholder: 'HH:mm:ss',
+        value: !scope.isRunning() ? scope.formatEnd('HH:mm:ss') : '',
+        change: function (value) {
+          setEndTime(scope.timeslice, value)
           scope.changed = true
         }
       })
