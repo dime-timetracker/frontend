@@ -7,8 +7,8 @@ const inputView = require('../utils/views/formfields/input')
 const selectView = require('../utils/views/formfields/select')
 
 function compareLabel (a, b) {
-  const nameA = a.label.toUpperCase() // ignore upper and lowercase
-  const nameB = b.label.toUpperCase() // ignore upper and lowercase
+  const nameA = (a.label || '').toUpperCase() // ignore upper and lowercase
+  const nameB = (b.label || '').toUpperCase() // ignore upper and lowercase
   if (nameA < nameB) {
     return -1
   }
