@@ -32,6 +32,9 @@ module.exports = function (options, value) {
   if (isFunction(options.update)) {
     attributes.oninput = (e) => { options.update(e.target.value, e) }
   }
+  if (isFunction(options.change)) {
+    attributes.onchange = (e) => { options.change(e.target.value, e) }
+  }
 
   return m('input.form-control' + ((options.inline) ? '.form-control-inline' : ''), attributes)
 }
