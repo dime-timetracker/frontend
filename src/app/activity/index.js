@@ -60,6 +60,11 @@ function stop (activity) {
 function activityListView (scope) {
   var container = []
 
+  if (scope.activities.filter(activity => running(activity)).length) {
+    global.document.head.querySelector('link[rel="shortcut icon"]').href = 'img/favicon-green.ico'
+  } else {
+    global.document.head.querySelector('link[rel="shortcut icon"]').href = 'img/favicon.ico'
+  }
   debug('view list', scope.visibleActivities)
   container.push(scope.visibleActivities.map(function (activity) {
     if (!activity.timeslices) {
