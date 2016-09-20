@@ -94,7 +94,11 @@ function controller (context) {
   }
   scope.onRegistrationFormSubmit = function () {
     authorize.register(scope.username, scope.password, scope.email, scope.firstname, scope.lastname)
-      .then(scope.loginSuccess)
+      .then(function () {
+        authorize.signin(scope.username, scope.password)
+          .then(scope.loginSuccess)
+          .catch(scope.loginFailed)
+      })
       .catch(scope.loginFailed)
     return false
   }
