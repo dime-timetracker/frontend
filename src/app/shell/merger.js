@@ -13,7 +13,7 @@ function examplesView (scope) {
   if (Object.keys(scope.examples).length) {
     const options = Object.keys(scope.examples)
     options.unshift('none') // prepend empty option
-    return m('.examples.column', m('select', {
+    return m('.examples.column', m('select.form-control', {
       onchange: (e) => {
         scope.query(scope.examples[e.target.value] || 'rows')
         scope.update(scope.examples[e.target.value] || 'rows')
