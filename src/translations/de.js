@@ -86,7 +86,7 @@ module.exports = {
     'login.registration.title': 'Neu hier?',
     'login.registration.submit': 'Registrieren',
     'login.signin.title': 'Wieder da?',
-    'login.form.submit': 'Anmelden',
+    'login.signin.submit': 'Anmelden',
     'menu.activities': 'Aktivitäten',
     'menu.customers': 'Kunden',
     'menu.logout': 'Abmelden',

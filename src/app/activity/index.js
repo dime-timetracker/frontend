@@ -161,34 +161,46 @@ function controller () {
     tags: []
   }
   scope.startNewActivity = function (activity) {
-    Promise.all([
-      assignRelated('customer', customerApi, scope.customers, global.confirm),
-      assignRelated('project', projectApi, scope.projects, global.confirm),
-      assignRelated('service', serviceApi, scope.services, global.confirm)
-    ].map(assign => assign(activity))).then(() => {
-      if (activity.customer) {
-        activity.customer_id = activity.customer.id
-      }
-      if (activity.project) {
-        activity.project_id = activity.project.id
-        activity.customer_id = activity.project.customer_id
-        activity.customer = scope.customers.find(customer => customer.id === activity.customer_id)
-      }
-      if (activity.service) {
-        activity.service_id = activity.service.id
-      }
-      item.submit({
-        activity: activity,
-        activityApi: api,
-        tags: scope.tags,
-        tagApi: tagApi
-      }).then((newActivity) => {
-        assignActivityRelations(scope)(newActivity)
-        scope.activities.unshift(newActivity)
-        scope.visibleActivities.unshift(newActivity)
-        start(newActivity)
+    assignRelated('customer', customerApi, scope.customers, global.confirm)(activity)
+      .then(() => {
+        if (activity.project && (!activity.project.customer_id)) {
+          activity.project.customer_id = activity.customer.id
+          activity.project.customer = activity.customer
+        }
       })
-    })
+      .then(() => {
+        Promise.all([
+          assignRelated('project', projectApi, scope.projects, global.confirm),
+          assignRelated('service', serviceApi, scope.services, global.confirm)
+        ].map(assign => assign(activity))).then(() => {
+          if (activity.customer) {
+            activity.customer_id = activity.customer.id
+          }
+          if (activity.project) {
+            activity.project_id = activity.project.id
+            if (activity.project.customer_id) {
+              activity.customer_id = activity.project.customer_id
+              activity.customer = scope.customers.find(customer => customer.id === activity.project.customer_id)
+            }
+          }
+          if (activity.service) {
+            activity.service_id = activity.service.id
+          }
+          item.submit({
+            activity: activity,
+            activityApi: api,
+            tags: scope.tags,
+            tagApi: tagApi
+          }).then((newActivity) => {
+            assignActivityRelations(scope)(newActivity)
+            scope.activities.unshift(newActivity)
+            if (!scope.activities.filter(a => a.id === newActivity.id).length) {
+              scope.visibleActivities.unshift(newActivity)
+            }
+            start(newActivity)
+          })
+        })
+      })
   }
   const promiseActivities = api.fetchBunch().then((list) => {
     scope.activities = list
