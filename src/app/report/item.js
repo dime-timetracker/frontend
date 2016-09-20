@@ -9,12 +9,26 @@ function view (scope) {
   const columns = scope.columns
   return m('tr.timeslice', { key: scope.key }, columns.map(col => {
     let value
+    let valueSource = ''
     if (col === 'tags') {
       // activity tags were broken down to row
       const shortcut = userSettings.find('global.shortcuts.tag')
       value = item.tags.map(tag => tag ? shortcut + tag.name : null).join(' ')
     } else if (item.activity[col]) {
-      value = item.activity[col].name || item.activity[col]
+      value = item.activity[col].name
+      valueSource = 'name'
+      if (!value) {
+        value = item.activity[col].alias
+        if (value) {
+          const shortcut = userSettings.find('global.shortcuts.' + col)
+          value = shortcut + value
+          valueSource = 'alias'
+        }
+      }
+      if (!value) {
+        value = item.activity[col]
+        valueSource = 'property'
+      }
     } else {
       if (col === 'duration') {
         value = moment.duration(item.duration, 'seconds').asHours().toFixed(2) + ' h'
@@ -25,7 +39,7 @@ function view (scope) {
     if (undefined === value) {
       value = ''
     }
-    return m('td.' + col, value)
+    return m('td.' + col + '.' + valueSource, value)
   }))
 }
 
