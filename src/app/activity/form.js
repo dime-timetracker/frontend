@@ -33,7 +33,8 @@ function controller (context) {
   scope.customers.sort(compareLabel).unshift({})
   scope.projects.sort(compareLabel).unshift({})
   scope.services.sort(compareLabel).unshift({})
-  scope.save = function () {
+  scope.save = function (e) {
+    if (e) e.preventDefault()
     Object.keys(scope.changes).forEach(field => {
       scope.activity[field] = scope.changes[field]
     })
@@ -74,7 +75,7 @@ function view (scope) {
       m('td', selectView({
         id: id('customer'),
         change: function (value) {
-          const customerId = parseInt(value)
+          const customerId = parseInt(value, 10)
           scope.changes.customer_id = customerId
           scope.changes.customer = scope.customers.find(customer => customer.id === customerId)
         },
@@ -88,7 +89,7 @@ function view (scope) {
       m('td', selectView({
         id: id('project'),
         change: function (value) {
-          const projectId = parseInt(value)
+          const projectId = parseInt(value, 10)
           scope.changes.project_id = projectId
           scope.changes.project = scope.projects.find(project => project.id === projectId)
         },
@@ -102,7 +103,7 @@ function view (scope) {
       m('td', selectView({
         id: id('service'),
         change: function (value) {
-          const serviceId = parseInt(value)
+          const serviceId = parseInt(value, 10)
           scope.changes.service_id = serviceId
           scope.changes.service = scope.services.find(service => service.id === serviceId)
         },
