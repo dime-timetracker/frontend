@@ -19,7 +19,7 @@
   "dependencies": {
     "codemirror": "^5.18.2",
     "debug": "^2.2.0",
-    "lodash": "^4.15.0",
+    "lodash": "^4.16.5",
     "mithril": "^0.2.0",
     "mithril-source-hint": "^1.0.0",
     "moment": "^2.10.3",
