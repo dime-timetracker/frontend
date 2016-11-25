@@ -12,6 +12,7 @@ const tagApi = require('src/api/tag')
 const serviceApi = require('src/api/service')
 const shellFilter = require('src/app/shell/filter')
 const shellMerger = require('src/app/shell/merger')
+const itemValues = require('./item').values
 const itemView = require('./item').view
 const t = require('src/lib/translation')
 const timesliceApi = require('src/api/timeslice')

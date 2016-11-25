@@ -1,66 +1,90 @@
 .badge-list
-  margin: 0
+  margin 0
 
-.badge-list > li
-  background-color: #26A69A
-  background-clip: padding-box
-  border-radius: 2px
-  box-sizing: border-box
-  color: #FFF
-  font-size: 1rem
-  min-width: 3rem
-  margin-right: 6px
-  text-align: center
-  line-height: inherit
+  & > li
+    background-color #26A69A
+    background-clip padding-box
+    border-radius 2px
+    box-sizing border-box
+    color #FFF
+    font-size 1rem
+    min-width 3rem
+    margin-right 6px
+    text-align center
+    line-height inherit
 
-.badge-list > li.incomplete
-  background-color: #FBC02D
+    &.incomplete
+      background-color #FBC02D
 
-.badge-list > li.empty
-  background-color: #F44336
+    &.empty
+      background-color #F44336
 
-.badge-list > li > a
-  color: inherit
-  padding: 0px 3px
+    & > a
+      color inherit
+      padding 0px 3px
 
-.badge-list.badge-list-small > li
-  font-size: .7rem
+  &.badge-list-small
 
-.badge-list.badge-list-small > li.input
-  background: inherit
-  border: #26A69A 2px solid
-  box-sizing: content-box
-  color: #26A69A
-  height: 20px
-  margin-right: 0
-  padding-left: 3px
+    & > li
+      font-size .7rem
 
-.badge-list.badge-list-small > li.input a
-  font-size: 0.8em
+      &.input
+        background inherit
+        border #26A69A 2px solid
+        box-sizing content-box
+        color #26A69A
+        height 20px
+        margin-right 0
+        padding-left 3px
 
-.badge-list.badge-list-small > li.input input,
-.badge-list.badge-list-small > li.input input:focus
-  background: transparent
-  border: none
-  height: 20px
-  outline-color: transparent
-  vertical-align: top
+        a
+          font-size 0.8em
+
+        input, input:focus
+          background transparent
+          border none
+          height 20px
+          outline-color transparent
+          vertical-align top
 
 .badge
   /* background-color: color('green', 'base');*/
-  background-clip: padding-box
-  border-radius: 2px
-  box-sizing: border-box
-  color: #999
-  font-size: 0.8rem
-  min-width: 3rem
-  text-align: center
-  line-height: inherit
-  margin: 0 10px
-  padding: 2px 5px
+  background-clip padding-box
+  border-radius 2px
+  box-sizing border-box
+  color #999
+  font-size 0.8rem
+  min-width 3rem
+  text-align center
+  line-height inherit
+  margin 0 10px
+  padding 2px 5px
 
-.badge.incomplete
-  background-color: #FBC02D
+  &.incomplete
+    background-color #FBC02D
 
-.badge.empty
-  background-color: #F44336
+  &.empty
+    background-color #F44336
+
+  .embedded-form
+    position absolute
+    text-align right
+    z-index 10
+
+    .close
+      background black
+      border none
+      border-radius 100%
+      color white
+      display block
+      height 2rem
+      margin-left 20rem
+      margin-top 1rem
+      position fixed
+      width 2rem
+
+    .card
+      margin-top 2rem
+      position fixed
+      text-align left
+      width 20rem

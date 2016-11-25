@@ -13,6 +13,12 @@ const tile = require('../utils/views/tile')
 const timesliceList = require('./timeslice/')
 const toggleButton = require('../utils/components/toggleButton')
 
+const relationForms = {
+  customer: require('src/app/customer/item'),
+  project: require('src/app/project/item'),
+  service: require('src/app/service/item')
+}
+
 function submit (context) {
   /**
    * @var context {
@@ -45,6 +51,7 @@ function controller (activityScope) {
     projects: activityScope.projects,
     services: activityScope.services,
     tags: activityScope.tags,
+    relationForm: null,
     running: activityScope.running,
     totalDuration: activityScope.totalDuration,
     start: activityScope.start,
@@ -132,9 +139,23 @@ function view (scope) {
   inner.push(m('span', scope.activity.description));
   ['customer', 'project', 'service'].forEach((relation) => {
     if (scope.activity[relation]) {
+      let relationForm = null
+      if (scope.relationForm === relation) {
+        const context = { key: (scope.activity.id || 0) + '.' + relation }
+        context[relation] = scope.activity[relation]
+        relationForm = m('span.embedded-form.' + relation, [
+          m.component(relationForms[relation], context),
+          m('button.close', { onclick: (e) => { scope.relationForm = null } }, '×')
+        ])
+      }
       inner.push(m('span.badge', {
         title: scope.activity[relation].name
-      }, scope.shortcuts[relation] + scope.activity[relation].alias))
+      }, [
+        relationForm,
+        m('span.alias', {
+          onclick: (e) => { scope.relationForm = relation }
+        }, scope.shortcuts[relation] + scope.activity[relation].alias)
+      ]))
     }
   })
   scope.activity.tags.forEach(tag => {
