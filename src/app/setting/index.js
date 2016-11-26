@@ -29,7 +29,14 @@ const sections = {
   }
 }
 sections.find = (name) => {
+  const settings = userSettings()
   let result
+  if (settings) {
+    const setting = settings.find(setting => setting.name === name)
+    if (setting) {
+      return setting.value
+    }
+  }
   Object.keys(sections).map((sectionName) => {
     if (sections[sectionName][name]) {
       result = sections[sectionName][name].value
