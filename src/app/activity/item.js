@@ -152,8 +152,11 @@ function view (scope) {
         title: scope.activity[relation].name
       }, [
         relationForm,
-        m('span.alias', {
-          onclick: (e) => { scope.relationForm = relation }
+        m('a.alias[href=#]', {
+          onclick: (e) => {
+            scope.relationForm = scope.relationForm === relation ? null : relation
+            return false
+          }
         }, scope.shortcuts[relation] + scope.activity[relation].alias)
       ]))
     }
