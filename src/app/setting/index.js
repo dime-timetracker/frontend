@@ -12,7 +12,8 @@ const cardView = require('../utils/views/card/default')
 const fields = {
   input: require('../utils/views/formfields/input'),
   select: require('../utils/views/formfields/select'),
-  checkbox: require('../utils/views/formfields/checkbox')
+  checkbox: require('../utils/views/formfields/checkbox'),
+  textarea: require('../utils/views/formfields/text')
 }
 
 const sections = {

@@ -147,6 +147,46 @@ function prepareCollection (scope) {
   m.redraw()
 }
 
+/**
+ * get parameters for invoice creation
+ *
+ * @param object config  Invoice configuration, including incrementNo, sender, taxRate
+ * @param array  columns Column headers
+ * @param array  rows    Invoice items
+ *
+ * @return array
+ */
+function getInvoiceParams (config, columns, rows) {
+  const params = { rows: [] }
+  params.rows = rows.map(row => itemValues(columns, row)).map((row) => {
+    return row.reduce((rowData, row) => {
+      rowData[row.code] = row.value
+      return rowData
+    }, {})
+  })
+  params.sender = config.sender || ''
+  const rowWithCustomer = rows.find(row => row.activity && row.activity.customer)
+  if (!rowWithCustomer) {
+    throw new Error('report.invoice.error.no-customer')
+  }
+  params.receiver = rowWithCustomer.activity.customer.address
+  params.increment_no = config.incrementNo || 1
+  params.columns = {}
+  columns.map(col => { params.columns[col] = t('report.table.header.' + col) })
+  const subtotal = rows.reduce((sum, row) => {
+    if (row.activity.customer && row.activity.customer.address !== params.receiver) {
+      throw new Error('report.invoice.error.altering-customers')
+    }
+    return sum + row.activity.project.rate * row.duration / 3600
+  }, 0)
+  params.totals = {
+    subtotal: subtotal,
+    tax: subtotal * parseFloat(config.taxRate) / 100,
+    grand_total: subtotal * (1 + parseFloat(config.taxRate) / 100)
+  }
+  return params
+}
+
 function controller () {
   const query = m.route.param('query') + ''
   const scope = {
@@ -202,7 +242,25 @@ function controller () {
     scope.onSubmitFilter(scope.query)
   })
 
+  scope.printInvoice = function (e) {
+    scope.invoiceParams(getInvoiceParams({
+      incrementNo: userSettings.find('report.invoice.nextIncrementId'),
+      sender: userSettings.find('report.invoice.sender'),
+      taxRate: userSettings.find('report.invoice.taxRate')
+    }, scope.columns(), scope.rows().filter(row => row)))
+    e.target.form.querySelector('input[name=invoice]').value = JSON.stringify(scope.invoiceParams())
+    e.target.form.submit()
+  }
+  scope.invoiceParams = m.prop({})
+
   return scope
+}
+
+function invoiceFormView (scope) {
+  return m('form.invoice[method=POST]', { target: '_invoice', action: 'invoice/html' }, [
+    m('input[type=hidden]', { name: 'invoice', value: JSON.stringify(scope.invoiceParams()) }),
+    m('button', { onclick: scope.printInvoice }, 'INVOICE')
+  ])
 }
 
 function view (scope) {
@@ -225,8 +283,9 @@ function view (scope) {
         ),
         totalsView({ rows: rows, columns: columns })
       ])
-    )
+    ),
+    invoiceFormView(scope)
   ])
 }
 
-module.exports = { controller, getFilterOptions, view, prepareCollection, columnSelectionView }
+module.exports = { controller, getFilterOptions, view, prepareCollection, columnSelectionView, getInvoiceParams }
