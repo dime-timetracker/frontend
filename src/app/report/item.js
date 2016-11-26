@@ -4,10 +4,10 @@ const m = require('src/lib/mithril')
 const moment = require('moment')
 const userSettings = require('src/app/setting').sections
 
-function view (scope) {
-  const item = scope.item
-  const columns = scope.columns
-  return m('tr.timeslice', { key: scope.key }, columns.map(col => {
+function values (columns, item) {
+  const durationHours = moment.duration(item.duration, 'seconds').asHours()
+  item.price = durationHours * item.activity.project.rate
+  return columns.map(col => {
     let value
     let valueSource = ''
     if (col === 'tags') {
@@ -30,17 +30,32 @@ function view (scope) {
         valueSource = 'property'
       }
     } else {
-      if (col === 'duration') {
-        value = moment.duration(item.duration, 'seconds').asHours().toFixed(2) + ' h'
-      } else {
-        value = item[col]
+      switch (col) {
+        case 'duration':
+          value = durationHours.toFixed(2) + ' h'
+          break
+        case 'price':
+          value = item.price.toFixed(2) + ' €'
+          break
+        default:
+          value = item[col]
       }
     }
     if (undefined === value) {
       value = ''
     }
-    return m('td.' + col + '.' + valueSource, value)
-  }))
+    return {
+      code: col,
+      type: valueSource,
+      value: value
+    }
+  })
 }
 
-module.exports = { view }
+function view (scope) {
+  return m('tr.timeslice', { key: scope.key },
+    values(scope.columns, scope.item).map(col => m('td.' + col.code + '.' + col.type, col.value))
+  )
+}
+
+module.exports = { view, values }

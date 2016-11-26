@@ -120,6 +120,7 @@ module.exports = {
     'report.table.header.started_at': 'Beginn',
     'report.table.header.stopped_at': 'Ende',
     'report.table.header.tags': 'Tags',
+    'report.table.header.price': 'Preis',
     'report.table.header.duration': 'Dauer',
     'report.table.totals.duration': 'Gesamtdauer',
     'service.add': 'Eine neue Dienstleistung hinzufügen',

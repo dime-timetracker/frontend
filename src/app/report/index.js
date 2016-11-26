@@ -68,7 +68,8 @@ function columnSelectionView (columns) {
     'tags',
     'started_at',
     'stopped_at',
-    'duration'
+    'duration',
+    'price'
   ].reverse()
   return m('.columns-selection.row', availableColumns.map(currentCol => m('.column.pull-right.' + currentCol, [
     m('input#enable_column_' + currentCol + '[type=checkbox]', {
@@ -120,6 +121,9 @@ function onFetch (customers, projects, services, tags) {
 function prepareCollection (scope) {
   let rows = JSON.parse(JSON.stringify(scope.collection())).map(row => {
     row.duration = duration(row, userSettings.find('report.precision'))
+    if (row.duration && row.activity.project && row.activity.project.rate) {
+      row.price = moment.duration(row.duration, 'seconds').asHours() * row.activity.project.rate
+    }
     return row
   })
   if (!scope.customMergeCode) {
@@ -153,7 +157,8 @@ function controller () {
       'project',
       'service',
       'tags',
-      'duration'
+      'duration',
+      'price'
     ]),
     query: decodeURIComponent(query.replace(/\+/g, '%20')),
     onSubmitFilter: function () {},
