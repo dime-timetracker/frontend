@@ -66,10 +66,25 @@ function buttonReportView (scope) {
 
 function buttonBookmarkView (scope) {
   const isBookmarked = bookmarks.isKnownQuery(scope.query)
+  const highlightBookmarksMenu = () => {
+
+  }
   return m('.media-object.pull-right',
     m('span.form-icon-label', {
       onclick: () => {
-        bookmarks.add(null, scope.query)
+        if (isBookmarked) {
+          bookmarks.remove(scope.query, 'query')
+        } else {
+          bookmarks.add(null, scope.query).then(() => {
+            const selectorHandle = document.querySelector('.filter .bookmarks')
+            if (selectorHandle) {
+              selectorHandle.style.backgroundColor = window.getComputedStyle(document.querySelector('header')).backgroundColor
+              setTimeout(() => {
+                selectorHandle.style.backgroundColor = ''
+              }, 300)
+            }
+          })
+        }
       }
     }, m('span.icon.icon-bookmark' + (isBookmarked ? '' : '-outline')))
   )
