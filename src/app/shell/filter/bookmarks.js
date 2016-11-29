@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('app.activity.shell.filter.bookmarks')
-const find = require('lodash/find')
 const isEqual = require('lodash/isEqual')
 const settingsApi = require('src/api/setting')
 
@@ -19,25 +18,21 @@ function isKnownQuery (query) {
 
 function add (name, query) {
   bookmarks.push({name: name, query: query})
-  settingsApi.persistConfig(configPath, JSON.stringify(bookmarks))
+  return settingsApi.persistConfig(configPath, JSON.stringify(bookmarks))
 }
 
 function update (oldName, newName, newQuery) {
   bookmarks.find((bookmark, index, bookmarks) => {
     bookmarks[index] = {name: newName, query: newQuery}
-    settingsApi.persistConfig(configPath, bookmarks)
+    settingsApi.persistConfig(configPath, JSON.stringify(bookmarks))
     return true
   })
 }
 
-function remove (name) {
-  bookmarks.find((bookmark, index, bookmarks) => {
-    if (bookmark.name === name) {
-      delete bookmarks[index]
-      settingsApi.persistConfig(configPath, bookmarks)
-      return true
-    }
-  })
+function remove (nameOrQuery, field) {
+  field = field || 'name'
+  bookmarks = bookmarks.filter((bookmark) => bookmark[field] !== nameOrQuery)
+  return settingsApi.persistConfig(configPath, JSON.stringify(bookmarks))
 }
 
 function init (list) {

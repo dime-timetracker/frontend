@@ -24,7 +24,7 @@ function find (name) {
 function persistConfig (name, value) {
   const setting = findByName(name) || { name: name }
   setting.value = value
-  api.persist('settings', setting)
+  return api.persist('settings', setting)
 }
 
 function total () {

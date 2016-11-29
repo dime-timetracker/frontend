@@ -103,8 +103,8 @@ function controller (listScope) {
   scope.blur = (e) => { shell.blur(e, scope) }
   scope.focus = (e) => { shell.focus(e, scope) }
   scope.iconViews = [
-    () => { return buttonReportView(scope) },
-    () => { return buttonBookmarkView(scope) }
+    () => buttonReportView(scope),
+    () => scope.query ? buttonBookmarkView(scope) : null
   ]
   scope.inputView = () => {
     return inputView(scope)
