@@ -10,6 +10,7 @@ const moment = require('moment')
 const projectApi = require('src/api/project')
 const tagApi = require('src/api/tag')
 const serviceApi = require('src/api/service')
+const settingsApi = require('src/api/setting')
 const shellFilter = require('src/app/shell/filter')
 const shellMerger = require('src/app/shell/merger')
 const itemValues = require('./item').values
@@ -157,32 +158,41 @@ function prepareCollection (scope) {
  * @return array
  */
 function getInvoiceParams (config, columns, rows) {
-  const params = { rows: [] }
+  const rowWithCustomer = rows.find(row => row.activity && row.activity.customer)
+  if (!rowWithCustomer) {
+    throw new Error('report.invoice.error.no-customer')
+  }
+  const params = {
+    columns: {},
+    date: config.date,
+    footer: config.footer,
+    increment_no: config.incrementNo,
+    intro: config.intro,
+    outro: config.outro,
+    receiver: rowWithCustomer.activity.customer.address,
+    rows: [],
+    sender: config.sender,
+    subject: config.subject
+  }
+  columns.map(col => { params.columns[col] = t('report.table.header.' + col) })
   params.rows = rows.map(row => itemValues(columns, row)).map((row) => {
     return row.reduce((rowData, row) => {
       rowData[row.code] = row.value
       return rowData
     }, {})
   })
-  params.sender = config.sender || ''
-  const rowWithCustomer = rows.find(row => row.activity && row.activity.customer)
-  if (!rowWithCustomer) {
-    throw new Error('report.invoice.error.no-customer')
-  }
-  params.receiver = rowWithCustomer.activity.customer.address
-  params.increment_no = config.incrementNo || 1
-  params.columns = {}
-  columns.map(col => { params.columns[col] = t('report.table.header.' + col) })
   const subtotal = rows.reduce((sum, row) => {
     if (row.activity.customer && row.activity.customer.address !== params.receiver) {
       throw new Error('report.invoice.error.altering-customers')
     }
     return sum + row.activity.project.rate * row.duration / 3600
   }, 0)
+  const tax = subtotal * parseFloat(config.taxRate) / 100
+  const grandTotal = subtotal + tax
   params.totals = {
-    subtotal: subtotal,
-    tax: subtotal * parseFloat(config.taxRate) / 100,
-    grand_total: subtotal * (1 + parseFloat(config.taxRate) / 100)
+    subtotal: { title: t('invoice.totals.subtotal'), value: subtotal.toFixed(2) + ' €' },
+    tax: { title: t('invoice.totals.tax'), value: tax.toFixed(2) + ' €' },
+    grand_total: { title: t('invoice.totals.grand_total'), value: grandTotal.toFixed(2) + ' €' }
   }
   return params
 }
@@ -242,24 +252,84 @@ function controller () {
     scope.onSubmitFilter(scope.query)
   })
 
+  scope.invoiceParams = m.prop({
+    date: (new Date()).toLocaleDateString(),
+    incrementNo: userSettings.find('report.invoice.incrementNo') || t('invoice.form.incrementNo.default'),
+    intro: userSettings.find('report.invoice.intro') || t('invoice.form.intro.default'),
+    outro: userSettings.find('report.invoice.outro') || t('invoice.form.outro.default'),
+    sender: userSettings.find('report.invoice.sender') || '',
+    subject: userSettings.find('report.invoice.subject') || t('invoice.form.subject.default'),
+    taxRate: userSettings.find('report.invoice.taxRate') || t('invoice.form.taxRate.default'),
+    footer: {
+      left: { 'name': userSettings.find('report.invoice.footer.companyName') },
+      center: { 'taxId': userSettings.find('report.invoice.footer.taxId') },
+      right: { 'bank-account': userSettings.find('report.invoice.footer.iban') }
+    }
+  })
+
   scope.printInvoice = function (e) {
-    scope.invoiceParams(getInvoiceParams({
-      incrementNo: userSettings.find('report.invoice.nextIncrementId'),
-      sender: userSettings.find('report.invoice.sender'),
-      taxRate: userSettings.find('report.invoice.taxRate')
-    }, scope.columns(), scope.rows().filter(row => row)))
-    e.target.form.querySelector('input[name=invoice]').value = JSON.stringify(scope.invoiceParams())
+    const invoiceParams = scope.invoiceParams()
+    settingsApi.persistConfig('report.invoice.incrementNo', invoiceParams.incrementNo)
+    settingsApi.persistConfig('report.invoice.intro', invoiceParams.intro)
+    settingsApi.persistConfig('report.invoice.outro', invoiceParams.outro)
+    settingsApi.persistConfig('report.invoice.subject', invoiceParams.subject)
+    invoiceParams.subject = invoiceParams.subject.replace('{incrementNo}', invoiceParams.incrementNo)
+    e.target.form.querySelector('input[name=invoice]').value = JSON.stringify(
+      getInvoiceParams(scope.invoiceParams(), scope.columns(), scope.rows().filter(row => row))
+    )
     e.target.form.submit()
   }
-  scope.invoiceParams = m.prop({})
 
   return scope
 }
 
 function invoiceFormView (scope) {
+  const invoiceParams = scope.invoiceParams()
+
+  const updateInvoiceParam = (field, value) => {
+    invoiceParams[field] = value
+    scope.invoiceParams(invoiceParams)
+  }
+
   return m('form.invoice[method=POST]', { target: '_invoice', action: 'invoice/html' }, [
-    m('input[type=hidden]', { name: 'invoice', value: JSON.stringify(scope.invoiceParams()) }),
-    m('button', { onclick: scope.printInvoice }, 'INVOICE')
+    m('input[type=hidden]', { name: 'invoice', value: JSON.stringify(invoiceParams) }),
+    m('label[for=invoice-subject]',
+      t('invoice.form.subject.label'),
+      m('input.subject', {
+        onchange: e => updateInvoiceParam('subject', e.target.value),
+        value: invoiceParams.subject
+      })
+    ),
+    m('label[for=invoice-incrementNo]', [
+      t('invoice.form.incrementNo.label'),
+      m('input#invoice-incrementNo', {
+        onchange: e => updateInvoiceParam('incrementNo', e.target.value),
+        value: invoiceParams.incrementNo
+      })
+    ]),
+    m('label[for=invoice-date]', [
+      t('invoice.form.date.label'),
+      m('input#invoice-date', {
+        onchange: e => updateInvoiceParam('date', e.target.value),
+        value: invoiceParams.date
+      })
+    ]),
+    m('label[for=invoice-intro]', [
+      t('invoice.form.intro.label'),
+      m('textarea#invoice-intro', {
+        onchange: e => updateInvoiceParam('intro', e.target.value),
+        value: invoiceParams.intro
+      })
+    ]),
+    m('label[for=invoice-outro]', [
+      t('invoice.form.outro.label'),
+      m('textarea#invoice-outro', {
+        onchange: e => updateInvoiceParam('outro', e.target.value),
+        value: invoiceParams.outro
+      })
+    ]),
+
+    m('button.btn.green', { onclick: scope.printInvoice }, t('invoice.form.create.button'))
   ])
 }
 
