@@ -31,8 +31,8 @@ describe('turning filters into fetch options', () => {
   it('should allow to pick columns to be rendered', () => {
     const out = mq(columnSelectionView(m.prop(['description', 'project', 'duration'])))
     out.should.have(1, '.columns-selection')
-    out.should.have(8, '.columns-selection input')
-    out.should.have(8, '.columns-selection label')
+    out.should.have(9, '.columns-selection input')
+    out.should.have(9, '.columns-selection label')
 
     out.should.have(1, '.columns-selection input#enable_column_description[type=checkbox][checked]')
     out.should.have(1, '.columns-selection input#enable_column_customer[type=checkbox]:not([checked])')
@@ -129,8 +129,13 @@ describe('turning filters into fetch options', () => {
         }
       ]
       config = {
+        date: 'heute',
+        footer: {},
         incrementNo: 2222,
+        intro: 'Hi!',
+        outro: 'Bye!',
         sender: 'Winnetouch, Puderrosa Ranch',
+        subject: 'Invoice',
         taxRate: 19
       }
     })
@@ -144,14 +149,33 @@ describe('turning filters into fetch options', () => {
 
     it('should convert report into invoice params', () => {
       expect(getInvoiceParams(config, columns, rows)).to.eql({
-        columns: [ 'project', 'tags', 'description', 'duration' ],
+        columns: { 'project': 'project', 'tags': 'tags', 'description': 'description', 'duration': 'duration' },
+        date: 'heute',
+        footer: {},
         increment_no: 2222,
+        intro: 'Hi!',
+        outro: 'Bye!',
         receiver: 'somewhere over the rainbow',
+        rows: [
+          {
+            description: 'brainstorming',
+            duration: (7 * 24).toFixed(2) + ' h',
+            project: 'save the world',
+            tags: ''
+          },
+          {
+            description: 'delete everything that is not nemo',
+            project: 'find nemo',
+            duration: '2.50 h',
+            tags: ''
+          }
+        ],
         sender: 'Winnetouch, Puderrosa Ranch',
+        subject: 'Invoice',
         totals: {
-          subtotal: 7 * 24 * 100 + 2.5 * 30,
-          tax: (7 * 24 * 100 + 2.5 * 30) * 0.19,
-          grand_total: (7 * 24 * 100 + 2.5 * 30) * 1.19
+          subtotal: { title: 'invoice.totals.subtotal', value: (7 * 24 * 100 + 2.5 * 30).toFixed(2) + ' €' },
+          tax: { title: 'invoice.totals.tax', value: ((7 * 24 * 100 + 2.5 * 30) * 0.19).toFixed(2) + ' €' },
+          grand_total: { title: 'invoice.totals.grand_total', value: ((7 * 24 * 100 + 2.5 * 30) * 1.19).toFixed(2) + ' €' }
         }
       })
     })

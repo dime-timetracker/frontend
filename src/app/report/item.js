@@ -6,14 +6,14 @@ const userSettings = require('src/app/setting').sections
 
 function values (columns, item) {
   const durationHours = moment.duration(item.duration, 'seconds').asHours()
-  item.price = durationHours * item.activity.project.rate
+  item.price = (item.activity.project) ? durationHours * item.activity.project.rate : 0
   return columns.map(col => {
     let value
     let valueSource = ''
     if (col === 'tags') {
       // activity tags were broken down to row
       const shortcut = userSettings.find('global.shortcuts.tag')
-      value = item.tags.map(tag => tag ? shortcut + tag.name : null).join(' ')
+      value = (item.tags || []).map(tag => tag ? shortcut + tag.name : null).join(' ')
     } else if (item.activity[col]) {
       value = item.activity[col].name
       valueSource = 'name'
@@ -35,7 +35,7 @@ function values (columns, item) {
           value = durationHours.toFixed(2) + ' h'
           break
         case 'price':
-          value = item.price.toFixed(2) + ' €'
+          value = item.pricetoFixed(2) + ' €'
           break
         default:
           value = item[col]
