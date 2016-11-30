@@ -148,6 +148,18 @@ function prepareCollection (scope) {
   m.redraw()
 }
 
+function isSingleCustomer (rows) {
+  let customerCount = 0
+  let customerAlias
+  rows.forEach((row, rowNo) => {
+    if (customerAlias !== (row.activity.customer ? '@' + row.activity.customer.alias : rowNo)) {
+      customerCount++
+      customerAlias = '@' + row.activity.customer.alias
+    }
+  })
+  return customerCount === 1
+}
+
 /**
  * get parameters for invoice creation
  *
@@ -354,7 +366,7 @@ function view (scope) {
         totalsView({ rows: rows, columns: columns })
       ])
     ),
-    invoiceFormView(scope)
+    isSingleCustomer(rows) ? invoiceFormView(scope) : null
   ])
 }
 
