@@ -68,7 +68,7 @@ function relationView (scope, property) {
     ]))
   }
   const valueOut = scope.project[property.name]
-    ? scope.project[property.name].name
+    ? scope.project[property.name].name || m('em', scope.customerShortcut + scope.project[property.name].alias)
     : m('em', t('project.property.missing', { property: t('project.property.' + property.name) }))
   return m('.property.' + property.name, {
     onclick: () => { scope.edit = property.name },
@@ -82,6 +82,7 @@ function controller (listContext) {
     key: listContext.key,
     project: listContext.project,
     customers: [],
+    customerShortcut: userSettings.find('global.shortcuts.customer'),
     shortcut: userSettings.find('global.shortcuts.project')
   }
   customerApi.getCollection().then((customers) => {
