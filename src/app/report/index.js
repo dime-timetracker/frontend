@@ -259,6 +259,10 @@ function controller () {
     const fetch = onFetch(customers, projects, services, tags)
     scope.onSubmitFilter = function (query) {
       fetch(scope, filter(query))
+      const newUrl = '/report/' + encodeURIComponent(query)
+      if (m.route() !== newUrl) {
+        m.route(newUrl)
+      }
     }
     debug('Registered filter submit event')
     scope.onSubmitFilter(scope.query)
