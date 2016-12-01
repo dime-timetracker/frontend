@@ -35,7 +35,7 @@ function values (columns, item) {
           value = durationHours.toFixed(2) + ' h'
           break
         case 'price':
-          value = item.pricetoFixed(2) + ' €'
+          value = item.price.toFixed(2) + ' €'
           break
         default:
           value = item[col]
