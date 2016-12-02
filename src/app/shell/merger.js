@@ -30,7 +30,9 @@ const methods = (userSettings, settingsApi, exampleMergers) => {
   function get () {
     const setting = JSON.parse(userSettings.find('report.customMergers') || '[]')
     if (exampleMergers) {
-      exampleMergers.foreach(example => setting.push(example))
+      Object.keys(exampleMergers).forEach(key => {
+        setting.push({ name: key, code: base64.encode(exampleMergers[key]) })
+      })
     }
     return mergers(setting.reduce((result, merger) => {
       result[merger.name] = base64.decode(merger.code)
