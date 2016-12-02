@@ -152,9 +152,10 @@ function isSingleCustomer (rows) {
   let customerCount = 0
   let customerAlias
   rows.forEach((row, rowNo) => {
-    if (customerAlias !== (row.activity.customer ? '@' + row.activity.customer.alias : rowNo)) {
+    const rowCustomerAlias = row.activity.customer ? '@' + row.activity.customer.alias : rowNo
+    if (customerAlias !== rowCustomerAlias) {
       customerCount++
-      customerAlias = '@' + row.activity.customer.alias
+      customerAlias = rowCustomerAlias
     }
   })
   return customerCount === 1
