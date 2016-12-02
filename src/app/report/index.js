@@ -127,7 +127,7 @@ function prepareCollection (scope) {
     }
     return row
   })
-  if (!scope.customMergeCode) {
+  if (!scope.customMergeCode()) {
     debug('no custom merger')
     scope.rows(rows)
     m.redraw()
@@ -209,6 +209,10 @@ function getInvoiceParams (config, columns, rows) {
   return params
 }
 
+function mergers () {
+  return shellMerger.methods(userSettings, settingsApi).get()
+}
+
 function controller () {
   const query = m.route.param('query') + ''
   const scope = {
@@ -227,23 +231,7 @@ function controller () {
     customMergeCode: m.prop('[]'),
     rows: m.prop([])
   }
-  scope.customMergeCodeExamples = {
-    groupByActivity: `rows.reduce((result, row) => {
-  if (undefined === result[row.activity.id]) {
-    result[row.activity.id] = row
-  } else {
-    result[row.activity.id].duration += row.duration
-    if (row.started_at < result[row.activity.id].started_at) {
-      result[row.activity.id].started_at = row.started_at
-    }
-  }
-  if (result[row.activity.id].stopped_at < row.stopped_at) {
-    result[row.activity.id].stopped_at = row.stopped_at
-  }
-  return result
-}, [])`
-  }
-  scope.customMergeCode(scope.customMergeCodeExamples.groupByActivity)
+  scope.customMergeCode(mergers().groupByActivity)
   scope.updateMergeCode = function (code) {
     scope.customMergeCode(code)
     prepareCollection(scope)
@@ -357,8 +345,9 @@ function view (scope) {
     m('.query.filter', cardView(m.component(shellFilter, scope))),
     m('.query.merger', cardView(m.component(shellMerger, {
       current: scope.customMergeCode,
-      examples: scope.customMergeCodeExamples,
-      update: scope.updateMergeCode
+      settingsApi: settingsApi,
+      update: scope.updateMergeCode,
+      userSettings: userSettings
     }))),
     columnSelectionView(scope.columns),
     m('.table-responsive',
