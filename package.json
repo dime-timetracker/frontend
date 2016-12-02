@@ -27,7 +27,7 @@
     "mousetrap-pause": "^1.0.0",
     "nib": "^1.1.0",
     "simple-uuid": "0.0.1",
-    "translate.js": "0.4.1"
+    "translate.js": "0.5.0"
   },
   "scripts": {
     "build:js": "node_modules/.bin/browserify src/app.js > public/app.js",
