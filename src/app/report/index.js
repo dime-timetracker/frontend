@@ -258,7 +258,7 @@ function controller () {
   })
 
   scope.invoiceParams = m.prop({
-    date: (new Date()).toLocaleDateString(),
+    date: (new Date()).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }),
     incrementNo: userSettings.find('report.invoice.incrementNo') || t('invoice.form.incrementNo.default'),
     intro: userSettings.find('report.invoice.intro') || t('invoice.form.intro.default'),
     outro: userSettings.find('report.invoice.outro') || t('invoice.form.outro.default'),
