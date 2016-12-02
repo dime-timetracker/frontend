@@ -91,7 +91,7 @@ module.exports = {
     'invoice.form.intro.label': 'Einleitung',
     'invoice.form.intro.default': "Sehr geehrte Damen und Herren,\n\nentsprechend Ihres Auftrages erlaube ich mir, folgende Leistungen in Rechnung zu stellen:",
     'invoice.form.outro.label': 'Schluss',
-    'invoice.form.outro.default': "Bitte überweisen Sie den Rechnungsbetrag innerhalb von 14 Tagen.\n\nMit freundlichen Grüßen\n\nThomas Birke",
+    'invoice.form.outro.default': "Bitte überweisen Sie den Rechnungsbetrag innerhalb von 14 Tagen.\n\nMit freundlichen Grüßen\n\n[Name]",
     'invoice.form.subject.label': 'Betreff',
     'invoice.form.subject.default': 'Rechnung #{incrementNo}',
     'invoice.form.taxRate.label': 'Steuersatz',
