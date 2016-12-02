@@ -46,7 +46,7 @@ function submit (context) {
 
 function controller (activityScope) {
   const scope = {
-    activity: activityScope.activity,
+    activity: m.prop(activityScope.activity),
     customers: activityScope.customers,
     projects: activityScope.projects,
     services: activityScope.services,
@@ -70,12 +70,12 @@ function controller (activityScope) {
       e.preventDefault()
     }
     submit({
-      activity: scope.activity,
+      activity: scope.activity(),
       activityApi: activityApi,
       tags: activityScope.tags,
       tagApi: tagApi
     }).then((activity) => {
-      scope.activity = activity
+      scope.activity(activity)
       m.redraw()
     })
   }
@@ -83,9 +83,9 @@ function controller (activityScope) {
     if (e) {
       e.preventDefault()
     }
-    const question = t('delete.confirm', { activity: scope.activity.description })
+    const question = t('delete.confirm', { activity: scope.activity().description })
     if (global.window.confirm(question)) {
-      activityApi.delete(scope.activity)
+      activityApi.delete(scope.activity())
     }
   }
 
@@ -99,7 +99,7 @@ function view (scope) {
     subs: []
   }
   options.actions.push(m.component(btnStartStop, {
-    key: 'startstop-' + scope.activity.id,
+    key: 'startstop-' + scope.activity().id,
     activity: scope.activity,
     running: scope.running,
     totalDuration: scope.totalDuration,
@@ -129,27 +129,27 @@ function view (scope) {
         shortcuts: scope.shortcuts
       }),
       m.component(timesliceList, {
-        key: 'timeslices-' + scope.activity.id,
+        key: 'timeslices-' + scope.activity().id,
         activity: scope.activity
       })
     ))
   }
 
   const inner = []
-  inner.push(m('span', scope.activity.description));
+  inner.push(m('span', scope.activity().description));
   ['customer', 'project', 'service'].forEach((relation) => {
-    if (scope.activity[relation]) {
+    if (scope.activity()[relation]) {
       let relationForm = null
       if (scope.relationForm === relation) {
-        const context = { key: (scope.activity.id || 0) + '.' + relation }
-        context[relation] = scope.activity[relation]
+        const context = { key: (scope.activity().id || 0) + '.' + relation }
+        context[relation] = scope.activity()[relation]
         relationForm = m('span.embedded-form.' + relation, [
           m.component(relationForms[relation], context),
           m('button.close', { onclick: (e) => { scope.relationForm = null } }, '×')
         ])
       }
       inner.push(m('span.badge', {
-        title: scope.activity[relation].name
+        title: scope.activity()[relation].name
       }, [
         relationForm,
         m('a.alias[href=#]', {
@@ -157,11 +157,11 @@ function view (scope) {
             scope.relationForm = scope.relationForm === relation ? null : relation
             return false
           }
-        }, scope.shortcuts[relation] + scope.activity[relation].alias)
+        }, scope.shortcuts[relation] + scope.activity()[relation].alias)
       ]))
     }
   })
-  scope.activity.tags.forEach(tag => {
+  scope.activity().tags.forEach(tag => {
     inner.push(m('span.badge.tag', '' + scope.shortcuts.tag + tag.name))
   })
 

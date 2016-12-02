@@ -44,9 +44,9 @@ function controller (listContext) {
     var question = t('timeslice.remove.confirm', { duration: getDuration(listContext.timeslice) })
     if (global.window.confirm(question)) {
       timesliceApi.remove(scope.timeslice).then(() => {
-        scope.activity.timeslices.forEach((timeslice, key) => {
+        scope.activity().timeslices.forEach((timeslice, key) => {
           if (timeslice.id === scope.timeslice.id) {
-            delete scope.activity.timeslices[key]
+            delete scope.activity().timeslices[key]
           }
         })
         m.redraw()

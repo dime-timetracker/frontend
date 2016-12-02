@@ -36,7 +36,7 @@ function controller (context) {
   scope.save = function (e) {
     if (e) e.preventDefault()
     Object.keys(scope.changes).forEach(field => {
-      scope.activity[field] = scope.changes[field]
+      scope.activity()[field] = scope.changes[field]
     })
     context.onSubmit()
     scope.changes = {}
@@ -46,12 +46,12 @@ function controller (context) {
 
 function view (scope) {
   function id (field) {
-    return 'activity-' + field + '-' + scope.activity.id
+    return 'activity-' + field + '-' + scope.activity().id
   }
-  const customerId = scope.activity.customer ? scope.activity.customer.id : null
-  const projectId = scope.activity.project ? scope.activity.project.id : null
-  const serviceId = scope.activity.service ? scope.activity.service.id : null
-  const tags = (scope.changes.tags || scope.activity.tags || [])
+  const customerId = scope.activity().customer ? scope.activity().customer.id : null
+  const projectId = scope.activity().project ? scope.activity().project.id : null
+  const serviceId = scope.activity().service ? scope.activity().service.id : null
+  const tags = (scope.changes.tags || scope.activity().tags || [])
   const buttons = []
   if (Object.keys(scope.changes).length) {
     buttons.push(m('a.btn.btn-green[href=#]', { onclick: scope.save }, m('span.icon.icon-done')))
@@ -66,7 +66,7 @@ function view (scope) {
         change: function (value) {
           scope.changes.description = value
         }
-      }, scope.changes.description || scope.activity.description || ''))
+      }, scope.changes.description || scope.activity().description || ''))
     ]),
     m('tr', [
       m('th', m('label', {

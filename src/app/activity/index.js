@@ -36,11 +36,12 @@ function totalDuration (activity) {
 
 function start (activity) {
   m.startComputation()
-  timesliceApi
+  return timesliceApi
     .persist(timesliceApi.create(activity.id, timestampFormat))
     .then((timeslice) => {
       activity.timeslices.unshift(timeslice)
       m.endComputation()
+      return activity.timeslices
     }, m.endComputation)
 }
 
