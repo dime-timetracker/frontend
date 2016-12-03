@@ -72,7 +72,7 @@ function focus (e, scope) {
     })
   })
 
-  ;['left', 'right', 'backspace', 'space'].forEach(key => {
+  ;['left', 'right', 'backspace', 'space', 'enter'].forEach(key => {
     mousetrap(e.target).bind(key, (e) => {
       autocompletionOptions([])
       autocompletionStatus({})
