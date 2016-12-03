@@ -1,0 +1,11 @@
+{
+    "name": "dime/frontend",
+    "description": "Web frontend for Dime Timetracker.",
+    "licence": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Birke",
+            "email": "dime@quafzi.de"
+        }
+    ]
+}
