@@ -51,9 +51,10 @@ function relationView (scope, property) {
         m('.value', property.formElement({
           id: scope.key + '-' + property.name,
           name: property.name,
-          options: property.relatedCollection.map((item) => {
-            return { value: item.id, label: item.name, item: item }
-          }),
+          options: property.relatedCollection.reduce((result, item) => {
+            result.push({ value: item.id, label: item.name, item: item })
+            return result
+          }, [{ label: '–' }]),
           change: (value) => {
             scope.project[property.name + '_id'] = value
             scope.project[property.name] = property.relatedCollection.filter((item) => {
