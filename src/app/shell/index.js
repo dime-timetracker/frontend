@@ -2,6 +2,7 @@
 
 const m = require('src/lib/mithril')
 const mousetrap = require('mousetrap-pause')(require('mousetrap'))
+const parse = require('src/lib/parser').parse
 const settingsApi = require('src/api/setting')
 const t = require('src/lib/translation')
 const userSettings = require('src/app/setting').sections
@@ -9,6 +10,11 @@ const userSettings = require('src/app/setting').sections
 const debug = require('debug')('app.shell')
 
 userSettings.shell = require('./settings')
+
+const autocompletionOptions = m.prop([])
+const autocompletionTrigger = m.prop(() => {})
+const autocompletionSelection = m.prop()
+const autocompletionStatus = m.prop()
 
 function registerMouseEvents (scope) {
   if (scope.shortcut) {
@@ -48,23 +54,49 @@ function focus (e, scope) {
     mousetrap(e.target).bind(shortcut, (e) => { scope.onSubmit(e, scope) })
   })
 
-  /*
-  mousetrap(e.target).bind(configuration.get('shell/shortcuts/triggerAutocompletion'), function (triggerEvent) {
-    scope.module.autocomplete(triggerEvent, scope);
-    return false;
-  });
-  mousetrap(e.target).bind(configuration.get('shell/shortcuts/cycleSuggestionsLeft'), function () {
-    scope.module.cycleSuggestions('left', e, scope);
-    return false;
-  });
-  mousetrap(e.target).bind(configuration.get('shell/shortcuts/cycleSuggestionsRight'), function () {
-    scope.module.cycleSuggestions('right', e, scope);
-    return false;
-  });
-  mousetrap(e.target).bind('space', function () {
-    scope.module.clearSuggestions(e, scope);
-  });
-  */
+  ;['customer', 'project', 'service', 'tag'].forEach(relation => {
+    applySetting('global.shortcuts.' + relation, (shortcut) => {
+      debug('Register shortcut to autocomplete ' + relation, shortcut)
+      mousetrap(e.target).bind(shortcut, (e) => {
+        debug(relation + ' autocompletion enabled')
+        autocompletionTrigger((e) => {
+          const parsed = parse(e.target.value)
+          if (scope.autocompletion && scope.autocompletion[relation]) {
+            const substring = parsed[relation] ? parsed[relation].alias : ''
+            autocompletionStatus({ shortcut, substring })
+            autocompletionOptions(scope.autocompletion[relation](substring))
+            m.redraw()
+          }
+        })
+      })
+    })
+  })
+
+  ;['left', 'right', 'backspace', 'space'].forEach(key => {
+    mousetrap(e.target).bind(key, (e) => {
+      autocompletionOptions([])
+      autocompletionStatus({})
+      autocompletionTrigger(() => {})
+      debug('autocompletion disabled')
+      m.redraw()
+    })
+  })
+
+  applySetting('shell.shortcuts.cycleAutocompletion', key => {
+    mousetrap(e.target).bind(key, (e) => {
+      autocompletionSelection(
+        autocompletionOptions()[autocompletionOptions().indexOf(autocompletionSelection()) + 1] ||
+        autocompletionOptions()[0]
+      )
+      e.target.value = e.target.value.replace(
+        new RegExp('(' + autocompletionStatus().shortcut + ')([^ ]*)($| )'),
+        '$1' + autocompletionSelection() + '$3'
+      )
+      m.redraw()
+      e.preventDefault()
+      return false
+    })
+  })
 }
 
 function bookmarksView (bookmarks, onSubmit) {
@@ -80,6 +112,7 @@ function bookmarksView (bookmarks, onSubmit) {
 
 function controller (parentScope) {
   const scope = {
+    autocompletion: parentScope.autocompletion,
     bookmarks: parentScope.bookmarks,
     htmlId: parentScope.htmlId,
     icon: parentScope.icon,
@@ -103,7 +136,11 @@ function view (scope) {
       bookmarksView(scope.bookmarks, scope.onSubmit)
     ])
   )
-  parts.push(m('.media-inner', scope.inputView()))
+  parts.push(m('.media-inner', scope.inputView({
+    autocompletionOptions,
+    autocompletionSelection,
+    autocompletionTrigger
+  })))
   return m('.media', parts)
 }
 

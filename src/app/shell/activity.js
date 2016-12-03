@@ -21,13 +21,24 @@ function createActivity (e, scope) {
 }
 
 function inputView (scope) {
-  return m('input.form-control.mousetrap', {
-    id: scope.htmlId,
-    placeholder: scope.placeholder,
-    onfocus: scope.focus,
-    onblur: scope.blur,
-    onkeydown: scope.keydown
-  })
+  let suggestions = null
+  if (scope.autocompletionOptions().length) {
+    suggestions = m('.suggestions', scope.autocompletionOptions().map(option => {
+      return m('.suggestion' + (scope.autocompletionSelection() === option ? '.selected' : ''), option)
+    }))
+  }
+  return [
+    m('input.form-control.mousetrap', {
+      autocompletion: scope.autocompletion,
+      id: scope.htmlId,
+      placeholder: scope.placeholder,
+      onfocus: scope.focus,
+      onblur: scope.blur,
+      onkeydown: scope.keydown,
+      onkeyup: scope.autocompletionTrigger ? scope.autocompletionTrigger() : null
+    }),
+    suggestions
+  ]
 }
 
 function controller (listScope) {
@@ -37,11 +48,19 @@ function controller (listScope) {
     icon: 'icon-add',
     shortcut: settingsApi.find('shell.shortcuts.focusActivity')
   }
+  scope.autocompletion = ['customer', 'project', 'service', 'tag'].reduce((result, relation) => {
+    result[relation] = substring => {
+      return listScope[relation + 's'].filter(item => {
+        return (item.alias || item.name).indexOf(substring) === 0
+      }).map(item => (item.alias || item.name))
+    }
+    return result
+  }, {})
   scope.placeholder = ' ' + t('shell.activity.placeholder', {
     shortcut: formatShortcut(scope.shortcut)
   })
-  scope.inputView = () => {
-    return inputView(scope)
+  scope.inputView = (options) => {
+    return inputView(Object.assign(scope, options))
   }
   scope.onSubmit = (e) => { createActivity(e, scope) }
   scope.blur = (e) => { shell.blur(e, scope) }
