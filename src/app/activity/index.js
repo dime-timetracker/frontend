@@ -164,7 +164,7 @@ function controller () {
   scope.startNewActivity = function (activity) {
     assignRelated('customer', customerApi, scope.customers, global.confirm)(activity)
       .then(() => {
-        if (activity.project && (!activity.project.customer_id)) {
+        if (activity.project && activity.customer && (!activity.project.customer_id)) {
           activity.project.customer_id = activity.customer.id
           activity.project.customer = activity.customer
         }
