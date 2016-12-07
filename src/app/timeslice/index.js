@@ -32,6 +32,16 @@ function setEnd (timeslice, value) {
   updateDuration(timeslice)
 }
 
+function setEndTime (timeslice, time) {
+  const date = moment(timeslice.stopped_at).format('YYYY-MM-DD')
+  setEnd(timeslice, date + 'T' + time)
+}
+
+function setEndDate (timeslice, date) {
+  const time = moment(timeslice.stopped_at).format('HH:mm:ss')
+  setEnd(timeslice, date + 'T' + time)
+}
+
 function getStart (timeslice) {
   return moment(timeslice.started_at, timestampFormat)
 }
@@ -71,6 +81,8 @@ module.exports = {
   getEnd: getEnd,
   getStart: getStart,
   setEnd: setEnd,
+  setEndDate: setEndDate,
+  setEndTime: setEndTime,
   setStart: setStart,
   setStartDate: setStartDate,
   setStartTime: setStartTime,
