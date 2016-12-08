@@ -95,8 +95,12 @@ function controller (activityScope) {
 function view (scope) {
   const options = {
     active: scope.showDetails,
+    attributes: {},
     actions: [],
     subs: []
+  }
+  if (scope.running(scope.activity())) {
+    options.attributes.class = 'running'
   }
   options.actions.push(m.component(btnStartStop, {
     key: 'startstop-' + scope.activity().id,

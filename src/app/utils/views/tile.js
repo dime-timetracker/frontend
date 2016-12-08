@@ -72,7 +72,7 @@ var tile = function(inner, options) {
     content = content.concat(buildSubs(options.subs));
   }
 
-  return m('.tile' + ((options.active) ? '.active' : ''), content);
+  return m('.tile' + ((options.active) ? '.active' : ''), options.attributes || {}, content);
 };
 
 module.exports = tile;
