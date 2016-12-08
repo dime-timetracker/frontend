@@ -60,7 +60,8 @@ function controller (listContext) {
 function view (scope) {
   // TODO Updates only when date/time picker available
   const inner = [
-    m('span.start', [
+    m('label.start', [
+      m('.label', t('timeslice.property.started_at')),
       input({
         type: 'date',
         inline: true,
@@ -84,8 +85,8 @@ function view (scope) {
         }
       })
     ]),
-    ' - ',
-    m('span.end', [
+    m('label.end', [
+      m('.label', t('timeslice.property.stopped_at')),
       input({
         type: 'date',
         inline: true,
