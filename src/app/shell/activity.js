@@ -44,6 +44,10 @@ function inputView (scope) {
 function controller (listScope) {
   const scope = {
     addActivity: listScope.startNewActivity,
+    autocompletionOptions: m.prop([]),
+    autocompletionTrigger: m.prop(() => {}),
+    autocompletionSelection: m.prop(),
+    autocompletionStatus: m.prop(),
     htmlId: 'shell',
     icon: 'icon-add',
     shortcut: settingsApi.find('shell.shortcuts.focusActivity')

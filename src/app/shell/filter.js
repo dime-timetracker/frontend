@@ -66,9 +66,6 @@ function buttonReportView (scope) {
 
 function buttonBookmarkView (scope) {
   const isBookmarked = bookmarks.isKnownQuery(scope.query)
-  const highlightBookmarksMenu = () => {
-
-  }
   return m('.media-object.pull-right',
     m('span.form-icon-label', {
       onclick: () => {
@@ -91,29 +88,50 @@ function buttonBookmarkView (scope) {
 }
 
 function inputView (scope) {
-  return m('input.form-control.mousetrap', {
-    id: scope.htmlId,
-    placeholder: t('shell.filter.placeholder', {
-      shortcut: scope.shortcut ? formatShortcut(scope.shortcut) : ''
+  let suggestions = null
+  if (scope.autocompletionOptions().length) {
+    suggestions = m('.suggestions', scope.autocompletionOptions().map(option => {
+      return m('.suggestion' + (scope.autocompletionSelection() === option ? '.selected' : ''), option)
+    }))
+  }
+  return [
+    m('input.form-control.mousetrap', {
+      autocompletion: scope.autocompletion,
+      id: scope.htmlId,
+      placeholder: t('shell.filter.placeholder', {
+        shortcut: scope.shortcut ? formatShortcut(scope.shortcut) : ''
+      }),
+      onblur: scope.blur,
+      onfocus: scope.focus,
+      onkeyup: scope.autocompletionTrigger ? scope.autocompletionTrigger() : null
     }),
-    onfocus: scope.focus,
-    onblur: scope.blur,
-    onkeydown: scope.keydown,
-    value: scope.query
-  })
+    suggestions
+  ]
 }
 
 function controller (listScope) {
   bookmarks.init()
   const scope = {
+    autocompletionOptions: m.prop([]),
+    autocompletionTrigger: m.prop(() => {}),
+    autocompletionSelection: m.prop(),
+    autocompletionStatus: m.prop(),
     bookmarks: bookmarks.list(),
-    inputView: inputView,
     icon: 'icon-filter-list',
+    inputView: options => inputView(Object.assign(scope, options)),
     htmlId: 'filter',
     listScope: listScope,
     query: listScope.query || null,
     shortcut: settingsApi.find('shell.shortcuts.focusFilter')
   }
+  scope.autocompletion = ['customer', 'project', 'service', 'tag'].reduce((result, relation) => {
+    result[relation] = substring => {
+      return listScope[relation + 's'].filter(item => {
+        return item.enabled && (item.alias || item.name).indexOf(substring) === 0
+      }).map(item => (item.alias || item.name))
+    }
+    return result
+  }, {})
   scope.onSubmit = (e) => { onSubmitFilter(e, scope) }
   scope.blur = (e) => { shell.blur(e, scope) }
   scope.focus = (e) => { shell.focus(e, scope) }
@@ -121,9 +139,6 @@ function controller (listScope) {
     () => buttonReportView(scope),
     () => scope.query ? buttonBookmarkView(scope) : null
   ]
-  scope.inputView = () => {
-    return inputView(scope)
-  }
   shell.registerMouseEvents(scope)
 
   return scope

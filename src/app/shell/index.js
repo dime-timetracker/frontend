@@ -11,11 +11,6 @@ const debug = require('debug')('app.shell')
 
 userSettings.shell = require('./settings')
 
-const autocompletionOptions = m.prop([])
-const autocompletionTrigger = m.prop(() => {})
-const autocompletionSelection = m.prop()
-const autocompletionStatus = m.prop()
-
 function registerMouseEvents (scope) {
   if (scope.shortcut) {
     mousetrap(global.window).bind(scope.shortcut, () => {
@@ -59,12 +54,12 @@ function focus (e, scope) {
       debug('Register shortcut to autocomplete ' + relation, shortcut)
       mousetrap(e.target).bind(shortcut, (e) => {
         debug(relation + ' autocompletion enabled')
-        autocompletionTrigger((e) => {
+        scope.autocompletionTrigger((e) => {
           const parsed = parse(e.target.value)
           if (scope.autocompletion && scope.autocompletion[relation]) {
             const substring = parsed[relation] ? parsed[relation].alias : ''
-            autocompletionStatus({ shortcut, substring })
-            autocompletionOptions(scope.autocompletion[relation](substring))
+            scope.autocompletionStatus({ shortcut, substring })
+            scope.autocompletionOptions(scope.autocompletion[relation](substring))
             m.redraw()
           }
         })
@@ -74,11 +69,11 @@ function focus (e, scope) {
 
   ;['left', 'right', 'backspace', 'space', 'enter'].forEach(key => {
     mousetrap(e.target).bind(key, (e) => {
-      autocompletionStatus({})
-      autocompletionTrigger(() => {})
+      scope.autocompletionStatus({})
+      scope.autocompletionTrigger(() => {})
       debug('autocompletion disabled')
-      if (autocompletionOptions().length) {
-        autocompletionOptions([])
+      if (scope.autocompletionOptions().length) {
+        scope.autocompletionOptions([])
         m.redraw()
       }
     })
@@ -86,13 +81,14 @@ function focus (e, scope) {
 
   applySetting('shell.shortcuts.cycleAutocompletion', key => {
     mousetrap(e.target).bind(key, (e) => {
-      autocompletionSelection(
-        autocompletionOptions()[autocompletionOptions().indexOf(autocompletionSelection()) + 1] ||
-        autocompletionOptions()[0]
+      const currentIndex = scope.autocompletionOptions().indexOf(scope.autocompletionSelection())
+      scope.autocompletionSelection(
+        scope.autocompletionOptions()[currentIndex + 1] ||
+        scope.autocompletionOptions()[0]
       )
       e.target.value = e.target.value.replace(
-        new RegExp('(' + autocompletionStatus().shortcut + ')([^ ]*)($| )'),
-        '$1' + autocompletionSelection() + '$3'
+        new RegExp('(' + scope.autocompletionStatus().shortcut + ')([^ ]*)($| )'),
+        '$1' + scope.autocompletionSelection() + '$3'
       )
       m.redraw()
       e.preventDefault()
@@ -138,11 +134,7 @@ function view (scope) {
       bookmarksView(scope.bookmarks, scope.onSubmit)
     ])
   )
-  parts.push(m('.media-inner', scope.inputView({
-    autocompletionOptions,
-    autocompletionSelection,
-    autocompletionTrigger
-  })))
+  parts.push(m('.media-inner', scope.inputView({})))
   return m('.media', parts)
 }
 

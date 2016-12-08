@@ -253,6 +253,10 @@ function controller () {
         m.route(newUrl)
       }
     }
+    scope.customers = customers
+    scope.projects = projects
+    scope.services = services
+    scope.tags = tags
     debug('Registered filter submit event')
     scope.onSubmitFilter(scope.query)
   })
