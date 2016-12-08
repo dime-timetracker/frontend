@@ -74,11 +74,13 @@ function focus (e, scope) {
 
   ;['left', 'right', 'backspace', 'space', 'enter'].forEach(key => {
     mousetrap(e.target).bind(key, (e) => {
-      autocompletionOptions([])
       autocompletionStatus({})
       autocompletionTrigger(() => {})
       debug('autocompletion disabled')
-      m.redraw()
+      if (autocompletionOptions().length) {
+        autocompletionOptions([])
+        m.redraw()
+      }
     })
   })
 
