@@ -69,7 +69,7 @@ function controller (listContext) {
     )
     return function () {
       if (global.window.confirm(question)) {
-        scope.customer.enabled = enable
+        scope.customer.enabled = enable ? 1 : 0
         api.persist(scope.customer)
       }
     }

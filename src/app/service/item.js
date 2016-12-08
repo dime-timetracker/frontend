@@ -55,7 +55,7 @@ function controller (listContext) {
     )
     return function () {
       if (global.window.confirm(question)) {
-        scope.service.enabled = enable
+        scope.service.enabled = enable ? 1 : 0
         api.persist(scope.service)
       }
     }
