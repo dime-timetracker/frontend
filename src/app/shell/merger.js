@@ -10,34 +10,14 @@ const toggleButton = require('../utils/components/toggleButton')
 
 const nbsp = '\u00A0'
 
-const groupByActivity = `rows.reduce((result, row) => {
-  if (undefined === result[row.activity.id]) {
-    result[row.activity.id] = row
-  } else {
-    result[row.activity.id].duration += row.duration
-    if (row.started_at < result[row.activity.id].started_at) {
-      result[row.activity.id].started_at = row.started_at
-    }
-  }
-  if (result[row.activity.id].stopped_at < row.stopped_at) {
-    result[row.activity.id].stopped_at = row.stopped_at
-  }
-  return result
-}, [])`
-
 const methods = (userSettings, settingsApi, exampleMergers) => {
   const mergers = m.prop()
   function get () {
     const setting = JSON.parse(userSettings.find('report.customMergers') || '[]')
-    if (exampleMergers) {
-      Object.keys(exampleMergers).forEach(key => {
-        setting.push({ name: key, code: base64.encode(exampleMergers[key]) })
-      })
-    }
     return mergers(setting.reduce((result, merger) => {
       result[merger.name] = base64.decode(merger.code)
       return result
-    }, {}))
+    }, exampleMergers || {}))
   }
   function persist () {
     const mergersJson = JSON.stringify(Object.keys(mergers()).reduce((result, name) => {
@@ -170,17 +150,11 @@ function inputView (scope) {
 }
 
 function controller (reportScope) {
-  const exampleMergers = [
-    {
-      name: t('shell.merger.example.groupByActivity'),
-      code: base64.encode(groupByActivity)
-    }
-  ]
   const scope = {
     htmlId: 'merger',
     icon: 'icon-new-releases',
     inputView: inputView,
-    methods: methods(reportScope.userSettings, reportScope.settingsApi, exampleMergers),
+    methods: methods(reportScope.userSettings, reportScope.settingsApi, reportScope.exampleMergers),
     name: reportScope.currentName,
     query: reportScope.current,
     showDetails: false,

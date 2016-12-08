@@ -21,6 +21,24 @@ const totalsView = require('./totals').view
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
 
+const groupByActivity = `rows.reduce((result, row) => {
+  if (undefined === result[row.activity.id]) {
+    result[row.activity.id] = row
+  } else {
+    result[row.activity.id].duration += row.duration
+    if (row.started_at < result[row.activity.id].started_at) {
+      result[row.activity.id].started_at = row.started_at
+    }
+  }
+  if (result[row.activity.id].stopped_at < row.stopped_at) {
+    result[row.activity.id].stopped_at = row.stopped_at
+  }
+  return result
+}, [])`
+
+const exampleMergers = {}
+exampleMergers[t('shell.merger.example.groupByActivity')] = groupByActivity
+
 function headerView (columns) {
   return m('thead', m('tr', columns.map(col => m('th.' + col, t('report.table.header.' + col)))))
 }
@@ -120,6 +138,7 @@ function onFetch (customers, projects, services, tags) {
 }
 
 function prepareCollection (scope) {
+  m.startComputation()
   let rows = JSON.parse(JSON.stringify(scope.collection())).map(row => {
     row.duration = duration(row, userSettings.find('report.precision'))
     if (row.duration && row.activity.project && row.activity.project.rate) {
@@ -130,7 +149,7 @@ function prepareCollection (scope) {
   if (!scope.customMergeCode()) {
     debug('no custom merger')
     scope.rows(rows)
-    m.redraw()
+    m.endComputation()
     return
   }
   try {
@@ -138,14 +157,12 @@ function prepareCollection (scope) {
     rows = eval(scope.customMergeCode()) || []
     if (Array.isArray(rows) === false) {
       debug('This should have been an array:', rows)
-      return
     }
+    scope.rows(rows)
   } catch (e) {
     debug('error running custom merger', e)
-    return
   }
-  scope.rows(rows)
-  m.redraw()
+  m.endComputation()
 }
 
 function isSingleCustomer (rows) {
@@ -211,7 +228,7 @@ function getInvoiceParams (config, columns, rows) {
 }
 
 function mergers () {
-  return shellMerger.methods(userSettings, settingsApi).get()
+  return shellMerger.methods(userSettings, settingsApi, exampleMergers).get()
 }
 
 function controller () {
@@ -350,6 +367,7 @@ function view (scope) {
     m('.query.filter', cardView(m.component(shellFilter, scope))),
     m('.query.merger', cardView(m.component(shellMerger, {
       current: scope.customMergeCode,
+      exampleMergers: mergers(),
       settingsApi: settingsApi,
       update: scope.updateMergeCode,
       userSettings: userSettings
