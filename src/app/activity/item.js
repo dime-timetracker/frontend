@@ -33,12 +33,18 @@ function submit (context) {
     return context.activityApi.persist(context.activity).then(resolve, reject)
   }
   if ((context.activity.tags || []).length) {
-    return Promise.all((context.activity.tags || []).filter(tag => !tag.id).map(tag =>
-      context.tagApi.persist(tag).then(savedTag => {
-        tag.id = savedTag.id
-        context.tags.push(tag)
+    return Promise.all((context.activity.tags || []).map(tag => {
+      const existingTag = context.tags.find(existingTag => existingTag.name === tag.name)
+      if (existingTag) {
+        tag.id = existingTag.id
+        return new Promise((resolve) => resolve())
+      } else {
+        context.tagApi.persist(tag).then(savedTag => {
+          tag.id = savedTag.id
+          context.tags.push(tag)
+        })
       }
-    ))).then(persistActivity)
+    })).then(persistActivity)
   } else {
     return new Promise(persistActivity)
   }
