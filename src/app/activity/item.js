@@ -34,7 +34,7 @@ function submit (context) {
   }
   if ((context.activity.tags || []).length) {
     return Promise.all((context.activity.tags || []).map(tag => {
-      const existingTag = context.tags.find(existingTag => existingTag.name === tag.name)
+      const existingTag = tag.id ? tag : context.tags.find(existingTag => existingTag.name === tag.name)
       if (existingTag) {
         tag.id = existingTag.id
         return new Promise((resolve) => resolve())
