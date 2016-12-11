@@ -13,6 +13,8 @@ const serviceApi = require('src/api/service')
 const settingsApi = require('src/api/setting')
 const shellFilter = require('src/app/shell/filter')
 const shellMerger = require('src/app/shell/merger')
+const startedAt = require('src/app/timeslice').startedAt
+const stoppedAt = require('src/app/timeslice').stoppedAt
 const itemValues = require('./item').values
 const itemView = require('./item').view
 const t = require('src/lib/translation')
@@ -141,6 +143,8 @@ function prepareCollection (scope) {
   m.startComputation()
   let rows = JSON.parse(JSON.stringify(scope.collection())).map(row => {
     row.duration = duration(row, userSettings.find('report.precision'))
+    row.started_at = startedAt(row, userSettings.find('report.precision')).toDate().toLocaleString()
+    row.stopped_at = stoppedAt(row, userSettings.find('report.precision')).toDate().toLocaleString()
     if (row.duration && row.activity.project && row.activity.project.rate) {
       row.price = moment.duration(row.duration, 'seconds').asHours() * row.activity.project.rate
     }

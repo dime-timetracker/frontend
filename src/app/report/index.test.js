@@ -99,9 +99,9 @@ describe('turning filters into fetch options', () => {
       m.redraw = () => {}
       prepareCollection(scope)
       expect(scope.rows()).to.eql([
-        { activity: { name: 'a' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
-        { activity: { name: 'b' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' },
-        { activity: { name: 'd' }, duration: 3600, started_at: '2016-01-01 00:00', stopped_at: '2016-01-01 01:00' }
+        { activity: { name: 'a' }, duration: 3600, started_at: '1.1.2016, 00:00:00', stopped_at: '1.1.2016, 01:00:00' },
+        { activity: { name: 'b' }, duration: 3600, started_at: '1.1.2016, 00:00:00', stopped_at: '1.1.2016, 01:00:00' },
+        { activity: { name: 'd' }, duration: 3600, started_at: '1.1.2016, 00:00:00', stopped_at: '1.1.2016, 01:00:00' }
       ])
     })
   })

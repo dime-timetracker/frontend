@@ -76,6 +76,22 @@ function duration (timeslice, precision) {
   return result
 }
 
+function startedAt (timeslice, precision) {
+  const started = moment(timeslice.started_at)
+  const precisionOffset = started.unix() % precision
+  console.log(precisionOffset)
+  started.subtract(precisionOffset, 'seconds')
+  if (precisionOffset > precision / 2) {
+    started.add(precision, 'seconds')
+  }
+  return started
+}
+
+function stoppedAt (timeslice, precision) {
+  return startedAt(timeslice, precision)
+    .add(duration(timeslice, precision), 'seconds')
+}
+
 module.exports = {
   now: now,
   getEnd: getEnd,
@@ -86,6 +102,8 @@ module.exports = {
   setStart: setStart,
   setStartDate: setStartDate,
   setStartTime: setStartTime,
+  startedAt: startedAt,
+  stoppedAt: stoppedAt,
   duration: duration,
   running: (t) => { return !t.stopped_at }
 }
