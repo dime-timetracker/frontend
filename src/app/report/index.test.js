@@ -2,6 +2,7 @@
 
 const m = require('mithril')
 const mq = require('mithril-query')
+const moment = require('moment')
 
 const expect = require('expect.js')
 const columnSelectionView = require('./').columnSelectionView
@@ -98,10 +99,12 @@ describe('turning filters into fetch options', () => {
       }
       m.redraw = () => {}
       prepareCollection(scope)
+      const expectedStart = moment('1.1.2016, 00:00:00').toDate().toLocaleString()
+      const expectedEnd = moment('1.1.2016, 01:00:00').toDate().toLocaleString()
       expect(scope.rows()).to.eql([
-        { activity: { name: 'a' }, duration: 3600, started_at: '1.1.2016, 00:00:00', stopped_at: '1.1.2016, 01:00:00' },
-        { activity: { name: 'b' }, duration: 3600, started_at: '1.1.2016, 00:00:00', stopped_at: '1.1.2016, 01:00:00' },
-        { activity: { name: 'd' }, duration: 3600, started_at: '1.1.2016, 00:00:00', stopped_at: '1.1.2016, 01:00:00' }
+        { activity: { name: 'a' }, duration: 3600, started_at: expectedStart, stopped_at: expectedEnd },
+        { activity: { name: 'b' }, duration: 3600, started_at: expectedStart, stopped_at: expectedEnd },
+        { activity: { name: 'd' }, duration: 3600, started_at: expectedStart, stopped_at: expectedEnd }
       ])
     })
   })
