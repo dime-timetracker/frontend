@@ -79,7 +79,6 @@ function duration (timeslice, precision) {
 function startedAt (timeslice, precision) {
   const started = moment(timeslice.started_at)
   const precisionOffset = started.unix() % precision
-  console.log(precisionOffset)
   started.subtract(precisionOffset, 'seconds')
   if (precisionOffset > precision / 2) {
     started.add(precision, 'seconds')

@@ -143,8 +143,8 @@ function prepareCollection (scope) {
   m.startComputation()
   let rows = JSON.parse(JSON.stringify(scope.collection())).map(row => {
     row.duration = duration(row, userSettings.find('report.precision'))
-    row.started_at = startedAt(row, userSettings.find('report.precision')).toDate().toLocaleString()
     row.stopped_at = stoppedAt(row, userSettings.find('report.precision')).toDate().toLocaleString()
+    row.started_at = startedAt(row, userSettings.find('report.precision')).toDate().toLocaleString()
     if (row.duration && row.activity.project && row.activity.project.rate) {
       row.price = moment.duration(row.duration, 'seconds').asHours() * row.activity.project.rate
     }
