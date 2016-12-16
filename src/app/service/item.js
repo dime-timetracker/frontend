@@ -44,10 +44,11 @@ function propertyView (scope, property) {
 
 function controller (listContext) {
   const scope = {
+    edit: null,
+    enabled: listContext.enabled,
     key: listContext.key,
     service: listContext.service,
-    shortcut: userSettings.find('global.shortcuts.service'),
-    edit: null
+    shortcut: userSettings.find('global.shortcuts.service')
   }
   scope.requestStatusChange = (enable) => {
     const question = t('service.' + (enable ? 'enable' : 'disable') + '.confirm', {
@@ -72,7 +73,8 @@ function controller (listContext) {
 }
 
 function view (scope) {
-  return m('.col-md-3.col-sm-6', { key: scope.key }, m('.card', m('.card-main', [
+  const tag = scope.enabled ? '.col-md-3.col-sm-6' : '.col-md-2.col-sm-4'
+  return m(tag, { key: scope.key }, m('.card', m('.card-main', [
     m('.card-inner', {
       onmouseleave: () => {
         if (scope.edit) { debug('quit editing ', scope.service.name); scope.edit = null }

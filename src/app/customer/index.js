@@ -42,9 +42,10 @@ function view (scope) {
       m('h3.content-sub-heading', t('customer.list.' + status + '.headline')),
       (customers[status] && customers[status].length) ? m('.row', customers[status].map((customer) => {
         return m.component(item, {
-          key: 'customer-' + customer.id,
+          collection: scope.collection,
           customer: customer,
-          collection: scope.collection
+          enabled: status === 'enabled',
+          key: 'customer-' + customer.id
         })
       })) : m('p', t('customer.list.' + status + '.empty'))
     ])),

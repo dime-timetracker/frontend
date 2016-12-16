@@ -88,6 +88,28 @@
 .customers,
 .projects,
 .services
+  & > .enabled > .row,
+  & > .disabled > .row
+    align-items flex-start
+
+    & > div
+      display inline-block
+      float none
+
+  .disabled
+    .card
+      background #ddd
+      font-size 0.6rem
+
+      p
+        margin 12px 0
+
+      .card-heading
+        font-size 0.8rem
+
+      .btn
+        font-size 0.8rem
+
   .card
     .card-main
       width: 100%

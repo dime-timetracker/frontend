@@ -79,11 +79,12 @@ function relationView (scope, property) {
 
 function controller (listContext) {
   const scope = {
+    customerShortcut: userSettings.find('global.shortcuts.customer'),
+    customers: [],
     edit: null,
+    enabled: listContext.enabled,
     key: listContext.key,
     project: listContext.project,
-    customers: [],
-    customerShortcut: userSettings.find('global.shortcuts.customer'),
     shortcut: userSettings.find('global.shortcuts.project')
   }
   customerApi.getCollection().then((customers) => {
@@ -111,7 +112,8 @@ function controller (listContext) {
 }
 
 function view (scope) {
-  return m('.col-md-3.col-sm-6', { key: scope.key }, m('.card', m('.card-main', [
+  const tag = scope.enabled ? '.col-md-3.col-sm-6' : '.col-md-2.col-sm-4'
+  return m(tag, { key: scope.key }, m('.card', m('.card-main', [
     m('.card-inner', {
       onmouseleave: () => {
         if (scope.edit) { scope.edit = null }

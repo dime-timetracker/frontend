@@ -47,9 +47,10 @@ function view (scope) {
       m('h3.content-sub-heading', t('project.list.' + status + '.headline')),
       (projects[status] && projects[status].length) ? m('.row', projects[status].map((project) => {
         return m.component(item, {
+          collection: scope.collection,
+          enabled: status === 'enabled',
           key: 'project-' + project.id,
-          project: project,
-          collection: scope.collection
+          project: project
         })
       })) : m('p', t('project.list.' + status + '.empty'))
     ])),
