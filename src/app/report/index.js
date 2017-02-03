@@ -22,6 +22,7 @@ const timesliceApi = require('src/api/timeslice')
 const totalsView = require('./totals').view
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
+const nbsp = '\u00a0'
 
 const groupByActivity = `rows.reduce((result, row) => {
   if (undefined === result[row.activity.id]) {
@@ -224,9 +225,9 @@ function getInvoiceParams (config, columns, rows) {
   const tax = subtotal * parseFloat(config.taxRate) / 100
   const grandTotal = subtotal + tax
   params.totals = {
-    subtotal: { title: t('invoice.totals.subtotal'), value: subtotal.toFixed(2) + ' €' },
-    tax: { title: t('invoice.totals.tax'), value: tax.toFixed(2) + ' €' },
-    grand_total: { title: t('invoice.totals.grand_total'), value: grandTotal.toFixed(2) + ' €' }
+    subtotal: { title: t('invoice.totals.subtotal'), value: subtotal.toFixed(2) + nbsp + '€' },
+    tax: { title: t('invoice.totals.tax'), value: tax.toFixed(2) + nbsp + '€' },
+    grand_total: { title: t('invoice.totals.grand_total'), value: grandTotal.toFixed(2) + nbsp + '€' }
   }
   return params
 }

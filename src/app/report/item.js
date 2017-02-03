@@ -3,6 +3,7 @@
 const m = require('src/lib/mithril')
 const moment = require('moment')
 const userSettings = require('src/app/setting').sections
+const nbsp = '\u00a0'
 
 function values (columns, item) {
   const durationHours = moment.duration(item.duration, 'seconds').asHours()
@@ -32,10 +33,10 @@ function values (columns, item) {
     } else {
       switch (col) {
         case 'duration':
-          value = durationHours.toFixed(2) + ' h'
+          value = durationHours.toFixed(2) + nbsp + 'h'
           break
         case 'price':
-          value = item.price.toFixed(2) + ' €'
+          value = item.price.toFixed(2) + nbsp + '€'
           break
         default:
           value = item[col]
