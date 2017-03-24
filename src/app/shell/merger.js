@@ -51,6 +51,7 @@ const methods = (userSettings, settingsApi, exampleMergers) => {
 function examplesView (scope) {
   if (Object.keys(scope.examples()).length) {
     const options = Object.keys(scope.examples())
+    options.unshift(t('shell.merger.example.own')) // prepend option to add own merger
     options.unshift(t('shell.merger.example.none')) // prepend empty option
     return m('.examples.column', m('select.form-control', {
       onchange: (e) => {
@@ -59,7 +60,7 @@ function examplesView (scope) {
         scope.query(scope.examples()[e.target.value] || 'rows')
         scope.update(scope.examples()[e.target.value] || 'rows')
         codemirror.reload(scope.query())
-        if (e.target.value === t('shell.merger.example.none')) {
+        if (e.target.value === t('shell.merger.example.own')) {
           scope.origName = e.target.value
           scope.showDetails = true
         }
@@ -76,9 +77,9 @@ function inputView (scope) {
   const BR = "\n"
   const buttons = []
   const code = scope.query()
-  if (scope.name !== t('shell.merger.example.none') && code && code.trim().length) {
+  if (scope.name !== t('shell.merger.example.own') && code && code.trim().length) {
     const isCustom = (scope.origName &&
-      scope.origName !== t('shell.merger.example.none') &&
+      scope.origName !== t('shell.merger.example.own') &&
       scope.origName !== t('shell.merger.example.groupByActivity')
     )
     if (isCustom) {
