@@ -39,7 +39,7 @@ function submit (context) {
         tag.id = existingTag.id
         return new Promise((resolve) => resolve())
       } else {
-        context.tagApi.persist(tag).then(savedTag => {
+        return context.tagApi.persist(tag).then(savedTag => {
           tag.id = savedTag.id
           context.tags.push(tag)
         })
