@@ -4,8 +4,8 @@ const groupBy = require('lodash/groupBy')
 const m = require('src/lib/mithril')
 const sortBy = require('lodash/sortBy')
 
+const addButton = require('./addButton')
 const api = require('../../api/service')
-const button = require('../utils/views/button')
 const item = require('./item')
 const t = require('../../lib/translation')
 
@@ -18,14 +18,11 @@ function controller () {
     m.redraw()
   })
 
-  scope.add = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    const service = { enabled: true }
-    scope.collection.push(service)
-    api.persist(service)
-    m.redraw()
+  scope.add = (newService) => {
+    api.persist(newService).then((service) => {
+      scope.collection.unshift(service)
+      m.redraw()
+    })
   }
 
   return scope
@@ -48,10 +45,7 @@ function view (scope) {
         })
       })) : m('p', t('service.list.' + status + '.empty'))
     ])),
-    button({
-      title: t('service.add'),
-      buttonOptions: { href: '/service', onclick: scope.add }
-    })
+    m.component(addButton, { add: scope.add })
   ])
 }
 

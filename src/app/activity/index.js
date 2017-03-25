@@ -1,7 +1,7 @@
 'use strict'
 
+const addButton = require('./addButton')
 const api = require('src/api/activity')
-const buttonView = require('src/app/utils/views/button')
 const card = require('src/app/utils/views/card/default')
 const customerApi = require('src/api/customer')
 const debug = require('debug')('app.activity')
@@ -99,10 +99,7 @@ function activityListView (scope) {
     } }, t('Show more')))
   }
 
-  container.push(buttonView({
-    title: t('activity.add'),
-    buttonOptions: { href: '/', onclick: scope.add }
-  }))
+  container.push(m.component(addButton, { add: scope.startNewActivity }))
 
   return m('.tile-wrap', container)
 }
@@ -235,13 +232,6 @@ function controller () {
     assignRelations(scope)
     m.redraw()
   })
-
-  scope.add = function (e) {
-    if (e) {
-      e.preventDefault()
-    }
-    scope.activities.unshift({tags: []})
-  }
 
   return scope
 }

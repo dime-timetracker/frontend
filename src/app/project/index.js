@@ -4,8 +4,8 @@ const groupBy = require('lodash/groupBy')
 const m = require('src/lib/mithril')
 const sortBy = require('lodash/sortBy')
 
+const addButton = require('./addButton')
 const api = require('../../api/project')
-const button = require('../utils/views/button')
 const customerApi = require('../../api/customer')
 const item = require('./item')
 const t = require('../../lib/translation')
@@ -24,14 +24,11 @@ function controller () {
     })
   })
 
-  scope.add = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    const project = { enabled: true }
-    scope.collection.push(project)
-    api.persist(project)
-    m.redraw()
+  scope.add = (newProject) => {
+    api.persist(newProject).then((project) => {
+      scope.collection.unshift(project)
+      m.redraw()
+    })
   }
 
   return scope
@@ -54,10 +51,7 @@ function view (scope) {
         })
       })) : m('p', t('project.list.' + status + '.empty'))
     ])),
-    button({
-      title: t('project.add'),
-      buttonOptions: { href: '/project', onclick: scope.add }
-    })
+    m.component(addButton, { add: scope.add })
   ])
 }
 

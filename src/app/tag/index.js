@@ -1,7 +1,7 @@
 'use strict'
 
+const addButton = require('./addButton')
 const api = require('../../api/tag')
-const button = require('../utils/views/button')
 const filter = require('lodash/filter')
 const item = require('./item')
 const m = require('src/lib/mithril')
@@ -17,11 +17,11 @@ function controller () {
     m.redraw()
   })
 
-  scope.add = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    api.persist({})
+  scope.add = (newTag) => {
+    api.persist(newTag).then((tag) => {
+      scope.collection.unshift(tag)
+      m.redraw()
+    })
   }
 
   return scope
@@ -61,10 +61,7 @@ function view (scope) {
     list.push(m('p', t('tag.list.disabled.empty')))
   }
 
-  list.push(button({
-    title: t('tag.add'),
-    buttonOptions: { href: '/tag', onclick: scope.add }
-  }))
+  list.push(m.component(addButton, { add: scope.add }))
 
   return m('div.list-tag', list)
 };
