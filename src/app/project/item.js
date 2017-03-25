@@ -114,11 +114,7 @@ function controller (listContext) {
 function view (scope) {
   const tag = scope.enabled ? '.col-md-3.col-sm-6' : '.col-md-2.col-sm-4'
   return m(tag, { key: scope.key }, m('.card', m('.card-main', [
-    m('.card-inner', {
-      onmouseleave: () => {
-        if (scope.edit) { scope.edit = null }
-      }
-    }, [
+    m('.card-inner', [
       m('p.card-heading', { title: scope.project.name }, propertyView(scope, {
         name: 'name',
         formElement: fieldViews.input

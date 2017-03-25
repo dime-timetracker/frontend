@@ -62,7 +62,7 @@ function controller (listContext) {
     edit: null,
     enabled: listContext.enabled,
     key: listContext.key,
-    shortcut: userSettings.find('global.shortcuts.customer'),
+    shortcut: userSettings.find('global.shortcuts.customer')
   }
   scope.requestStatusChange = (enable) => {
     const question = t('customer.' + (enable ? 'enable' : 'disable') + '.confirm', {
@@ -89,11 +89,7 @@ function controller (listContext) {
 function view (scope) {
   const tag = scope.enabled ? '.col-md-3.col-sm-6' : '.col-md-2.col-sm-4'
   return m(tag, { key: scope.key }, m('.card', m('.card-main', [
-    m('.card-inner', {
-      onmouseleave: () => {
-        if (scope.edit) { debug('quit editing ', scope.customer.name); scope.edit = null }
-      }
-    }, [
+    m('.card-inner', [
       m('p.card-heading', { title: scope.customer.name }, propertyField(scope, {
         name: 'name',
         formElement: fieldViews.input
