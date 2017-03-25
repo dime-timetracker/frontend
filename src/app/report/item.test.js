@@ -2,6 +2,7 @@
 
 const mq = require('mithril-query')
 const expect = require('expect.js')
+const nbsp = '\u00a0'
 
 const itemComponent = require('./item')
 
@@ -45,19 +46,19 @@ describe('render report item', () => {
       item.duration = 3600
       let out = mq(itemComponent.view({ item: item, columns: columns }))
       out.should.have(1, 'td.duration')
-      expect(out.first('td.duration').children).to.eql(['1.00 h'])
+      expect(out.first('td.duration').children).to.eql(['1.00' + nbsp + 'h'])
     })
     it('when we need to round up', () => {
       item.duration = 1797
       let out = mq(itemComponent.view({ item: item, columns: columns }))
       out.should.have(1, 'td.duration')
-      expect(out.first('td.duration').children).to.eql(['0.50 h'])
+      expect(out.first('td.duration').children).to.eql(['0.50' + nbsp + 'h'])
     })
     it('when we need to round down', () => {
       item.duration = 7203
       let out = mq(itemComponent.view({ item: item, columns: columns }))
       out.should.have(1, 'td.duration')
-      expect(out.first('td.duration').children).to.eql(['2.00 h'])
+      expect(out.first('td.duration').children).to.eql(['2.00' + nbsp + 'h'])
     })
   })
 })

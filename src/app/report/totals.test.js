@@ -35,6 +35,6 @@ describe('render totals', () => {
     out.should.have(1, 'tr')
     out.should.have(1, 'th[colspan=3]')
     out.should.have(1, 'td.duration.total')
-    expect(out.first('td').children[0]).to.match(/123[,.]50 h/)
+    expect(out.first('td').children[0]).to.match(/123[,.]50.h/)
   })
 })

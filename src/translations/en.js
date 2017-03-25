@@ -144,7 +144,7 @@ module.exports = {
     'shell.merger.description': 'You may modify these items as you want. Use your own code or choose from the existing ones:',
     'shell.merger.example.groupByActivity': 'group by activity',
     'shell.merger.example.none': '–',
-    'shell.merger.example.own': 'own code',
+    'shell.merger.example.own': 'custom code',
     'shell.merger.title': 'configure list',
     'tag.add': 'Add tag',
     'tag.property.name': 'Tag name',

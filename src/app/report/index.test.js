@@ -3,6 +3,7 @@
 const m = require('mithril')
 const mq = require('mithril-query')
 const moment = require('moment')
+const nbsp = '\u00a0'
 
 const expect = require('expect.js')
 const columnSelectionView = require('./').columnSelectionView
@@ -162,23 +163,23 @@ describe('turning filters into fetch options', () => {
         rows: [
           {
             description: 'brainstorming',
-            duration: (7 * 24).toFixed(2) + ' h',
+            duration: (7 * 24).toFixed(2) + nbsp + 'h',
             project: 'save the world',
             tags: ''
           },
           {
             description: 'delete everything that is not nemo',
             project: 'find nemo',
-            duration: '2.50 h',
+            duration: '2.50' + nbsp + 'h',
             tags: ''
           }
         ],
         sender: 'Winnetouch, Puderrosa Ranch',
         subject: 'Invoice',
         totals: {
-          subtotal: { title: 'invoice.totals.subtotal', value: (7 * 24 * 100 + 2.5 * 30).toFixed(2) + ' €' },
-          tax: { title: 'invoice.totals.tax', value: ((7 * 24 * 100 + 2.5 * 30) * 0.19).toFixed(2) + ' €' },
-          grand_total: { title: 'invoice.totals.grand_total', value: ((7 * 24 * 100 + 2.5 * 30) * 1.19).toFixed(2) + ' €' }
+          subtotal: { title: 'invoice.totals.subtotal', value: (7 * 24 * 100 + 2.5 * 30).toFixed(2) + nbsp + '€' },
+          tax: { title: 'invoice.totals.tax', value: ((7 * 24 * 100 + 2.5 * 30) * 0.19).toFixed(2) + nbsp + '€' },
+          grand_total: { title: 'invoice.totals.grand_total', value: ((7 * 24 * 100 + 2.5 * 30) * 1.19).toFixed(2) + nbsp + '€' }
         }
       })
     })
