@@ -48,7 +48,10 @@ function view (scope) {
         })
       })) : m('p', t('service.list.' + status + '.empty'))
     ])),
-    button('service.add', '/service', scope.add)
+    button({
+      title: t('service.add'),
+      buttonOptions: { href: '/service', onclick: scope.add }
+    })
   ])
 }
 

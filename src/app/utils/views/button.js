@@ -1,40 +1,34 @@
-'use strict';
+'use strict'
 
-var m = require('src/lib/mithril');
-var t = require('../../../lib/translation');
-var isFunction = require('lodash/isFunction');
-var isString = require('lodash/isString');
+const m = require('src/lib/mithril')
 
 /**
  * Button is mithril virtual element that will generate a float button
  * with a text, an optional action and a optional onclick.
- *
- * @param {string} text Text is displayed as title.
- * @param {string} action
- * @param {function} onclick
- * @param {string} icon
- * @param {string} color
- * @returns {VirtualElement}
  */
-module.exports = function (text, action, onclick, icon, color) {
-  text = t(text);
-  icon = icon || '.icon-add';
-  color = color || '.fbtn-red';
-  
-  var attr = {
-    config: m.route,
-    title: text
-  };
-
-  if (isFunction(onclick)) {
-    attr.onclick = onclick;
+module.exports = (options) => {
+  const button = options.buttonOptions || {}
+  if (!button.config) {
+    button.config = m.route
   }
-
-  if (isString(action)) {
-    attr.href = action;
+  if (options.title) {
+    button.title = options.title
   }
+  if (options.onclick) {
+    button.onclick = options.onclick
+  }
+  if (options.href) {
+    button.href = options.href
+  }
+  button.class = (button.class || '') + ' ' + (options.color || 'fbtn-red')
 
-  return m('.fbtn-container', m('.fbtn-inner', 
-    m('a[href=""].fbtn' + color, attr, [ m('span.fbtn-text', text), m('span.icon' + icon) ])
-  ));
-};
+  const icon = options.iconOptions || {}
+  icon.class = (icon.class || '') + ' ' + (options.icon || 'icon-add')
+
+  return m('.fbtn-container', m('.fbtn-inner',
+    m('a[href=""].fbtn', button, [
+      m('span.fbtn-text', options.title || ''),
+      m('span.icon', icon)
+    ])
+  ))
+}

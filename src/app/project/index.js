@@ -54,7 +54,10 @@ function view (scope) {
         })
       })) : m('p', t('project.list.' + status + '.empty'))
     ])),
-    button('project.add', '/project', scope.add)
+    button({
+      title: t('project.add'),
+      buttonOptions: { href: '/project', onclick: scope.add }
+    })
   ])
 }
 

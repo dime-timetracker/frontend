@@ -99,7 +99,10 @@ function activityListView (scope) {
     } }, t('Show more')))
   }
 
-  container.push(buttonView('Add Activity', '/', scope.add))
+  container.push(buttonView({
+    title: t('activity.add'),
+    buttonOptions: { href: '/', onclick: scope.add }
+  }))
 
   return m('.tile-wrap', container)
 }

@@ -61,7 +61,10 @@ function view (scope) {
     list.push(m('p', t('tag.list.disabled.empty')))
   }
 
-  list.push(button('tag.add', '/tag', scope.add))
+  list.push(button({
+    title: t('tag.add'),
+    buttonOptions: { href: '/tag', onclick: scope.add }
+  }))
 
   return m('div.list-tag', list)
 };

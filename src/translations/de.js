@@ -2,6 +2,7 @@
 
 module.exports = {
   translation: {
+    'activity.add': 'Aktivität hinzufügen',
     'activity.customer': 'Kunde',
     'activity.customer.confirm.create': 'Soll der Kunde "{alias}" neu angelegt werden?',
     'activity.project': 'Projekt',
@@ -255,7 +256,6 @@ module.exports = {
     'Logout': 'Abmelden',
     'Username': 'Benutzername',
     'Password': 'Passwort',
-    'Add Activity': 'Aktivität hinzufügen',
     'Tags': 'Tags',
     'tags': 'Tags'
   }

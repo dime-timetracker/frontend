@@ -49,7 +49,10 @@ function view (scope) {
         })
       })) : m('p', t('customer.list.' + status + '.empty'))
     ])),
-    button('customer.add', '/customer', scope.add)
+    button({
+      title: t('customer.add'),
+      buttonOptions: { href: '/customer', onclick: scope.add }
+    })
   ])
 }
 

@@ -2,6 +2,7 @@
 
 module.exports = {
   translation: {
+    'activity.add': 'Add an activity',
     'activity.customer': 'customer',
     'activity.customer.confirm.create': 'Do you want to create a new customer "{alias}"?',
     'activity.project': 'project',
@@ -191,7 +192,6 @@ module.exports = {
     'shift': 'shift',
     'alt': 'alt',
     'Show more': 'Show more',
-    'Add an activity': 'Add an activity',
     'Filter activities': 'Filter activities',
     'customer': 'customer',
     'customers': 'customers',
