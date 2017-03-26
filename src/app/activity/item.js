@@ -9,6 +9,7 @@ const btnStartStop = require('./btnStartStop')
 const grid = require('../utils/views/grid')
 const settingsApi = require('../../api/setting')
 const tagApi = require('../../api/tag')
+const ticketUrl = require('src/app/project/ticketUrl')
 const tile = require('../utils/views/tile')
 const timesliceList = require('./timeslice/')
 const toggleButton = require('../utils/components/toggleButton')
@@ -171,8 +172,16 @@ function view (scope) {
       ]))
     }
   })
-  scope.activity().tags.forEach(tag => {
-    inner.push(m('span.badge.tag', '' + scope.shortcuts.tag + tag.name))
+  ticketUrl.linkTags(scope.activity()).forEach(tag => {
+    let tagOut = '' + scope.shortcuts.tag + tag.name
+    if (tag.url) {
+      tagOut = m('a', {
+        href: tag.url,
+        rel: 'noopener',
+        target: '_blank'
+      }, tagOut)
+    }
+    inner.push(m('span.badge.tag', tagOut))
   })
 
   return tile(inner, options)

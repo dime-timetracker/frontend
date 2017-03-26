@@ -4,6 +4,7 @@ const m = require('src/lib/mithril')
 const api = require('../../api/project')
 const customerApi = require('../../api/customer')
 const t = require('../../lib/translation')
+const ticketUrl = require('./ticketUrl')
 const userSettings = require('../setting').sections
 
 const fieldViews = {
@@ -133,7 +134,8 @@ function view (scope) {
           name: 'rate',
           formElement: fieldViews.input,
           postfix: '\u00a0' + t('default.currency')
-        })
+        }),
+        m.component(ticketUrl, { project: scope.project })
       ])
     ]),
     m('.card-action', [
