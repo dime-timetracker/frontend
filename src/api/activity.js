@@ -1,6 +1,7 @@
 'use strict'
 
 const api = require('../api')
+const arrayRemove = require('lodash/remove')
 const debug = require('debug')('api.activities')
 const m = require('src/lib/mithril')
 
@@ -31,6 +32,14 @@ function fetchNext (fetchOptions = {}) {
   return fetchBunch(fetchOptions)
 }
 
+function remove (activity) {
+  return api.remove('activities', activity.id).then(() => {
+    arrayRemove(collection, function (item) {
+      return item.id === activity.id
+    })
+  })
+}
+
 function total () {
   if (!options.pagination) {
     debug('Please request activities before to get total')
@@ -44,4 +53,4 @@ function getCollection () {
   })
 }
 
-module.exports = { fetchAll, fetchBunch, fetchNext, getCollection, persist, total }
+module.exports = { fetchAll, fetchBunch, fetchNext, getCollection, persist, remove, total }

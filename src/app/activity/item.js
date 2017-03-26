@@ -5,6 +5,7 @@ const t = require('../../lib/translation')
 
 const activityApi = require('../../api/activity')
 const activityForm = require('./form')
+const arrayRemove = require('lodash/remove')
 const btnStartStop = require('./btnStartStop')
 const grid = require('../utils/views/grid')
 const settingsApi = require('../../api/setting')
@@ -90,9 +91,12 @@ function controller (activityScope) {
     if (e) {
       e.preventDefault()
     }
-    const question = t('delete.confirm', { activity: scope.activity().description })
+    const question = t('activity.remove.confirm', { description: scope.activity().description })
     if (global.window.confirm(question)) {
-      activityApi.delete(scope.activity())
+      activityApi.remove(scope.activity())
+      arrayRemove(activityScope.collection, (item) => {
+        return item.id === scope.activity().id
+      })
     }
   }
 
@@ -129,16 +133,22 @@ function view (scope) {
 
   if (scope.showDetails) {
     options.subs.push(grid(
-      m.component(activityForm, {
-        activity: scope.activity,
-        onSubmit: scope.onSubmit,
-        onDelete: scope.onDelete,
-        customers: scope.customers,
-        projects: scope.projects,
-        services: scope.services,
-        tags: scope.tags,
-        shortcuts: scope.shortcuts
-      }),
+      [
+        m.component(activityForm, {
+          activity: scope.activity,
+          onSubmit: scope.onSubmit,
+          onDelete: scope.onDelete,
+          customers: scope.customers,
+          projects: scope.projects,
+          services: scope.services,
+          tags: scope.tags,
+          shortcuts: scope.shortcuts
+        }),
+        m('a.btn.btn-flat[href=#]', {
+          onclick: scope.onDelete,
+          title: t('activity.remove.title')
+        }, m('span.icon.icon-delete'))
+      ],
       m.component(timesliceList, {
         key: 'timeslices-' + scope.activity().id,
         activity: scope.activity
