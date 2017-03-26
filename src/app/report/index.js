@@ -1,12 +1,12 @@
 'use strict'
 
-const activityApi = require('src/api/activity')
 const cardView = require('src/app/utils/views/card/default')
 const customerApi = require('src/api/customer')
 const debug = require('debug')('app.report')
 const duration = require('src/app/timeslice').duration
 const m = require('src/lib/mithril')
 const moment = require('moment')
+const onFetch = require('./fetch')
 const projectApi = require('src/api/project')
 const tagApi = require('src/api/tag')
 const serviceApi = require('src/api/service')
@@ -18,7 +18,6 @@ const stoppedAt = require('src/app/timeslice').stoppedAt
 const itemValues = require('./item').values
 const itemView = require('./item').view
 const t = require('src/lib/translation')
-const timesliceApi = require('src/api/timeslice')
 const totalsView = require('./totals').view
 const userSettings = require('src/app/setting').sections
 userSettings.report = require('./settings')
@@ -108,36 +107,6 @@ function columnSelectionView (columns) {
     }),
     m('label[for=enable_column_' + currentCol + ']', t('report.table.header.' + currentCol))
   ])))
-}
-
-function onFetch (customers, projects, services, tags) {
-  return function (scope, options) {
-    Promise.all([
-      activityApi.fetchAll(options),
-      timesliceApi.fetchAll(options)
-    ]).then(function ([activities, timeslices]) {
-      debug('filtered activities', activities)
-      scope.collection(timeslices.map(timeslice => {
-        const activity = activities.find((activity) => (activity.id === timeslice.activity_id))
-        if (activity) {
-          timeslice.activity = activity
-          timeslice.activity.customer = customers.find((customer) => (
-            customer.id === timeslice.activity.customer_id
-          ))
-          timeslice.activity.project = projects.find((project) => (
-            project.id === timeslice.activity.project_id
-          ))
-          timeslice.activity.service = services.find((service) => (
-            service.id === timeslice.activity.service_id
-          ))
-          timeslice.tags = timeslice.activity.tags
-            .map(tagId => tags.find(tag => tag.id === tagId))
-          return timeslice
-        }
-      }).filter(timeslice => timeslice))
-      prepareCollection(scope)
-    })
-  }
 }
 
 function prepareCollection (scope) {
@@ -267,9 +236,17 @@ function controller () {
     tagApi.getCollection()
   ]).then(function ([customers, projects, services, tags]) {
     const filter = getFilterOptions(customers, projects, services, tags)
-    const fetch = onFetch(customers, projects, services, tags)
+    const fetch = onFetch({
+      customer: customers,
+      project: projects,
+      service: services,
+      tag: tags
+    })
     scope.onSubmitFilter = function (query) {
-      fetch(scope, filter(query))
+      fetch(result => {
+        scope.collection(result)
+        prepareCollection(scope)
+      }, filter(query))
       const newUrl = '/report/' + encodeURIComponent(query)
       if (m.route() !== newUrl) {
         m.route(newUrl)
