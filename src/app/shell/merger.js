@@ -53,7 +53,7 @@ function examplesView (scope) {
     const options = Object.keys(scope.examples())
     options.unshift(t('shell.merger.example.own')) // prepend option to add own merger
     options.unshift(t('shell.merger.example.none')) // prepend empty option
-    return m('.examples.column', m('select.form-control', {
+    return m('span.examples', m('select.form-control', {
       onchange: (e) => {
         scope.name = e.target.value
         scope.origName = e.target.value
@@ -142,7 +142,7 @@ function inputView (scope) {
       ]),
       m('.tile-inner', [
         m('.title', t('shell.merger.title')),
-        m('.description.pull-left', t('shell.merger.description') + nbsp),
+        m('span.description', t('shell.merger.description') + nbsp),
         examplesView(scope)
       ])
     ]),
