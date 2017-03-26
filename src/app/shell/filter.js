@@ -127,7 +127,7 @@ function controller (listScope) {
   scope.autocompletion = ['customer', 'project', 'service', 'tag'].reduce((result, relation) => {
     result[relation] = substring => {
       return listScope[relation + 's'].filter(item => {
-        return item.enabled && (item.alias || item.name).indexOf(substring) === 0
+        return item.enabled && ('' + (item.alias || item.name)).indexOf(substring) === 0
       }).map(item => (item.alias || item.name))
     }
     return result

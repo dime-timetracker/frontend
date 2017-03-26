@@ -9,6 +9,7 @@ function values (columns, item) {
   const durationHours = moment.duration(item.duration, 'seconds').asHours()
   item.price = (item.activity.project) ? durationHours * item.activity.project.rate : 0
   return columns.map(col => {
+    let title
     let value
     let valueSource = ''
     if (col === 'tags') {
@@ -16,12 +17,13 @@ function values (columns, item) {
       const shortcut = userSettings.find('global.shortcuts.tag')
       value = (item.tags || []).map(tag => tag ? shortcut + tag.name : null).join(' ')
     } else if (item.activity[col]) {
+      const shortcut = userSettings.find('global.shortcuts.' + col)
+      title = shortcut + item.activity[col].alias || ''
       value = item.activity[col].name
       valueSource = 'name'
       if (!value) {
         value = item.activity[col].alias
         if (value) {
-          const shortcut = userSettings.find('global.shortcuts.' + col)
           value = shortcut + value
           valueSource = 'alias'
         }
@@ -47,6 +49,7 @@ function values (columns, item) {
     }
     return {
       code: col,
+      title: title,
       type: valueSource,
       value: value
     }
@@ -55,7 +58,9 @@ function values (columns, item) {
 
 function view (scope) {
   return m('tr.timeslice', { key: scope.key },
-    values(scope.columns, scope.item).map(col => m('td.' + col.code + '.' + col.type, col.value))
+    values(scope.columns, scope.item).map(col => m('td.' + col.code + '.' + col.type, {
+      title: col.title
+    }, col.value))
   )
 }
 
