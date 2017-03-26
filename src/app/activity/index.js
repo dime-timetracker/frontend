@@ -12,6 +12,7 @@ const projectApi = require('src/api/project')
 const serviceApi = require('src/api/service')
 const shellActivities = require('src/app/shell/activity')
 const shellFilter = require('src/app/shell/filter')
+const statistics = require('./statistics')
 const t = require('src/lib/translation')
 const tagApi = require('src/api/tag')
 const timesliceApi = require('src/api/timeslice')
@@ -242,6 +243,7 @@ function controller () {
 function view (scope) {
   return m('.activities', [
     card(m.component(shellActivities, scope)),
+    m.component(statistics, scope),
     m('.filter', card(m.component(shellFilter, scope))),
     activityListView(scope)
   ])

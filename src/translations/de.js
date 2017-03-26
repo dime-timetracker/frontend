@@ -180,6 +180,7 @@ module.exports = {
     'shell.merger.example.groupByActivity': 'nach Aktivität zusammenfassen',
     'shell.merger.example.own': 'eigener Code',
     'shell.merger.example.none': '–',
+    'statistics.currentMonth': 'aktueller Monat',
     'tag.add': 'Ein neues Tag hinzufügen',
     'tag.property.name': 'Name des Tags',
     'tag.list.disabled.empty': 'Ich habe keine inaktiven Tags gefunden.',

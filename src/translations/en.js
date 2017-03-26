@@ -147,6 +147,7 @@ module.exports = {
     'shell.merger.example.none': '–',
     'shell.merger.example.own': 'custom code',
     'shell.merger.title': 'configure list',
+    'statistics.currentMonth': 'current month',
     'tag.add': 'Add tag',
     'tag.property.name': 'Tag name',
     'tag.list.disabled.empty': 'There are no disabled tags.',
