@@ -83,6 +83,7 @@ function controller (activityScope) {
       tags: activityScope.tags,
       tagApi: tagApi
     }).then((activity) => {
+      activityScope.assignRelations(activity)
       scope.activity(activity)
       m.redraw()
     })

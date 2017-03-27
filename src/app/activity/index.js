@@ -73,6 +73,7 @@ function activityListView (scope) {
     }
     return m.component(item, {
       activity: activity,
+      assignRelations: scope.assignActivityRelations,
       collection: scope.visibleActivities,
       customers: scope.customers,
       key: activity.id,
@@ -232,6 +233,8 @@ function controller () {
     assignRelations(scope)
     m.redraw()
   })
+
+  scope.assignActivityRelations = assignActivityRelations(scope)
 
   return scope
 }
