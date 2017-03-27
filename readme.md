@@ -1,4 +1,3 @@
-=============
 DIME frontend
 =============
 
@@ -11,7 +10,7 @@ This is under heavy development, but should be ready for production until Summer
 2016.
 
 Installation
-============
+------------
 
 Clone repository, run ``npm install``.
 
@@ -21,7 +20,7 @@ in there.
 Build everything by running ``npm run build`` and open your browser to start using Dime.
 
 Development
-===========
+-----------
 
 To build everything on file change, just run ``npm run watch``, which packs your
 js via browserify and converts your stylus files to css.
