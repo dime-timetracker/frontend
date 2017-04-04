@@ -20,7 +20,7 @@
     "codemirror": "^5.25.0",
     "debug": "^2.4.1",
     "lodash": "^4.15.0",
-    "mithril": "^0.2.0",
+    "mithril": "^1.1.1",
     "mithril-source-hint": "^1.0.0",
     "moment": "^2.18.1",
     "mousetrap": "^1.5.3",
