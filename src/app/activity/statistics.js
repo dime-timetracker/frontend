@@ -58,16 +58,11 @@ function view (scope) {
     value = metric.value
     return m('.' + metricName, [
       m('.statistic.' + metricName, [
-        value === undefined ? null : [
-          m('.target', m('.current', {
-            style: {
-              width: percent + '%'
-            }
-          }, [
-            m('span.name', metric.label + ':'),
-            m('span.value', eval(metric.formatValue) + '/' + formattedTarget)
-          ]))
-        ]
+        value === undefined ? null : m('.target', [
+          m('.current', { style: { width: percent + '%' } }),
+          m('span.name', metric.label + ':'),
+          m('span.value', eval(metric.formatValue) + '/' + formattedTarget)
+        ])
       ])
     ])
   }))
