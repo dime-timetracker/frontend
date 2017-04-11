@@ -4,10 +4,11 @@ const getFilterOptions = require('src/app/report').getFilterOptions
 const fetchReport = require('src/app/report/fetch')
 const m = require('src/lib/mithril')
 const t = require('src/lib/translation')
+const userSettings = require('src/app/setting').sections
 
 function controller (listScope) {
   const scope = {
-    metrics: {}
+    metrics: JSON.parse(userSettings.find('activity.statistics.items') || '[]')
   }
   scope.getFilterOptions = getFilterOptions(
     listScope.customers,
@@ -16,13 +17,6 @@ function controller (listScope) {
     listScope.tags
   )
 
-  scope.metrics.currentMonth = {
-    aggregator: 'timeslices.reduce((result, row) => result + row.duration, 0)',
-    filter: 'current month',
-    formatValue: '"" + (Math.round(value/360)/10) + " h"',
-    label: t('statistics.currentMonth'),
-    target: 100 * 3600
-  }
   const report = fetchReport({
     customer: listScope.customers,
     project: listScope.projects,
@@ -30,12 +24,12 @@ function controller (listScope) {
     tag: listScope.tags
   })
 
-  Object.keys(scope.metrics).forEach(metricName => {
+  scope.metrics.forEach(metric => {
     report(timeslices => {
-      const result = eval(scope.metrics[metricName].aggregator)
-      scope.metrics[metricName].value = result
+      const result = eval(metric.aggregator)
+      metric.value = result
       m.redraw()
-    }, scope.getFilterOptions(scope.metrics[metricName].filter))
+    }, scope.getFilterOptions(metric.filter))
   })
 
   return scope
@@ -59,7 +53,9 @@ function view (scope) {
     return m('.' + metricName, [
       m('.statistic.' + metricName, [
         value === undefined ? null : m('.target', [
-          m('.current', { style: { width: percent + '%' } }),
+          m('.current', { style: { width: percent + '%' } })
+        ]),
+        m('.statistics-label', [
           m('span.name', metric.label + ':'),
           m('span.value', eval(metric.formatValue) + '/' + formattedTarget)
         ])
