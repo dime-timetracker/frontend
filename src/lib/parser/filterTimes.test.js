@@ -90,6 +90,17 @@ describe('time filter parser', function() {
       expect(result._text).to.eql('foo  baz')
     })
 
+    it ('should handle "last 12 months" keyword', function () {
+      const input = 'foo last 12 months baz'
+      const result = parseFilterTimes({ _text: input })
+      expect(result).to.have.property('filterStart')
+      expect(result).to.have.property('filterStop')
+      expect(result.filterStart).to.eql(moment().subtract(12, 'month').startOf('month'))
+      expect(result.filterStop).to.eql(moment().subtract(1, 'month').endOf('month'))
+      expect(result).to.have.property('_text')
+      expect(result._text).to.eql('foo  baz')
+    })
+
   })
 
 })
