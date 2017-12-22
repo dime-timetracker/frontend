@@ -27,7 +27,7 @@ function matchesFilter (filter) {
       }
     }
     if (filter.description) {
-      if (!activity.description || activity.description.indexOf(filter.description) === -1) {
+      if (!activity.description || activity.description.toLowerCase().indexOf(filter.description.toLowerCase()) === -1) {
         return false
       }
     }
@@ -148,7 +148,4 @@ function view (scope) {
   return m.component(shell, scope)
 }
 
-module.exports = {
-  controller: controller,
-  view: view
-}
+module.exports = { controller, matchesFilter, view }

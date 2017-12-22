@@ -2,6 +2,7 @@
 
 const m = require('src/lib/mithril')
 const mq = require('mithril-query')
+const filter = require('./filter')
 
 const fakeWindow = {
   dimeDebug: function () {
@@ -21,7 +22,6 @@ describe('filter', function () {
   // Mousetrap makes use of these
   global.navigator = {}
   global.document = { attachEvent: fakeWindow.attachEvent }
-  var filter = require('./filter')
 
   beforeEach(function () {
     global.window = m.deps(fakeWindow)
@@ -54,5 +54,12 @@ describe('filter', function () {
     }
     scope = filter.controller({})
     expect(registeredEvents).to.be(3)
+  })
+
+  it('should be able to match an activity\'s description', function () {
+    expect(filter.matchesFilter({ description: "test" })({ description: "write test for Dime" })).to.be.ok()
+    expect(filter.matchesFilter({ description: "dime" })({ description: "write test for Dime" })).to.be.ok()
+    expect(filter.matchesFilter({ description: "Test" })({ description: "write test for Dime" })).to.be.ok()
+    expect(filter.matchesFilter({ description: "Dime" })({ description: "write test for Dime" })).to.be.ok()
   })
 })
